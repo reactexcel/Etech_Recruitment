@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import Tasks from 'TodoApp/collections/Tasks';
+import Tasks from 'app/collections';
 
 // This code only runs on the server
 Meteor.publish('tasks', function () {
