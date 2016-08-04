@@ -1,4 +1,5 @@
-//Import Collections and methods
+import '../methods/sendMail.js'
 
-import './publications';
-import 'TodoApp/methods';
+Meteor.startup(function () {
+  process.env.MAIL_URL = 'smtp://<Username/email>:<Password>@smtp.gmail.com:25';
+});

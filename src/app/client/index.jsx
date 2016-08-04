@@ -10,6 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import { createStore, applyMiddleware, compose } from 'redux'
 import {Router , Route, IndexRoute, hashHistory} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import SendMail from "./components/sendMail"
 
 export let isMonitorAction;
 
@@ -28,7 +29,7 @@ Meteor.startup(
     ReactDOM.render(
       <MuiThemeProvider>
         <Provider store={store}>
-          
+          <SendMail />
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));
   }
