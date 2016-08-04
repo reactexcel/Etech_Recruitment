@@ -18,8 +18,8 @@ const logger = createLogger();
 injectTapEventPlugin();
 
 
-console.log('aaaa')
-console.log( reducer )
+//console.log('aaaa')
+//console.log( reducer )
 
 Meteor.startup(
   () => {

@@ -1,6 +1,5 @@
 import { createAction } from 'redux-actions';
 export const LOGIN = "LOGIN";
-export const GET_USER = "GET_USER";
 
 export function loginUser(email,password){
 	return function(dispatch,getState){
@@ -10,9 +9,11 @@ export function loginUser(email,password){
 					reject(error)
 				}else{
 					let user={
+						id: Meteor.userId(),
 						email:email,
 						password:password
 					}
+					console.log(Meteor.userid())
 					dispatch(actionAfterLogin(user))
 					resolve(user)
 				}
@@ -22,7 +23,4 @@ export function loginUser(email,password){
 }
 export function actionAfterLogin(user){
 	return createAction(LOGIN)(user)
-}
-export function getUser(){
-	return createAction(GET_USER)(Meteor.user())
 }

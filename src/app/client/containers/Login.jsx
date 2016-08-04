@@ -9,20 +9,20 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 class LoginContainer extends React.Component{
       constructor(props){
 		super(props);
-	}
-	getChildContext() {
-      return { 
-      	muiTheme: getMuiTheme(baseTheme) 
-      };
-  }
-  render(){
+	  }
+	  getChildContext() {
+         return { 
+      	    muiTheme: getMuiTheme(baseTheme) 
+         };
+     }
+     render(){
 		return(
-			<Login 
-			router={this.props.router} 
-			ui={this.props.ui} 
-			onLogin={this.props.login}/>
+			   <Login 
+			   router={this.props.router} 
+			   ui={this.props.ui} 
+			   onLogin={this.props.login}/>
 			);
-	}
+	 }
 }
 LoginContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,

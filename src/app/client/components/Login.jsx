@@ -20,20 +20,6 @@ export default class Login extends React.Component{
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
-	/*componentWillMount(){
-		let self=this;
-		Meteor.autorun(function(evt){
-			self.autorun=evt;
-			if(Meteor.userId()){
-				self.props.router.push('/dashboard');
-				evt.stop();
-			}
-		})
-		this.props.onGetUser()
-	}
-	componentWillUnmount(){
-		this.autorun.stop()
-	}*/
 	loginUser(){
         this.props.onLogin(this.state.email,this.state.password).then(()=>{
             alert("Login successfull");
@@ -49,11 +35,11 @@ export default class Login extends React.Component{
 		     iconElementRight={<RaisedButton label="LogIn" 
 		     onTouchTap={this.openLogin}/>}
 		     />
-		     <div style={{'textAlign':'center'}}>
-		     <div style={{'width':'400','paddingTop':'5px','margin':'0px auto'}}>
+		     <div style={{textAlign:'center'}}>
+		     <div style={{width:400,paddingTop:5,margin:'0px auto'}}>
 		     <h3>Login</h3>
                <div>
-				<TextField value={this.state.email} style={{'width':'80%'}} floatingLabelText="Email"
+				<TextField value={this.state.email} style={{width:'80%'}} floatingLabelText="Email"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -63,7 +49,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-				<TextField value={this.state.password} style={{'width':'80%'}} floatingLabelText="Password"
+				<TextField value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -72,7 +58,7 @@ export default class Login extends React.Component{
 					}
 				}/>
 				</div>
-				<div style={{'textAlign': 'left','marginLeft':'20px'}}>
+				<div style={{textAlign: 'left',marginLeft:40}}>
                  <Link to="forget" className="link">{"forgot password"}</Link>
                  <div>
                  <Link to="register" className="link" >{"Register"}</Link>
@@ -91,6 +77,5 @@ export default class Login extends React.Component{
 }
 
 Login.propTypes={
-	onLogin:React.PropTypes.func.isRequired,
-	//onGetUser:React.PropTypes.func.isRequired
+	onLogin:React.PropTypes.func.isRequired
 }
