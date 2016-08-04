@@ -1,1 +1,1 @@
-import 'TodoApp/server';
+import 'app/server';
