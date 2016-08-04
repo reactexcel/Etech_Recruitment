@@ -1,14 +1,4 @@
-# kickstart-meteor-react
-
-Kickstart a barebone project with Meteor and React fast!
-
-1. git clone https://github.com/thereactivestack/kickstart-meteor-react.git
-1. cd kickstart-meteor-react
-1. meteor
-
-You can try [other kickstart projects](https://github.com/thereactivestack/kickstart) with ReactRouter, FlowRouter or Redux.
-
-## [Learn how to be productive with Meteor and Webpack in 7 days on TheReactiveStack.com](https://thereactivestack.com)
+# Etech Recruitment Meteor React
 
 # Production
 You can use meteor run, meteor build, mup or anything working with Meteor.
