@@ -1,7 +1,7 @@
 # Etech Recruitment Meteor React
 
 # Production
-You can use meteor run, meteor build, mup or anything working with Meteor.
+You can use meteor run, meteor build, mup or anything working with Meteor
 
 ## Run in production mode
 `meteor run --production`
