@@ -13,29 +13,20 @@ export function error_forgot_password( data ){
 	return createAction( ACTION_ERROR_FORGOT_PASSOWORD )( data )
 }
 
-
 export function forgot_password( emailid ){
 	return (dispatch,getState) => {
 		return new Promise( (resolve,reject) => {
-			//Accounts.createUser( {email: 'arun', password : 'kumar'}, ( error ) => {
-			Accounts.setPassword( 'SZpuBr8TZXNGJMqXy','arunkumar', ( error ) => {
-			//Accounts.findUserByEmail(emailid, ( error ) => {
-				if( error ){
-					console.log('error')
-					console.log( error )
+			Meteor.call('doUpdateUserPassword', emailid, 'DEMOPASSWORD', (err, data) => {
+				if(err){
+        			error_forgot_password( 'error occurs' )
 				}else{
-					console.log('success')
+					if( data.error == 0 ){
+					 	dispatch ( success_forgot_password('Check your email for new password') )
+					}else{
+						dispatch ( success_forgot_password(data.message) )
+					}
 				}
-
 			})
-			// Meteor.call('addTodo',text, (err,todo) => {
-			// 	if(err){
-					
-			// 	}else{
-			// 		dispatch(add_to_do(text));
-			// 		dispatch( loadTodoList() )
-			// 	}
-			// });
 		})
 	}
 }

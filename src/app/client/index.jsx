@@ -5,7 +5,6 @@ import {Meteor} from 'meteor/meteor';
 import { Provider } from 'react-redux';
 import createLogger from 'redux-logger';
 import reducer from './reducers/index';
-import invariant from 'redux-immutable-state-invariant';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { createStore, applyMiddleware, compose } from 'redux'
 import {Router , Route, IndexRoute, hashHistory} from 'react-router'
@@ -30,8 +29,8 @@ export class APP extends React.Component {
 
 Meteor.startup(
   () => {
-    let store = createStore(reducer,Immutable.Map({}),compose(
-      applyMiddleware(invariant(), logger,thunk),
+    let store = createStore(reducer, compose(
+      applyMiddleware( logger,thunk),
       window.devToolsExtension ? window.devToolsExtension({
         getMonitor: (monitor) => { isMonitorAction = monitor.isMonitorAction; }
         }) : f => f

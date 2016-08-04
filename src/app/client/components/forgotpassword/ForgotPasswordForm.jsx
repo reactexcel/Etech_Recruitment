@@ -16,6 +16,7 @@ class ForgotPasswordForm extends React.Component {
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
+        console.log( props )
     }
     submitForm( evt ){
         evt.preventDefault();
