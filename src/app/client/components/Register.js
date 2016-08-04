@@ -16,6 +16,10 @@ export default class Register extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      errorEmail: '',
+      errorName: '',
+      errorPass: '',
+      errorCpass: '',
       email: '',
       name:'',
       password: '',
@@ -42,16 +46,47 @@ export default class Register extends React.Component {
     let name = this.state.name.trim()
     let password = this.state.password.trim()
     if(email == ""){
-      alert("Email required")
+      this.setState({
+        errorEmail:"Email required"
+      })
     }else if(!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)){
-      alert("Please enter a valid email")
-    }else if(name == ""){
-      alert("name required")
-    }else if(password == ""){
-      alert("password required")
-    }else if(password !== this.state.conf_password){
-      alert("Password do not match")
+      this.setState({
+        errorEmail:"Enter a valid email"
+      })
     }else{
+      this.setState({
+        errorEmail:''
+      })
+    } 
+    if(name == ""){
+      this.setState({
+        errorName:"Name required"
+      })
+    }else{
+      this.setState({
+        errorName:""
+      })
+    } 
+    if(password == ""){
+      this.setState({
+        errorPass:"Password required"
+      })
+    }else{
+      this.setState({
+        errorPass:""
+      })
+    }
+    if(password !== this.state.conf_password){
+      this.setState({
+        errorCpass:"Password do not match"
+      })
+    }else{
+      this.setState({
+        errorCpass:""
+      })
+    }
+
+    if(email != '' && name != '' && password != '' && password == this.state.conf_password){
       this.props.onRegisterUser(email, name, password).then( () => {
         this.setState({
           email: '',
@@ -60,13 +95,14 @@ export default class Register extends React.Component {
           conf_password : ''
         })
       }).catch( (error) => {
-        //console.log(error)
           alert(error.toString())
       })
     }
   }
   goBack(){
-    alert("goBack triggered")
+    history.goBack()
+    //this.props.router.push('/login')
+    
   }
   render() {
     return (
@@ -85,6 +121,7 @@ export default class Register extends React.Component {
                         style={{width: '100%'}}
                         onChange={ (evt) => {  this.setState({email: evt.target.value}) }}
                         value={this.state.email}
+                        errorText={this.state.errorEmail}
                         floatingLabelText="Email" />
                     </div>
                     <div>
@@ -92,6 +129,7 @@ export default class Register extends React.Component {
                         style={{width: '100%'}}
                         onChange={ (evt) => {  this.setState({name: evt.target.value}) }}
                         value={this.state.name}
+                        errorText={this.state.errorName}
                         floatingLabelText="Name" />
                     </div>
                     <div>
@@ -100,6 +138,7 @@ export default class Register extends React.Component {
                         onChange={ (evt) => {  this.setState({password: evt.target.value}) }}
                         type="password"
                         value={this.state.passowrd}
+                        errorText={this.state.errorPass}
                         floatingLabelText="Password" />
                     </div>
 
@@ -109,6 +148,7 @@ export default class Register extends React.Component {
                         onChange={ (evt) => {  this.setState({conf_password: evt.target.value}) }}
                         type="password"
                         value={this.state.conf_password}
+                        errorText={this.state.errorCpass}
                         floatingLabelText="Confirm Password" />
                     </div>
                     <br />

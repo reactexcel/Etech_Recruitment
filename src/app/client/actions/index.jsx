@@ -10,10 +10,8 @@ export function registerUser(email, name, password){
 		return new Promise( (resolve, reject) => {
 			Meteor.call('regUser', email, name, password, (err, id) => {
 				if(err){
-					console.log("error")
 					reject(err)
 				}else{
-					console.log("success")
 					let data = {
 						id:id,
 						email:email,
