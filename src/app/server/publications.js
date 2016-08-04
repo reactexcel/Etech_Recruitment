@@ -1,5 +1,5 @@
-import { Meteor } from 'meteor/meteor';
-import Tasks from 'TodoApp/collections/Tasks';
+/*import { Meteor } from 'meteor/meteor';
+import Tasks from 'app/collections/Tasks';
 
 // This code only runs on the server
 Meteor.publish('tasks', function () {
@@ -9,4 +9,4 @@ Meteor.publish('tasks', function () {
       { owner: this.userId }
     ]
   });
-});
+});*/
