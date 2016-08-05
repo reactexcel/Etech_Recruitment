@@ -92,7 +92,7 @@ export default class Register extends React.Component {
       })
     }
 
-    if(email != '' && emailValid = true && name != '' && password != '' && password == this.state.conf_password){
+    if(email != '' && emailValid == true && name != '' && password != '' && password == this.state.conf_password){
       this.props.onRegisterUser(email, name, password).then( () => {
         this.setState({
           email: '',
@@ -103,9 +103,10 @@ export default class Register extends React.Component {
           snackbarmsg:"You have registered successfully"
         })
       }).catch( (error) => {
+        //error.toString()
         this.setState({
           snackbarOpen:true,
-          snackbarmsg:error.toString()
+          snackbarmsg:"Error : Username already exist"
         })
       })
     }
