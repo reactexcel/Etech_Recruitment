@@ -36,11 +36,10 @@ Meteor.startup(
       <MuiThemeProvider>
         <Provider store={store}>
           <Router history={hashHistory}>
-            <Route path="/" >
+            <Route path="/" component={LoginContainer}></Route>
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={registerContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword} />
-            </Route>
           </Router>
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));

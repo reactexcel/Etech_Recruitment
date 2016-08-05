@@ -1,7 +1,6 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
-import AppBar from 'material-ui/AppBar';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
@@ -29,8 +28,8 @@ export default class Login extends React.Component{
     Meteor.autorun(function(c) {
       self.autorun = c;
       if (Meteor.userId()) {
-        self.props.router.push('/user')
-        c.stop() //only run this one time
+        //self.props.router.push('/user')
+        //c.stop()
       }  
     });    
   }
@@ -86,12 +85,9 @@ export default class Login extends React.Component{
 	render(){
 		return(
 			<div>
-		     <AppBar 
-		     title="Login"
-		     />
 		     <div style={{textAlign:'center'}}>
 		     <div style={{width:400,paddingTop:5,margin:'0px auto'}}>
-		     <h3>Login</h3>
+		     <h3>LOGIN</h3>
                <div>
 				<TextField errorText={this.state.emailError} value={this.state.email} style={{width:'80%'}} floatingLabelText="Email"
 				onChange={
