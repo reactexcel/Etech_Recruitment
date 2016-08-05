@@ -3,7 +3,6 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
-import Config from '../../../collections/config'
 
 export default class EmailSettingForm extends React.Component {
   constructor(props) {
@@ -20,7 +19,7 @@ export default class EmailSettingForm extends React.Component {
   }
 
   onEmailSettingSave () {
-    console.log(Config.find({}).fetch());
+
   }
 
   render() {
@@ -141,7 +140,7 @@ export default class EmailSettingForm extends React.Component {
                       "marginTop": "2%"
                     }
                   }
-                  onClick={this.onEmailSettingSave}
+                  onClick={this.OnSaveSettings}
                 />
               </div>
             </form>
@@ -153,10 +152,7 @@ export default class EmailSettingForm extends React.Component {
 }
 
 EmailSettingForm.propTypes = {
-  "emailId": PropTypes.string,
-  "password": PropTypes.string,
-  "server": PropTypes.string,
-  "port": PropTypes.number,
-  "encrpyt": PropTypes.string,
-  //"onEmailSettingSave": PropTypes.func.isrequired
+  onFetchSettings: PropTypes.func.isrequired,
+  OnSaveSettings: PropTypes.func.isrequired,
+  emailSetting: PropTypes.array.isrequired,
 };

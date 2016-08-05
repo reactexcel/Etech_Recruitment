@@ -8,14 +8,18 @@ export default class EmailSettingFormContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      "count": 2
+      "count": this.props.emailSetting.length
     }
   }
 
+  componentWillMount(){
+    this.props.onFetchSettings();
+  }
+
   render() {
-    let forms = _.times(this.state.count,( i )=>{
-      return (<EmailSettingForm {...this.props} key={i}/>);
-    });
+    let forms = this.state.count > 0?(_.map(this.props.saveSetting,( value )=>{
+      return (<EmailSettingForm {...this.props} key={value._id}/>);
+    })):<EmailSettingForm {...this.props} />;
     return (
       <div className="col-sm-12 col-md-12 ">
         {forms}
@@ -34,10 +38,7 @@ export default class EmailSettingFormContainer extends React.Component {
 }
 
 EmailSettingFormContainer.propTypes = {
-  "emailId": PropTypes.string,
-  "password": PropTypes.string,
-  "server": PropTypes.string,
-  "port": PropTypes.number,
-  "encrpyt": PropTypes.string,
-//  "onEmailSettingSave": PropTypes.func.isrequired
+  onFetchSettings: PropTypes.func.isrequired,
+  OnSaveSettings: PropTypes.func.isrequired,
+  emailSetting: PropTypes.array.isrequired,
 };
