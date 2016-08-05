@@ -24,6 +24,19 @@ export default class Login extends React.Component{
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
+	componentWillMount(){
+    let self = this
+    Meteor.autorun(function(c) {
+      self.autorun = c;
+      if (Meteor.userId()) {
+        self.props.router.push('/user')
+        c.stop() //only run this one time
+      }  
+    });    
+  }
+  componentWillUnmount(){
+    this.autorun.stop()
+  }
 	loginUser(){
         let email=this.state.email.trim()
 		let password=this.state.password.trim()
@@ -58,6 +71,7 @@ export default class Login extends React.Component{
 		     })
            }).catch((error)=>{
            	this.setState({
+           		
 			   errorMessage:"User not found",
 			   showSnackbar:true
 		     })
