@@ -6,6 +6,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Link} from 'react-router';
+import Snackbar from 'material-ui/Snackbar';
 
 export default class Login extends React.Component{
 	static contextTypes={
@@ -17,7 +18,9 @@ export default class Login extends React.Component{
 			email:'',
 			emailError:'',
 			password:'',
-			passwordError:''
+			passwordError:'',
+			showSnackbar:false,
+			errorMessage:''
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
@@ -34,7 +37,7 @@ export default class Login extends React.Component{
            })
         }else{
           this.setState({
-             emailError:''
+             emailError:'',
           })
         }if(password == ""){
           this.setState({
@@ -45,28 +48,32 @@ export default class Login extends React.Component{
              passwordError:""
           })
         }
-        if(this.state.emailError=='' && this.state.passwordError==''){
+        if(this.state.email != '' && this.state.password != ''){
            this.props.onLogin(this.state.email,this.state.password).then(()=>{
-           	 this.setState={
-			   email:'',
-			   password:''
-		     }
-             alert("Login successfull");
-           }).catch((error)=>{
            	 this.setState({
-               emailError:error.toString()
-             })
-        	 alert(error.toString());
+			   email:'',
+			   password:'',
+			   errorMessage:'You have successfully login',
+			   showSnackbar:true
+		     })
+           }).catch((error)=>{
+           	this.setState({
+			   errorMessage:error.toString(),
+			   showSnackbar:true
+		     })
            })
         }
 	}
+	handleRequestClose(){
+        this.setState({
+            showSnackbar: false
+        })
+    }
 	render(){
 		return(
 			<div>
 		     <AppBar 
-		     title="Login" 
-		     iconElementRight={<RaisedButton label="LogIn" 
-		     onTouchTap={this.openLogin}/>}
+		     title="Login"
 		     />
 		     <div style={{textAlign:'center'}}>
 		     <div style={{width:400,paddingTop:5,margin:'0px auto'}}>
@@ -82,7 +89,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-				<TextField errorText={this.state.passwordError} value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
+				<TextField type="password" errorText={this.state.passwordError} value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -92,7 +99,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div style={{textAlign: 'left',marginLeft:40}}>
-                 <Link to="forget" className="link">{"forgot password"}</Link>
+                 <Link to="forgotpassword" className="link">{"forgot password"}</Link>
                  <div>
                  <Link to="register" className="link" >{"Register"}</Link>
                  </div>
@@ -102,6 +109,12 @@ export default class Login extends React.Component{
                       <RaisedButton label="LOGIN" onTouchTap={this.loginUser} primary={true}/>
                 </div>
 		     </div>
+		     <Snackbar
+                    open={this.state.showSnackbar}
+                    message={this.state.errorMessage}
+                    autoHideDuration={3000}
+                    onRequestClose={this.handleRequestClose.bind(this)}
+                />
 		     </div>
 		    </div>
 			);
