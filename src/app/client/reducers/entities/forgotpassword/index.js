@@ -12,4 +12,6 @@ export function forgotpassword( state = Immutable.Map(initialState), action ){
     }else{
         return state.set('status', '')
     }
+
+    return state
 }

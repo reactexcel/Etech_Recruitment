@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux-immutable'
 
-import entities from './entities'
+import { forgotpassword } from './forgotpassword'
 
 export default combineReducers({
-	entities
+	forgotpassword
 })

@@ -16,7 +16,12 @@ class ForgotPasswordForm extends React.Component {
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
-        console.log( props )
+        if( props.status_message != '' ){
+            this.setState({
+                status_message : props.status_message,
+                showSnackbar : true
+            })
+        }
     }
     submitForm( evt ){
         evt.preventDefault();

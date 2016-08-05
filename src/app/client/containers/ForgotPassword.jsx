@@ -20,13 +20,14 @@ class ForgotPassword extends React.Component {
     render(){
         return(
         	<div>
-        		<ForgotPasswordForm doForgotPassword={this.doForgotPassword} />
+        		<ForgotPasswordForm doForgotPassword={this.doForgotPassword} status_message={this.props.forgotpassword.status }/>
         	</div>
         )
     }
 }
 function mapStateToProps( state ){
-	return {
+    return {
+		forgotpassword : state.toJS().entities.forgotpassword
     }
 }
 const mapDispatchToProps = (dispatch) => {

@@ -18,7 +18,7 @@ export function forgot_password( emailid ){
 		return new Promise( (resolve,reject) => {
 			Meteor.call('doUpdateUserPassword', emailid, 'DEMOPASSWORD', (err, data) => {
 				if(err){
-        			error_forgot_password( 'error occurs' )
+					error_forgot_password( 'error occurs' )
 				}else{
 					if( data.error == 0 ){
 					 	dispatch ( success_forgot_password('Check your email for new password') )

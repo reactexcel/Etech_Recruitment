@@ -17,18 +17,9 @@ export let isMonitorAction;
 const logger = createLogger();
 injectTapEventPlugin();
 
-export class APP extends React.Component {
-    render() {
-        return (
-            <div>
-                {this.props.children}
-            </div>
-        );
-    }
-}
-
 Meteor.startup(
   () => {
+
     let store = createStore(reducer, compose(
       applyMiddleware( logger,thunk),
       window.devToolsExtension ? window.devToolsExtension({
