@@ -28,7 +28,8 @@ LoginContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,
 };
 function mapStateToProps(state,props){
-  state = state.toJS()    
+  state = state.toJS()  
+
   return {
     ui: state.ui
   }

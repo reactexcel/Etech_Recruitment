@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux-immutable';
+import {users} from './users/users';
 
-import entities from './entities';
 
 export default combineReducers({
-	entities,
-})
+	users
+})	
