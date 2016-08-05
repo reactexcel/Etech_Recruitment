@@ -58,7 +58,7 @@ export default class Login extends React.Component{
 		     })
            }).catch((error)=>{
            	this.setState({
-			   errorMessage:error.toString(),
+			   errorMessage:"User not found",
 			   showSnackbar:true
 		     })
            })
