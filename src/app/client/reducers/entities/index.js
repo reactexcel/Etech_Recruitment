@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux-immutable'
 
-import entities from './entities/register'
+import register from './register'
 
 export default combineReducers({
-entities
+register
 })

@@ -1,3 +1,3 @@
 import { Meteor } from 'meteor/meteor';
+import  'app/collections';
 
-// This code only runs on the server
