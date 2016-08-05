@@ -7,7 +7,7 @@ Meteor.methods({
       Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
-        }
+        },
         "to": email.to,
         "from": email.from,
         "subject": email.subject,

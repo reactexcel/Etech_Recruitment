@@ -4,12 +4,13 @@ import Immutable from 'immutable';
 import {Meteor} from 'meteor/meteor';
 import { Provider } from 'react-redux';
 import createLogger from 'redux-logger';
-import {reducer} from './reducers/index.jsx';
+import reducer from './reducers';
 import invariant from 'redux-immutable-state-invariant';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { createStore, applyMiddleware, compose } from 'redux'
 import {Router , Route, IndexRoute, hashHistory} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppContainer from './containers'
 
 export let isMonitorAction;
 
@@ -28,7 +29,7 @@ Meteor.startup(
     ReactDOM.render(
       <MuiThemeProvider>
         <Provider store={store}>
-          
+          <AppContainer />
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));
   }
