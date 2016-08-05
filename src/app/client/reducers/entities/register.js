@@ -1,13 +1,17 @@
 import Immutable from 'immutable';
+import { combineReducers } from 'redux-immutable'
+
+
+
 
 import { ADD_USER } from '../../actions'
 
 
 
-export function register(state = Immutable.fromJS({}),action){
+function register(state = Immutable.List([]),action){
 	switch(action.type){
 		case ADD_USER:
-			state = Immutable.fromJS(action.payload)
+			state = action.payload
 			return state
 
 		default:
@@ -15,3 +19,9 @@ export function register(state = Immutable.fromJS({}),action){
 	}
 
 }
+
+
+
+export default combineReducers({
+register
+})
