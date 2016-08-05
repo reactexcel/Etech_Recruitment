@@ -16,16 +16,50 @@ export default class Login extends React.Component{
 		super(props);
 		this.state={
 			email:'',
-			password:''
+			emailError:'',
+			password:'',
+			passwordError:''
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
 	loginUser(){
-        this.props.onLogin(this.state.email,this.state.password).then(()=>{
-            alert("Login successfull");
-        }).catch((error)=>{
-        	alert(error.toString());
-        })
+        let email=this.state.email.trim()
+		let password=this.state.password.trim()
+		if(email == ""){
+           this.setState({
+             emailError:"Please enter an e-mail address"
+           })
+        }else if(!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)){
+           this.setState({
+             emailError:"You have entered an invalid e-mail address"
+           })
+        }else{
+          this.setState({
+             emailError:''
+          })
+        }if(password == ""){
+          this.setState({
+             passwordError:"Please provide a valid password"
+          })
+        }else{
+          this.setState({
+             passwordError:""
+          })
+        }
+        if(this.state.emailError=='' && this.state.passwordError==''){
+           this.props.onLogin(this.state.email,this.state.password).then(()=>{
+           	 this.setState={
+			   email:'',
+			   password:''
+		     }
+             alert("Login successfull");
+           }).catch((error)=>{
+           	 this.setState({
+               emailError:error.toString()
+             })
+        	 alert(error.toString());
+           })
+        }
 	}
 	render(){
 		return(
@@ -39,7 +73,7 @@ export default class Login extends React.Component{
 		     <div style={{width:400,paddingTop:5,margin:'0px auto'}}>
 		     <h3>Login</h3>
                <div>
-				<TextField value={this.state.email} style={{width:'80%'}} floatingLabelText="Email"
+				<TextField errorText={this.state.emailError} value={this.state.email} style={{width:'80%'}} floatingLabelText="Email"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -49,7 +83,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-				<TextField value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
+				<TextField errorText={this.state.passwordError} value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
 				onChange={
 					(e)=>{
 						this.setState({

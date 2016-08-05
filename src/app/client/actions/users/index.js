@@ -13,7 +13,6 @@ export function loginUser(email,password){
 						email:email,
 						password:password
 					}
-					console.log(Meteor.userid())
 					dispatch(actionAfterLogin(user))
 					resolve(user)
 				}

@@ -18,13 +18,9 @@ const logger = createLogger();
 injectTapEventPlugin();
 
 
-//console.log('aaaa')
-//console.log( reducer )
 
 Meteor.startup(
   () => {
-
-
 
     let store = createStore(reducer,Immutable.Map({}),compose(
       applyMiddleware(invariant(), logger,thunk),
