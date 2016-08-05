@@ -6,7 +6,6 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Link} from 'react-router';
-const classNames = require('classnames');
 
 export default class Login extends React.Component{
 	static contextTypes={
