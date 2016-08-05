@@ -24,7 +24,7 @@ export default class Login extends React.Component{
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
-	componentWillMount(){
+	/*componentWillMount(){
     let self = this
     Meteor.autorun(function(c) {
       self.autorun = c;
@@ -36,7 +36,7 @@ export default class Login extends React.Component{
   }
   componentWillUnmount(){
     this.autorun.stop()
-  }
+  }*/
 	loginUser(){
         let email=this.state.email.trim()
 		let password=this.state.password.trim()
