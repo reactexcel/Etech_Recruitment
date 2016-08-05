@@ -1,4 +1,5 @@
 import React from 'react';
+import { router } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -6,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
-
+import Snackbar from 'material-ui/Snackbar';
 
 
 export default class Register extends React.Component {
@@ -23,7 +24,9 @@ export default class Register extends React.Component {
       email: '',
       name:'',
       password: '',
-      conf_password: ''
+      conf_password: '',
+      snackbarOpen:false,
+      snackbarmsg:''
     }
     this.goBack = this.goBack.bind(this)
     this.signup = this.signup.bind(this)
@@ -45,6 +48,7 @@ export default class Register extends React.Component {
     let email = this.state.email.trim()
     let name = this.state.name.trim()
     let password = this.state.password.trim()
+    let emailValid = true
     if(email == ""){
       this.setState({
         errorEmail:"Email required"
@@ -53,10 +57,12 @@ export default class Register extends React.Component {
       this.setState({
         errorEmail:"Enter a valid email"
       })
+      emailValid = false
     }else{
       this.setState({
         errorEmail:''
       })
+      emailValid = true
     } 
     if(name == ""){
       this.setState({
@@ -86,23 +92,32 @@ export default class Register extends React.Component {
       })
     }
 
-    if(email != '' && name != '' && password != '' && password == this.state.conf_password){
+    if(email != '' && emailValid == true && name != '' && password != '' && password == this.state.conf_password){
       this.props.onRegisterUser(email, name, password).then( () => {
         this.setState({
           email: '',
           name:'',
           password: '',
-          conf_password : ''
+          conf_password : '',
+          snackbarOpen:true,
+          snackbarmsg:"You have registered successfully"
         })
       }).catch( (error) => {
-          alert(error.toString())
+        //error.toString()
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:"Error : Username already exist"
+        })
       })
     }
   }
+  handleRequestClose = () => {
+        this.setState({
+            snackbarOpen: false,
+        });
+    };
   goBack(){
-    history.goBack()
-    //this.props.router.push('/login')
-    
+    this.props.router.push('/login')
   }
   render() {
     return (
@@ -158,7 +173,12 @@ export default class Register extends React.Component {
 
                 </div>
 
-
+                  <Snackbar
+                      open={this.state.snackbarOpen}
+                      message={this.state.snackbarmsg}
+                      autoHideDuration={5000}
+                      onRequestClose={this.handleRequestClose}
+                  />
                 </div>
             </div>
           </div>
