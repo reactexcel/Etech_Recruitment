@@ -1,5 +1,5 @@
-import { check } from 'meteor/check'
-import { Accounts } from 'meteor/accounts-base';
+import {check} from 'meteor/check';
+import {Accounts} from 'meteor/accounts-base';
 
 Meteor.methods({
   'regUser' : function(email, name, password) {
@@ -15,4 +15,3 @@ Meteor.methods({
   }
 
 })
-
