@@ -24,6 +24,7 @@ class RegisterContainer extends React.Component {
 
       return (
             <Register 
+              router={this.props.router}  
               onRegisterUser={this.props.registerUser}
             />
          
