@@ -13,7 +13,7 @@ Meteor.methods({
       username: email,
       password: password
     })  
-  },
+  }/*,
   'log.insert':function(action_type,user_id,details){
     check(action_type,string)
     check(user_id,string)
@@ -21,7 +21,7 @@ Meteor.methods({
       action_type:action_type,
       user_id:user_id,
       details:details
-    })
+    });
     let logDisplay={
       logId:logId,
       user_id:user_id,
@@ -29,6 +29,6 @@ Meteor.methods({
       details:details
     }
     return logDisplay
-  }
+  }*/
 
 })
