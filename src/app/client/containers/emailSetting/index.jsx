@@ -18,9 +18,9 @@ class EmailSetting extends React.Component {
 }
 
 EmailSetting.propTypes = {
-  onFetchSettings: PropTypes.func.isrequired,
-  OnSaveSettings: PropTypes.func.isrequired,
-  emailSetting: PropTypes.array.isrequired,
+  onFetchSettings: React.PropTypes.func.isRequired,
+  onSaveSettings: React.PropTypes.func.isRequired,
+  emailSetting: React.PropTypes.any.isRequired,
 };
 
 
@@ -36,8 +36,8 @@ const mapDispatchToProps = (dispatch) => {
       onFetchSettings: () =>{
         dispatch(action.onFetchSettingsFromDB());
       },
-      OnSaveSettings: () =>{
-        dispatch(action.onSaveSettingsToDB());
+      onSaveSettings: (detail) =>{
+        dispatch(action.onSaveSettingsToDB(detail));
       }
     }
 }

@@ -29,11 +29,11 @@ export function onFetchSettingsFromDB(){
 export function onSaveSettingsToDB (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
+        console.log(detail, "sdfsf");
       Meteor.call('saveSettings',detail,(err,storeData) => {
           if(err){
             reject(err);
           }else{
-            console.log(storeData);
             dispatch(saveSettingsToDB(storeData));
             resolve();
           }

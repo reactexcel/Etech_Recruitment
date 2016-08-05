@@ -8,18 +8,26 @@ export default class EmailSettingForm extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      "emailId": this.props.emailId || "",
-      "password": this.props.password || "",
-      "server": this.props.server || "",
-      "port": this.props.port || "",
-      "encrpyt": this.props.encrpyt || ""
+      "emailId": this.props.emailSetting.emailId || "",
+      "password": this.props.emailSetting.password || "",
+      "server": this.props.emailSetting.server || "",
+      "port": this.props.emailSetting.port || "",
+      "encrypt": this.props.emailSetting.encrypt || ""
     }
     this.error = [];
-    this.onEmailSettingSave = this.onEmailSettingSave.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
   }
 
-  onEmailSettingSave () {
-
+  saveSettings () {
+    console.log(this.props);
+      this.props.onSaveSettings({
+        "emailId": this.state.emailId ,
+        "password": this.state.password ,
+        "server": this.state.server ,
+        "port": this.state.port ,
+        "encrypt": this.state.encrypt,
+        "_id": this.props.emailSetting._id || ""
+      });
   }
 
   render() {
@@ -52,7 +60,7 @@ export default class EmailSettingForm extends React.Component {
               </div>
               <div>
                 <TextField
-                  type="password"
+                  type="text"
                   floatingLabelText="Password"
                   hintText="Password"
                   fullWidth={true}
@@ -113,21 +121,21 @@ export default class EmailSettingForm extends React.Component {
               <div>
                 <TextField
                   type="text"
-                  floatingLabelText="Encrpyt"
+                  floatingLabelText="encrypt"
                   hintText="ssl/stl"
                   fullWidth={true}
                   onChange={
                     (evt) =>{
-                      this.setState({"encrpyt": evt.target.value});
+                      this.setState({"encrypt": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
-                        this.error.encrpyt = "Encrpyt is required";
+                        this.error.encrypt = "encrypt is required";
                       }else{
-                        this.error.encrpyt = "";
+                        this.error.encrypt = "";
                       }
                     }
                   }
-                  errorText={this.error.encrpyt}
-                  value={this.state.encrpyt}
+                  errorText={this.error.encrypt}
+                  value={this.state.encrypt}
                 />
               </div>
               <div>
@@ -140,7 +148,7 @@ export default class EmailSettingForm extends React.Component {
                       "marginTop": "2%"
                     }
                   }
-                  onClick={this.OnSaveSettings}
+                  onClick={this.saveSettings}
                 />
               </div>
             </form>
@@ -152,7 +160,6 @@ export default class EmailSettingForm extends React.Component {
 }
 
 EmailSettingForm.propTypes = {
-  onFetchSettings: PropTypes.func.isrequired,
-  OnSaveSettings: PropTypes.func.isrequired,
-  emailSetting: PropTypes.array.isrequired,
+  onSaveSettings: PropTypes.func.isRequired,
+  emailSetting: PropTypes.any.isRequired,
 };

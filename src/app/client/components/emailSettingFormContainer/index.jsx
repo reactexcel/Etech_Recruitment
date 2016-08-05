@@ -7,9 +7,6 @@ import _ from 'lodash';
 export default class EmailSettingFormContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      "count": this.props.emailSetting.length
-    }
   }
 
   componentWillMount(){
@@ -17,12 +14,19 @@ export default class EmailSettingFormContainer extends React.Component {
   }
 
   render() {
-    let forms = this.state.count > 0?(_.map(this.props.saveSetting,( value )=>{
-      return (<EmailSettingForm {...this.props} key={value._id}/>);
-    })):<EmailSettingForm {...this.props} />;
+    let forms = this.props.emailSetting.length > 0?(_.map(this.props.emailSetting,( value )=>{
+      return (<EmailSettingForm
+          onSaveSettings={this.props.onSaveSettings}
+          emailSetting = {value}
+          key={value._id}/>);
+    })):"";
     return (
       <div className="col-sm-12 col-md-12 ">
         {forms}
+        <EmailSettingForm
+          onSaveSettings={this.props.onSaveSettings}
+          emailSetting = {[]}
+        />
         <div className="pull-right"
           style={{"position": "absolute","top": "90%", "left":"92%"}}
         >
@@ -38,7 +42,7 @@ export default class EmailSettingFormContainer extends React.Component {
 }
 
 EmailSettingFormContainer.propTypes = {
-  onFetchSettings: PropTypes.func.isrequired,
-  OnSaveSettings: PropTypes.func.isrequired,
-  emailSetting: PropTypes.array.isrequired,
+  onFetchSettings: PropTypes.func.isRequired,
+  onSaveSettings: PropTypes.func.isRequired,
+  emailSetting: PropTypes.any.isRequired,
 };

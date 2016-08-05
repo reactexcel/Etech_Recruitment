@@ -7,9 +7,12 @@ Meteor.methods({
     return Config.find({}).fetch();
   },
   "saveSettings": function(details){
-    settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
+    const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
-      return details.id = Config.insert(details);
+      return details._id = Config.insert(details);
+    }else{
+      console.log(settings[0]._id);
+      Config.update({"_id": settings[0]._id},{$set:details});
     }
   }
 });
