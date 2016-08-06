@@ -91,23 +91,26 @@ export default class Login extends React.Component{
 			<div style={
                         {
                           fontFamily: this.context.muiTheme.fontFamily, 
-                          color: this.context.muiTheme.palette.accent1Color,
+                          color: this.context.muiTheme.palette.canvasColor,
                           textAlign: 'center',
                           fontSize:'20px'
                         }
-                    }>Login</div>
+                    }>Etech Recruitment</div>
 		     <div style={{
-		     	width:300,
-		     	paddingTop:20,
-		     	paddingBottom:20,
-		     	paddingLeft:20,
-		     	paddingRight:20,
+		     	width:320,
+		     	padding:30,
 		     	margin:'0px auto',
 		     	marginTop:'20px',
 		     	backgroundColor:'white',
 		     	borderRadius:'3px'
 		     }}>
-		     
+		     <div style={
+                        {
+                          fontFamily: this.context.muiTheme.fontFamily,
+                          textAlign: 'left',
+                          fontSize:'12px'
+                        }
+                    }>Sign in with your Etech Recruitment Account</div>
                <div>
 				<TextField errorText={this.state.emailError} value={this.state.email} style={{width:'100%'}} floatingLabelText="Email"
 				onChange={
@@ -140,22 +143,22 @@ export default class Login extends React.Component{
 		     <div style={
                         {
                           fontFamily: this.context.muiTheme.fontFamily, 
-                          color: '#40C4FF',
+                          
                           textAlign: 'center',
                           marginTop:'20px'
 
                         }
                     }>
-                    <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none'}}>{"Forgotpassword?"}</Link>
+                    <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none',color:'#00bcd4',fontWeight:'600',cursor:'pointer'}}>{"Forgotpassword?"}</Link>
               </div>
               <div style={{
               	          fontFamily: this.context.muiTheme.fontFamily, 
-                          color: '#40C4FF',
+                          color: '#00bcd4',
                           textAlign: 'center',
                           marginTop:'20px'
               }}>
               <div style={{color: this.context.muiTheme.palette.canvasColor,fontSize:'15px',display:'inline'}}>Do not have an account?</div>{" "}
-              <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none'}}>{"Sign Up"}</Link>
+              <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',fontWeight:'600',cursor:'pointer',color:'#00bcd4'}}>{"Sign Up"}</Link>
               </div>
 		     <Snackbar
                     open={this.state.showSnackbar}
