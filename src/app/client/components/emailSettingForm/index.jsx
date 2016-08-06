@@ -19,14 +19,13 @@ export default class EmailSettingForm extends React.Component {
   }
 
   saveSettings () {
-    console.log(this.props);
       this.props.onSaveSettings({
         "emailId": this.state.emailId ,
         "password": this.state.password ,
         "server": this.state.server ,
         "port": this.state.port ,
         "encrypt": this.state.encrypt,
-        "_id": this.props.emailSetting._id || ""
+        "_id": this.props.emailSetting._id || undefined
       });
   }
 

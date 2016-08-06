@@ -9,9 +9,9 @@ Meteor.methods({
   "saveSettings": function(details){
     const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
-      return details._id = Config.insert(details);
+      details._id = Config.insert(details);
+      return details;
     }else{
-      console.log(settings[0]._id);
       Config.update({"_id": settings[0]._id},{$set:details});
     }
   }
