@@ -9,6 +9,23 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Logo from './../assets/images/logo.png';
+import {Link} from 'react-router';
+
+
+const styles = {
+  errorStyle: {
+    textAlign:'left',
+  },
+  container: {
+    position: 'relative',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+}
 
 export default class Register extends React.Component {
   static contextTypes = {
@@ -26,7 +43,8 @@ export default class Register extends React.Component {
       password: '',
       conf_password: '',
       snackbarOpen:false,
-      snackbarmsg:''
+      snackbarmsg:'',
+      loading:'hide'
     }
     this.goBack = this.goBack.bind(this)
     this.signup = this.signup.bind(this)
@@ -93,6 +111,9 @@ export default class Register extends React.Component {
     }
 
     if(email != '' && emailValid == true && name != '' && password != '' && password == this.state.conf_password){
+      this.setState({
+        loading:'loading'
+      })
       this.props.onRegisterUser(email, name, password).then( () => {
         this.setState({
           email: '',
@@ -100,11 +121,12 @@ export default class Register extends React.Component {
           password: '',
           conf_password : '',
           snackbarOpen:true,
-          snackbarmsg:"You have registered successfully"
+          snackbarmsg:"You have registered successfully",
+          loading:'hide'
         })
       }).catch( (error) => {
-        //error.toString()
         this.setState({
+          loading:'hide',
           snackbarOpen:true,
           snackbarmsg:"Error : Username already exist"
         })
@@ -123,19 +145,28 @@ export default class Register extends React.Component {
     return (
         <MuiThemeProvider>
           <div>
-            <AppBar
-              title={"Register"} 
-              iconElementRight={<FlatButton label="Back" onTouchTap={this.goBack} />}
-            />
-            <div style={{textAlign: 'center'}}>
-                <div style={{width: 320, margin: '0px auto', paddingTop: 20}}>
+            <div style={{textAlign: 'center' }}>
+                <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
+                  <div style={{marginBottom:'10px'}}>
+                    <img src={Logo} style={{cursor:"pointer"}} />
+                  </div>
+                    <div style={{
+                              fontFamily: this.context.muiTheme.fontFamily,
+                              color: this.context.muiTheme.palette.canvasColor,
+                              textAlign: 'center',fontSize:'17px',fontWeight:600,
+                              padding:'10px 10px 0px'}}>
+                      <span>Etech Recruitment</span>
+                    </div>
                     
-              <div style={{width: 320, margin: '0px auto', paddingTop: 20}}>
+                <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
+                    <div style={{fontSize:'16px',marginBottom:'1rem',textAlign:'left'}}>Sign up</div>
                     <div>
                       <TextField 
                         style={{width: '100%'}}
+                        floatingLabelFixed={true}
                         onChange={ (evt) => {  this.setState({email: evt.target.value}) }}
                         value={this.state.email}
+                        errorStyle={styles.errorStyle}
                         errorText={this.state.errorEmail}
                         floatingLabelText="Email" />
                     </div>
@@ -144,6 +175,8 @@ export default class Register extends React.Component {
                         style={{width: '100%'}}
                         onChange={ (evt) => {  this.setState({name: evt.target.value}) }}
                         value={this.state.name}
+                        floatingLabelFixed={true}
+                        errorStyle={styles.errorStyle}
                         errorText={this.state.errorName}
                         floatingLabelText="Name" />
                     </div>
@@ -152,7 +185,9 @@ export default class Register extends React.Component {
                         style={{width: '100%'}}
                         onChange={ (evt) => {  this.setState({password: evt.target.value}) }}
                         type="password"
+                        floatingLabelFixed={true}
                         value={this.state.passowrd}
+                        errorStyle={styles.errorStyle}
                         errorText={this.state.errorPass}
                         floatingLabelText="Password" />
                     </div>
@@ -162,17 +197,28 @@ export default class Register extends React.Component {
                         style={{width: '100%'}}
                         onChange={ (evt) => {  this.setState({conf_password: evt.target.value}) }}
                         type="password"
+                        floatingLabelFixed={true}
+                        errorStyle={styles.errorStyle}
                         value={this.state.conf_password}
                         errorText={this.state.errorCpass}
                         floatingLabelText="Confirm Password" />
                     </div>
+                   
                     <br />
                     <div style={{textAlign: 'center'}}>
-                      <RaisedButton label="SIGNUP" primary={true} onTouchTap={this.signup} />
+                      <RaisedButton label="SIGNUP" primary={true} fullWidth={true} onTouchTap={this.signup} />
                     </div>
-
                 </div>
-
+                  <div style={{color: this.context.muiTheme.palette.canvasColor}}>Already have an account?
+                   <Link to="login" className="link" style={{color:"#00BCD4"}}>{" Sign in "}</Link></div>
+                    <div>
+                     <RefreshIndicator
+                        size={40}
+                        left={0}
+                        top={0}
+                        status={this.state.loading}
+                        style={styles.refresh} />
+                        </div>
                   <Snackbar
                       open={this.state.snackbarOpen}
                       message={this.state.snackbarmsg}
