@@ -12,13 +12,36 @@ export default class EmailSettingForm extends React.Component {
       "password": this.props.emailSetting.password || "",
       "server": this.props.emailSetting.server || "",
       "port": this.props.emailSetting.port || "",
-      "encrypt": this.props.emailSetting.encrypt || ""
+      "encrypt": this.props.emailSetting.encrypt || "",
+      "_id": this.props.emailSetting._id || undefined
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
+    this.update = this.update.bind(this);
+    this.regExp= {
+      "port" : /^[0-9]+$/,
+      "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "password": /^[a-zA-Z0-9\.-_!@#$%^&*]+$/,
+      "server": /^[a-z]+[.][a-z]+[.][a-z]+$/,
+      "encrypt": /^[a-z]+$/
+    }
   }
 
+  update(row) {
+    this.setState({
+      "emailId": row.emailId || "",
+      "password": row.password || "",
+      "server": row.server || "",
+      "port": row.port || "",
+      "encrypt": row.encrypt || "",
+      "_id": row._id || undefined
+    })
+    this.error = [];
+  }
   saveSettings () {
+    if (this.state.emailId.length && this.state.password.length
+          && this.state.port.length && this.state.server.length
+            && this.state.encrypt.length){
       this.props.onSaveSettings({
         "emailId": this.state.emailId ,
         "password": this.state.password ,
@@ -27,14 +50,23 @@ export default class EmailSettingForm extends React.Component {
         "encrypt": this.state.encrypt,
         "_id": this.props.emailSetting._id || undefined
       });
+      this.setState({
+        "emailId": "",
+        "password": "",
+        "server": "",
+        "port": "",
+        "encrypt": "",
+        "_id": undefined
+      })
+    }
   }
 
   render() {
+
     return (
       <div className="row">
-        <div className="col-sm-6 col-xs-12 col-md-4 col-lg-6 well well-lg">
+        <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12 well well-lg">
           <Paper zDepth={2} style={{"padding":"20px"}}>
-            <span className="close pull-right" title="Delete it">&times;</span>
             <h4 className="h4 text-center">Enter email server details </h4>
             <form>
               <div>
@@ -48,6 +80,8 @@ export default class EmailSettingForm extends React.Component {
                       this.setState({"emailId": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
                         this.error.emailId = "Enter a email id";
+                      }else if (!this.regExp.emailId.test(evt.target.value)) {
+                        this.error.emailId = "invalid email id";
                       }else{
                         this.error.emailId = "";
                       }
@@ -68,6 +102,8 @@ export default class EmailSettingForm extends React.Component {
                       this.setState({"password": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
                         this.error.password = "Enter a password";
+                      }else if (!this.regExp.password.test(evt.target.value)) {
+                        this.error.password = "invalid password";
                       }else{
                         this.error.password = "";
                       }
@@ -88,6 +124,8 @@ export default class EmailSettingForm extends React.Component {
                       this.setState({"server": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
                         this.error.server = "Enter mail server";
+                      }else if (!this.regExp.server.test(evt.target.value)) {
+                        this.error.server = "invalid server";
                       }else{
                         this.error.server = "";
                       }
@@ -108,6 +146,8 @@ export default class EmailSettingForm extends React.Component {
                       this.setState({"port": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
                         this.error.port = "Enter port number";
+                      }else if (!this.regExp.port.test(evt.target.value)) {
+                        this.error.port = "invalidport number";
                       }else{
                         this.error.port = "";
                       }
@@ -128,6 +168,8 @@ export default class EmailSettingForm extends React.Component {
                       this.setState({"encrypt": evt.target.value});
                       if (!evt.target.value.length > 0 ) {
                         this.error.encrypt = "encrypt is required";
+                      }else if (!this.regExp.encrypt.test()) {
+                        this.error.encrypt = "invalid encrypt";
                       }else{
                         this.error.encrypt = "";
                       }

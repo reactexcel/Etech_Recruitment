@@ -1,43 +1,52 @@
 import React, {PropTypes} from 'react';
-import EmailSettingForm from '../emailSettingForm'
-import Paper from 'material-ui/Paper';
+import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
+import EmailSettingForm from '../emailSettingForm'
+import EmailSettingList from '../emailSettingList'
 import _ from 'lodash';
 
 export default class EmailSettingFormContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.selectedRow = this.selectedRow.bind(this);
   }
 
   componentWillMount(){
     this.props.onFetchSettings();
   }
 
+  selectedRow(row, checked){
+    if(checked)
+      this.refs.form.update(row)
+    else {
+      this.refs.form.update([])
+    }
+  }
+
   render() {
-    let forms = this.props.emailSetting.length > 0?(_.map(this.props.emailSetting,( value )=>{
-      return (<EmailSettingForm
-          onSaveSettings={this.props.onSaveSettings}
-          emailSetting = {value}
-          key={value._id}/>);
-    })):"";
     return (
-      <div className="col-sm-12 col-md-12 ">
-        {forms}
-        <EmailSettingForm
-          onSaveSettings={this.props.onSaveSettings}
-          emailSetting = {[]}
-        />
-        <div className="pull-right"
-          style={{"position": "absolute","top": "90%", "left":"92%"}}
-        >
-          <Paper zDepth={3} rounded={true} circle={true} style={{"backgroundColor": "#a94442"}}>
-            <IconButton
-              iconClassName="fa fa-plus fa-2x"
-              iconStyle={{"color": "#eee"}}
+      <div className="row">
+        <div className="col-sm-12 col-lg-12 col-md-12">
+          <AppBar
+            title="Email server Settings"
+            showMenuIconButton={false}
+          />
+          <div className="col-sm-8">
+            <EmailSettingList
+              emailSetting={this.props.emailSetting}
+              selectedRow={this.selectedRow}
+              />
+          </div>
+          <div className="col-sm-4 col-md-4 ">
+            <EmailSettingForm
+              ref="form"
+              onSaveSettings={this.props.onSaveSettings}
+              emailSetting = {[]}
             />
-          </Paper>
+          </div>
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 
