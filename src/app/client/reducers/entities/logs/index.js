@@ -5,6 +5,7 @@ let initialState={
 }
 export function logs(state=Immutable.Map(initialState),action){
 	if(action.type=='ADD_LOG'){
-		state.set('log',action.payload)
+		return state.set('log',action.payload)
 	}
+	return state;
 }
