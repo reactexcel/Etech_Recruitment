@@ -5,6 +5,7 @@ import EmailSettingForm from '../emailSettingForm'
 import EmailSettingList from '../emailSettingList'
 import Snackbar from 'material-ui/Snackbar'
 import _ from 'lodash';
+import LogoImg from '../../assets/images/logo.png'
 
 export default class EmailSettingFormContainer extends React.Component {
   constructor(props) {
@@ -51,6 +52,7 @@ export default class EmailSettingFormContainer extends React.Component {
           <AppBar
             title="Email server Settings"
             showMenuIconButton={false}
+            conElementRight={<img src={LogoImg} />}
           />
           <div className="col-sm-8">
             <EmailSettingList
