@@ -1,6 +1,5 @@
-import { combineReducers } from 'redux-immutable';
-import entities from './entities';
-
-export default  combineReducers({
-  entities
+import { combineReducers } from 'redux-immutable'
+import entities from './entities'
+export default combineReducers({
+	entities
 })

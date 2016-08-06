@@ -58,11 +58,11 @@ export default class EmailSettingForm extends React.Component {
         "encrypt": "",
         "_id": undefined
       })
+      this.props.snackbarOpen("We Catch your changes");
     }
   }
 
   render() {
-
     return (
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12 well well-lg">
@@ -202,5 +202,6 @@ export default class EmailSettingForm extends React.Component {
 
 EmailSettingForm.propTypes = {
   onSaveSettings: PropTypes.func.isRequired,
+  snackbarOpen: PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
 };

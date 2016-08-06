@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as ACTION from '../../../actions';
+import * as ACTION from '../../../actions/emailSetting';
 import _ from 'lodash';
 let initialState = Immutable.List([]);
 

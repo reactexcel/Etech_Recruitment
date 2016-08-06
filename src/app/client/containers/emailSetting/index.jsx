@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
-import * as action from '../../actions'
+import * as action from '../../actions/emailSetting'
 import EmailSettingFormContainer from '../../components/emailSettingFormContainer'
 import {withRouter} from 'react-router'
 import { connect } from 'react-redux';
 
-class EmailSetting extends React.Component {
+class EmailSettingContainer extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(
+export default withRouter(connect(
  mapStateToProps,
  mapDispatchToProps
-)(EmailSetting);
+)(EmailSettingContainer));

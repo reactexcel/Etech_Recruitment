@@ -3,16 +3,37 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import EmailSettingForm from '../emailSettingForm'
 import EmailSettingList from '../emailSettingList'
+import Snackbar from 'material-ui/Snackbar'
 import _ from 'lodash';
 
 export default class EmailSettingFormContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      "open": false,
+      "message" : "",
+    }
     this.selectedRow = this.selectedRow.bind(this);
+    this.snackbarClose = this.snackbarClose.bind(this);
+    this.snackbarOpen = this.snackbarOpen.bind(this);
   }
 
   componentWillMount(){
     this.props.onFetchSettings();
+  }
+
+  snackbarClose(){
+    this.setState({
+      "open": false,
+      "message" : "",
+    });
+  }
+
+  snackbarOpen(message){
+    this.setState({
+      "open": true,
+      "message" : message,
+    });
   }
 
   selectedRow(row, checked){
@@ -42,9 +63,16 @@ export default class EmailSettingFormContainer extends React.Component {
               ref="form"
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
+              snackbarOpen={this.snackbarOpen}
             />
           </div>
         </div>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={4000}
+          onRequestClose={this.sanckbarClose}
+        />
       </div>
     );
   }
