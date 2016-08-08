@@ -55,8 +55,8 @@ export default class Login extends React.Component{
     Meteor.autorun(function(c) {
       self.autorun = c;
       if (Meteor.userId()) {
-        //self.props.router.push('/user')
-        //c.stop()
+        self.props.router.push('/config/emailSetting')
+        c.stop()
       }  
     });    
   }
