@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import EmailSettingForm from '../emailSettingForm'
 import EmailSettingList from '../emailSettingList'
@@ -39,34 +38,31 @@ export default class EmailSettingFormContainer extends React.Component {
 
   selectedRow(row, checked){
     if(checked)
-      this.refs.form.update(row)
+      this.refs.form.update(row, "Edit")
     else {
-      this.refs.form.update([])
+      this.refs.form.update([], "Save")
     }
   }
 
   render() {
     return (
-      <div className="row">
-        <div className="col-sm-12 col-lg-12 col-md-12">
-          <AppBar
-            title="Email server Settings"
-            showMenuIconButton={false}
-            conElementRight={<img src={LogoImg} />}
-          />
-          <div className="col-sm-8">
-            <EmailSettingList
-              emailSetting={this.props.emailSetting}
-              selectedRow={this.selectedRow}
-              />
-          </div>
-          <div className="col-sm-4 col-md-4 ">
+      <div>
+        <div className="row">
+          <div className="col-sm-12 col-lg-12 col-md-12">
             <EmailSettingForm
               ref="form"
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
               snackbarOpen={this.snackbarOpen}
-            />
+              />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-12 col-lg-12 col-md-12">
+            <EmailSettingList
+              emailSetting={this.props.emailSetting}
+              selectedRow={this.selectedRow}
+              />
           </div>
         </div>
         <Snackbar
