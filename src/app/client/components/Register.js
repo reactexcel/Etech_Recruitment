@@ -44,7 +44,8 @@ export default class Register extends React.Component {
       conf_password: '',
       snackbarOpen:false,
       snackbarmsg:'',
-      loading:'hide'
+      loading:'hidden',
+      signup:'show'
     }
     this.goBack = this.goBack.bind(this)
     this.signup = this.signup.bind(this)
@@ -112,7 +113,8 @@ export default class Register extends React.Component {
 
     if(email != '' && emailValid == true && name != '' && password != '' && password == this.state.conf_password){
       this.setState({
-        loading:'loading'
+        loading:'show',
+        signup:'hidden'
       })
       this.props.onRegisterUser(email, name, password).then( () => {
         this.setState({
@@ -122,7 +124,8 @@ export default class Register extends React.Component {
           conf_password : '',
           snackbarOpen:true,
           snackbarmsg:"You have registered successfully",
-          loading:'hide'
+          loading:'hidden',
+          signup:'show'
         })
       }).catch( (error) => {
         this.setState({
@@ -205,20 +208,21 @@ export default class Register extends React.Component {
                     </div>
                    
                     <br />
-                    <div style={{textAlign: 'center'}}>
+                    <div className={this.state.signup} style={{textAlign: 'center'}}>
                       <RaisedButton label="SIGNUP" primary={true} fullWidth={true} onTouchTap={this.signup} />
                     </div>
-                </div>
-                  <div style={{color: this.context.muiTheme.palette.canvasColor}}>Already have an account?
-                   <Link to="login" className="link" style={{color:"#00BCD4"}}>{" Sign in "}</Link></div>
-                    <div>
+                     <div className={this.state.loading}>
                      <RefreshIndicator
                         size={40}
                         left={0}
                         top={0}
-                        status={this.state.loading}
+                        status="loading"
                         style={styles.refresh} />
                         </div>
+                </div>
+                  <div style={{color: this.context.muiTheme.palette.canvasColor}}>Already have an account?
+                   <Link to="login" className="link" style={{color:"#00BCD4"}}>{" Sign in "}</Link></div>
+                   
                   <Snackbar
                       open={this.state.snackbarOpen}
                       message={this.state.snackbarmsg}
