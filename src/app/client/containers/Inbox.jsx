@@ -26,9 +26,9 @@ class Inbox extends React.Component {
     }
     render(){
         return(
-        	<div>
+        	<div class="container">
                 <Header title="Inbox"/>
-
+                
                 <EmailsList emails={this.props.inbox.emails} />
 
         		Inbox x
