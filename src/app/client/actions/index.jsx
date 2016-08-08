@@ -1,6 +1,8 @@
 import { createAction } from 'redux-actions';
 
 export const ADD_USER = "ADD_USER";
+export const FETCH_MAILS_FROM_SERVER = "FETCH_MAILS_FROM_SERVER";
+
 
 export function registerUser(email, name, password){
 	return function (dispatch, getState){
