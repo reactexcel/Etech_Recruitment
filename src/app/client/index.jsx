@@ -17,6 +17,7 @@ import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
+import Page_Inbox from './containers/Inbox'
 
 export let isMonitorAction;
 
@@ -46,6 +47,7 @@ Meteor.startup(
                 <IndexRoute Component={ConfigurationContainer} />
                 <Route path="/config/emailSetting" component={EmailSettingContainer}></Route>
               </Route>
+              <Route path="inbox" component={Page_Inbox}></Route>
           </Router>
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));
