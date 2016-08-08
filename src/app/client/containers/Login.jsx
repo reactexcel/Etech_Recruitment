@@ -17,10 +17,16 @@ class LoginContainer extends React.Component{
      }
      render(){
 		return(
-			   <Login 
+			<div className="container" style={{'paddingTop':'30px'}}>
+            <div className="row">
+             <Login 
 			   router={this.props.router} 
 			   ui={this.props.ui} 
 			   onLogin={this.props.login}/>
+            </div>
+            </div>
+			   
+			   
 			);
 	 }
 }

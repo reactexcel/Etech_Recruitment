@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export {default as RegisterContainer} from './registerContainer';
 import React, {PropTypes} from 'react';
 import { withRouter } from 'react-router';
@@ -21,3 +22,6 @@ class AppContainer extends React.Component {
 }
 
 export default withRouter(AppContainer);
+=======
+export {default as RegisterContainer} from './registerContainer'
+>>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0

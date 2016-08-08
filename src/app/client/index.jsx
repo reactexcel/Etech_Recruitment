@@ -17,6 +17,7 @@ import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
 import Page_ForgotPassword from './containers/ForgotPassword';
 import AppContainer from './containers'
+import Page_ForgotPassword from './containers/ForgotPassword'
 
 export let isMonitorAction;
 
