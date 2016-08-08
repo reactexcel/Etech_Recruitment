@@ -45,7 +45,8 @@ export default class Login extends React.Component{
 			passwordError:'',
 			showSnackbar:false,
 			errorMessage:'',
-			progressBar:"hide"
+			showButton:'show',
+			showloader:'hide'
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
@@ -83,7 +84,8 @@ export default class Login extends React.Component{
           this.setState({
           	 emailError:"",
              passwordError:"",
-             progressBar:"loading"
+             showloader:'show',
+             showButton:'hide'
           });
 
           this.props.onLogin(this.state.email,this.state.password).then(()=>{
@@ -92,14 +94,16 @@ export default class Login extends React.Component{
 			   password:'',
 			   errorMessage:'You have successfully login',
 			   showSnackbar:true,
-			   progressBar:'hide'
+			   showloader:'hide',
+			   showButton:'show'
 		     })
            }).catch((error)=>{
            	this.setState({
            		
 			   errorMessage:"Invalid Email/Password",
 			   showSnackbar:true,
-			   progressBar:'hide'
+			   showloader:'hide',
+			   showButton:'show'
 		     })
            })
 
@@ -164,10 +168,19 @@ export default class Login extends React.Component{
                  <Checkbox  label="Keep me signed in" style={styles.checkbox}/>
 				</div>
 				
-				<div style={{marginTop:'10px'}}>
+				<div style={{marginTop:'10px'}} className={this.state.showButton}>
 
                       <RaisedButton style={{width:'100%',marginTop:'10px'}} label="LOGIN" onTouchTap={this.loginUser} primary={true}/>
                 </div>
+                <div style={styles.container} className={this.state.showloader}>
+                <RefreshIndicator
+                  size={40}
+                  left={10}
+                  top={0}
+                  status="loading"
+                  style={styles.refresh}
+                 />
+               </div>
 		     </div>
 		     <div style={
                         {
@@ -189,15 +202,7 @@ export default class Login extends React.Component{
               <div style={{color: this.context.muiTheme.palette.canvasColor,fontSize:'15px',display:'inline'}}>Do not have an account?</div>{" "}
               <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',fontWeight:'600',cursor:'pointer',color:'#4DB6AC'}}>{"Sign Up"}</Link>
               </div>
-              <div style={styles.container}>
-    <RefreshIndicator
-      size={40}
-      left={10}
-      top={0}
-      status={this.state.progressBar}
-      style={styles.refresh}
-    />
-    </div>
+              
 		     <Snackbar
                     open={this.state.showSnackbar}
                     message={this.state.errorMessage}
