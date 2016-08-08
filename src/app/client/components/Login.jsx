@@ -118,13 +118,13 @@ export default class Login extends React.Component{
        
 		return(
 			<div className="col-md-12" style={{textAlign:'center'}}>
-			<div><img src={LogoImg}/></div>
+			<div style={{marginBottom:'50px'}}><img src={LogoImg}/></div>
                     
 		     <div style={{
 		     	width:320,
 		     	padding:30,
 		     	margin:'0px auto',
-		     	marginTop:'20px',
+		     	marginTop:'1rem',
 		     	backgroundColor:'white',
 		     	borderRadius:'3px'
 		     }}>
