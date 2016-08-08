@@ -15,8 +15,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LoginContainer from './containers/Login';
 import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
-import Page_ForgotPassword from './containers/ForgotPassword';
 import AppContainer from './containers';
+import Page_ForgotPassword from './containers/ForgotPassword'
+import Page_Home from './containers/Home'
 
 export let isMonitorAction;
 
@@ -37,6 +38,7 @@ Meteor.startup(
           <Router history={hashHistory}>
             <Route path="/" component={AppContainer}>
               <IndexRoute component={LoginContainer} />
+              <Route path="home" component={Page_Home}></Route>
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={RegisterContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword}> </Route>
