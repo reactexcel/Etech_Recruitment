@@ -1,5 +1,4 @@
-import {createAction} from 'redux-action';
-
+import {createAction} from 'redux-actions'
 export const FETCH_SETTINGS_FROM_DB = "FETCH_SETTINGS_FROM_DB";
 export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
