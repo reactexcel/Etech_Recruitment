@@ -1,7 +1,7 @@
 import ip from 'ip';
 
 export const config_ENV = {
-  "emailServer": {
+  "email": {
     "_id": "excellenceseo@gmail.com",
     "_password": "java@123",
     "_host": "smtp.gmail.com",
