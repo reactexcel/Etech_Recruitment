@@ -131,7 +131,8 @@ Meteor.methods({
   	var currentDateTime = new Date()
 	emailData.m_source_email_id = source_email_id
   	emailData.m_insert_time = currentDateTime
-  	emailData.m_insert_timestamp = currentDateTime.getTime()*1
+  	emailData.m_insert_timestamp = currentDateTime.getTime()*1,
+  	emailData.m_read_status = 0*1
 	EmailsStore.insert( emailData );
   }
 });
