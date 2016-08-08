@@ -55,8 +55,8 @@ export default class Login extends React.Component{
     Meteor.autorun(function(c) {
       self.autorun = c;
       if (Meteor.userId()) {
-        self.props.router.push('/config/emailSetting')
-        c.stop()
+        //self.props.router.push('/config/emailSetting')
+        //c.stop()
       }  
     });    
   }
@@ -119,15 +119,6 @@ export default class Login extends React.Component{
 		return(
 			<div className="col-md-12" style={{textAlign:'center'}}>
 			<div><img src={LogoImg}/></div>
-			<div style={
-                        {
-                          fontFamily: this.context.muiTheme.fontFamily, 
-                          color: this.context.muiTheme.palette.canvasColor,
-                          textAlign: 'center',
-                          fontSize:'20px',
-                          paddingTop:'20px'
-                        }
-                    }>Etech Recruitment</div>
                     
 		     <div style={{
 		     	width:320,
