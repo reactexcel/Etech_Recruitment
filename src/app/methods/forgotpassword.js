@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Accounts } from 'meteor/accounts-base'
+import {config_ENV} from '../config/index.jsx';
 
 Meteor.methods({
   doUpdateUserPassword : function( emailid ){
@@ -10,7 +11,7 @@ Meteor.methods({
       Accounts.setPassword( userId, newpassword)
           let email={
               to:emailid, 
-              from:'system@gmail.com', 
+              from:config_ENV.email._id, 
               subject:'Password reset',
               message:'Your New password is :<b>'+ newpassword + '</b> for email :'+ emailid
             }
@@ -23,7 +24,6 @@ Meteor.methods({
       return {
         error : 1,
         message : 'User not found',
-        pass:''
       }
     }
   }

@@ -30,7 +30,7 @@ const styles = {
    container: {
     position: 'relative',
     marginTop:10
-  },
+  }
 };
 export default class Login extends React.Component{
 	static contextTypes={
@@ -118,13 +118,13 @@ export default class Login extends React.Component{
        
 		return(
 			<div className="col-md-12" style={{textAlign:'center'}}>
-			<div><img src={LogoImg}/></div>
+			<div style={{marginBottom:'50px'}}><img src={LogoImg}/></div>
                     
 		     <div style={{
 		     	width:320,
 		     	padding:30,
 		     	margin:'0px auto',
-		     	marginTop:'20px',
+		     	marginTop:'1rem',
 		     	backgroundColor:'white',
 		     	borderRadius:'3px'
 		     }}>
@@ -136,7 +136,7 @@ export default class Login extends React.Component{
                         }
                     }>Sign In</div>
                <div>
-				<TextField errorStyle={styles.errorStyle} errorText={this.state.emailError} value={this.state.email} style={{width:'100%'}} floatingLabelText="Email"
+				<TextField floatingLabelFixed={true} errorStyle={styles.errorStyle} errorText={this.state.emailError} value={this.state.email} style={{width:'100%'}} floatingLabelText="Email"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -146,7 +146,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-				<TextField errorStyle={styles.errorStyle} type="password" errorText={this.state.passwordError} value={this.state.password} style={{width:'100%'}} floatingLabelText="Password"
+				<TextField floatingLabelFixed={true} errorStyle={styles.errorStyle} type="password" errorText={this.state.passwordError} value={this.state.password} style={{width:'100%'}} floatingLabelText="Password"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -156,7 +156,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-                 <Checkbox  label="Keep me signed in" style={styles.checkbox}/>
+                 <Checkbox labelStyle={styles.checkbox} label="Keep me signed in" style={styles.checkbox}/>
 				</div>
 				
 				<div style={{marginTop:'10px'}} className={this.state.showButton}>
@@ -175,14 +175,13 @@ export default class Login extends React.Component{
 		     </div>
 		     <div style={
                         {
-                          fontFamily: this.context.muiTheme.fontFamily, 
-                          
+                          fontFamily: this.context.muiTheme.fontFamily,
                           textAlign: 'center',
                           marginTop:'20px'
 
                         }
                     }>
-                    <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none',color:'#4DB6AC',fontWeight:'600',cursor:'pointer'}}>{"Forgot Password?"}</Link>
+                    <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none',color:'#00BCD4',cursor:'pointer'}}>{"Forgot Password?"}</Link>
               </div>
               <div style={{
               	          fontFamily: this.context.muiTheme.fontFamily, 
@@ -191,7 +190,7 @@ export default class Login extends React.Component{
                           marginTop:'20px'
               }}>
               <div style={{color: this.context.muiTheme.palette.canvasColor,fontSize:'15px',display:'inline'}}>Do not have an account?</div>{" "}
-              <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',fontWeight:'600',cursor:'pointer',color:'#4DB6AC'}}>{"Sign Up"}</Link>
+              <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',cursor:'pointer',color:'#00BCD4'}}>{"Sign Up"}</Link>
               </div>
               
 		     <Snackbar

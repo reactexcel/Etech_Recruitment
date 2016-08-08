@@ -3,12 +3,13 @@ import {users} from './users/users';
 import register from './register/register'
 import { forgotpassword } from './forgotpassword'
 import {logs} from './logs'
+import { home } from './home'
 import { emailSetting } from './emailSetting';
-
 export default combineReducers({
 	users,
 	register,
 	forgotpassword,
 	logs,
-    emailSetting
-});
+	home,
+	emailSetting
+})
