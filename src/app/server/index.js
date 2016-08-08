@@ -1,6 +1,7 @@
 import './publications';
-import './../methods/forgotpassword';
+import '../methods/forgotpassword';
 import '../methods/sendMail.js';
+import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
 import '../collections/config'
 import {config_ENV} from './../config';

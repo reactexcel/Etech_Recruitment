@@ -16,6 +16,7 @@ import LoginContainer from './containers/Login';
 import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
 import Page_ForgotPassword from './containers/ForgotPassword'
+import Page_Home from './containers/Home'
 
 export let isMonitorAction;
 
@@ -37,6 +38,7 @@ Meteor.startup(
         <Provider store={store}>
           <Router history={hashHistory}>
             <Route path="/" component={LoginContainer}></Route>
+              <Route path="home" component={Page_Home}></Route>
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={RegisterContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword} />

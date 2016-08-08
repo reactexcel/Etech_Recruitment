@@ -26,3 +26,5 @@ standard-minifier-css@1.1.8
 standard-minifier-js@1.1.8
 thereactivestack:blazetoreact
 email
+http
+momentjs:moment
