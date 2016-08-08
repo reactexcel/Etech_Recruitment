@@ -8,6 +8,7 @@ import {Menu, MenuItem} from 'material-ui/Menu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import MenuDrawer from '../../components/menuDrawer';
 
 class ConfigurationContainer extends React.Component {
   constructor(props) {
@@ -15,16 +16,19 @@ class ConfigurationContainer extends React.Component {
     this.state={"open": false}
     this.handleToggel = this.handleToggel.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.requestChange = this.requestChange.bind(this);
   }
 
   handleToggel(){
     this.setState({open: !this.state.open});
   }
 
-  handleClose(path){
-    this.setState({open: false});
-    if(path !== "")
-      this.props.router.push(path);
+  handleClose(){
+    this.setState({open: !this.state.open});
+  }
+
+  requestChange(open){
+    this.setState({"open": open});
   }
 
   render() {
@@ -66,21 +70,12 @@ class ConfigurationContainer extends React.Component {
           <div className="col-lg-10 col-sm-10 col-xs-12 well well-lg" style={{"height": "100%"}}>
             {this.props.children}
           </div>
-          <Drawer
-            docked={false}
-            width={null}
+          <MenuDrawer
             open={this.state.open}
-            onRequestChange={(open) => this.setState({open:false})}
-            swipeAreaWidth={100}
-            docked={false}
-          >
-            <h3 className="text-center"> Menu</h3>
-            <Divider />
-            <MenuItem onTouchTap={()=>{this.handleClose("/")}}>Home</MenuItem>
-            <MenuItem onTouchTap={this.handleClose}>Inbox</MenuItem>
-            <MenuItem onTouchTap={this.handleClose}>Candidate Liat</MenuItem>
-            <MenuItem onTouchTap={()=>{this.handleClose("/config")}}>Settings</MenuItem>
-          </Drawer>
+            router={this.props.router}
+            handleClose={this.handleClose}
+            requestChange={this.requestChange}
+          />
         </div>
     );
   }
