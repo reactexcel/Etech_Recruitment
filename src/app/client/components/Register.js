@@ -2,10 +2,7 @@ import React from 'react';
 import { router } from 'react-router'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import Snackbar from 'material-ui/Snackbar';
 
@@ -150,7 +147,7 @@ export default class Register extends React.Component {
           <div>
             <div style={{textAlign: 'center' }}>
                 <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
-                  <div style={{marginBottom:'50px'}}>
+                  <div style={{marginBottom:'40px'}}>
                     <img src={Logo} style={{cursor:"pointer"}} />
                   </div>
                 <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
