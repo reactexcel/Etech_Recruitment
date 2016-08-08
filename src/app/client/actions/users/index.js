@@ -1,5 +1,6 @@
 import { createAction } from 'redux-actions';
 export const LOGIN = "LOGIN";
+//export const LOADING = "LOADING";
 
 export function loginUser(email,password){
 	return function(dispatch,getState){
@@ -23,3 +24,6 @@ export function loginUser(email,password){
 export function actionAfterLogin(user){
 	return createAction(LOGIN)(user)
 }
+/*export function loading(show){
+    return createAction(LOADING)(show)
+}*/

@@ -11,21 +11,26 @@ import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
 Meteor.methods({
   doUpdateEmailsStore: function () {
 
-  	// check fog logged user
-  	if( Meteor.user() == null ){
+  	//check fog logged user
+	if( Meteor.user() == null ){
 		return 'INVALID_LOGIN'
-  	}
+	}
 
-
-  	var source_email_id = 'exceltes@gmail.com'
-  	var source_email_password = 'java@123'
-  	var source_host = 'imap.gmail.com'
-  	var source_port = '993'
-  	var source_encryp = 'ssl'
-
-
-
-  	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//check for imap settings
+	var checkSettings = Meteor.call('fetchSettings')
+	if( checkSettings.length == 0 ){
+		return 'SETTINGS_NOT_FOUND'		
+	}else{
+		var settings = checkSettings[0]
+		
+		var source_email_id = settings.emailId
+  		var source_email_password = settings.password
+  		var source_host = settings.server
+  		var source_port = settings.port
+  		var source_encryp = settings.encrypt
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
   	var date = new Date()
 	var todaysDate = moment(date).format("YYYY-MM-DD")
 

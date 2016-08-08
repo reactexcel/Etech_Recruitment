@@ -10,7 +10,7 @@ export function home( state = Immutable.Map(initialState), action ){
     }else if( action.type == 'ACTION_EMPTY_NEW_EMAILS' ){
         return state.set('status_new_emails', action.payload )
     }else if( action.type == 'ACTION_ERROR_NEW_EMAILS' ){
-        return state.set('status_new_emails', '')
+        return state.set('status_new_emails', action.payload)
     }
     return state
 }

@@ -6,7 +6,32 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import {Link} from 'react-router';
 import Snackbar from 'material-ui/Snackbar';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Checkbox from 'material-ui/Checkbox';
+import LogoImg from './../assets/images/logo.png';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
+const styles = {
+  block: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    marginBottom: 16,
+    textAlign:'left',
+    fontWeight:'normal'
+  },
+  errorStyle:{
+  	textAlign:'left',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+   container: {
+    position: 'relative',
+    marginTop:10
+  },
+};
 export default class Login extends React.Component{
 	static contextTypes={
 			muiTheme:React.PropTypes.object.isRequired
@@ -19,7 +44,9 @@ export default class Login extends React.Component{
 			password:'',
 			passwordError:'',
 			showSnackbar:false,
-			errorMessage:''
+			errorMessage:'',
+			showButton:'show',
+			showloader:'hide'
 		}
 		this.loginUser=this.loginUser.bind(this);
 	}
@@ -28,7 +55,7 @@ export default class Login extends React.Component{
     Meteor.autorun(function(c) {
       self.autorun = c;
       if (Meteor.userId()) {
-        //self.props.router.push('/user')
+        //self.props.router.push('/config/emailSetting')
         //c.stop()
       }  
     });    
@@ -37,6 +64,7 @@ export default class Login extends React.Component{
     this.autorun.stop()
   }
 	loginUser(){
+		
         let email=this.state.email.trim()
 		let password=this.state.password.trim()
 		if(email == ""){
@@ -47,34 +75,38 @@ export default class Login extends React.Component{
            this.setState({
              emailError:"You have entered an invalid e-mail address"
            })
-        }else{
+        }else if(password == ""){
           this.setState({
-             emailError:'',
-          })
-        }if(password == ""){
-          this.setState({
+          	 emailError:'',
              passwordError:"Please provide a valid password"
           })
         }else{
           this.setState({
-             passwordError:""
-          })
-        }
-        if(this.state.email != '' && this.state.password != ''){
-           this.props.onLogin(this.state.email,this.state.password).then(()=>{
+          	 emailError:"",
+             passwordError:"",
+             showloader:'show',
+             showButton:'hide'
+          });
+
+          this.props.onLogin(this.state.email,this.state.password).then(()=>{
            	 this.setState({
 			   email:'',
 			   password:'',
 			   errorMessage:'You have successfully login',
-			   showSnackbar:true
+			   showSnackbar:true,
+			   showloader:'hide',
+			   showButton:'show'
 		     })
            }).catch((error)=>{
            	this.setState({
            		
-			   errorMessage:"User not found",
-			   showSnackbar:true
+			   errorMessage:"Invalid Email/Password",
+			   showSnackbar:true,
+			   showloader:'hide',
+			   showButton:'show'
 		     })
            })
+
         }
 	}
 	handleRequestClose(){
@@ -83,13 +115,28 @@ export default class Login extends React.Component{
         })
     }
 	render(){
+       
 		return(
-			<div>
-		     <div style={{textAlign:'center'}}>
-		     <div style={{width:400,paddingTop:5,margin:'0px auto'}}>
-		     <h3>LOGIN</h3>
+			<div className="col-md-12" style={{textAlign:'center'}}>
+			<div><img src={LogoImg}/></div>
+                    
+		     <div style={{
+		     	width:320,
+		     	padding:30,
+		     	margin:'0px auto',
+		     	marginTop:'20px',
+		     	backgroundColor:'white',
+		     	borderRadius:'3px'
+		     }}>
+		     <div style={
+                        {
+                          fontFamily: this.context.muiTheme.fontFamily,
+                          textAlign: 'left',
+                          fontSize:'17px'
+                        }
+                    }>Sign In</div>
                <div>
-				<TextField errorText={this.state.emailError} value={this.state.email} style={{width:'80%'}} floatingLabelText="Email"
+				<TextField errorStyle={styles.errorStyle} errorText={this.state.emailError} value={this.state.email} style={{width:'100%'}} floatingLabelText="Email"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -99,7 +146,7 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-				<TextField type="password" errorText={this.state.passwordError} value={this.state.password} style={{width:'80%'}} floatingLabelText="Password"
+				<TextField errorStyle={styles.errorStyle} type="password" errorText={this.state.passwordError} value={this.state.password} style={{width:'100%'}} floatingLabelText="Password"
 				onChange={
 					(e)=>{
 						this.setState({
@@ -108,24 +155,51 @@ export default class Login extends React.Component{
 					}
 				}/>
 				</div>
-				<div style={{textAlign: 'left',marginLeft:40}}>
-                 <Link to="forgotpassword" className="link">{"forgot password"}</Link>
-                 <div>
-                 <Link to="register" className="link" >{"Register"}</Link>
-                 </div>
+				<div>
+                 <Checkbox  label="Keep me signed in" style={styles.checkbox}/>
 				</div>
-				<div style={{textAlign: 'right'}}>
+				
+				<div style={{marginTop:'10px'}} className={this.state.showButton}>
 
-                      <RaisedButton label="LOGIN" onTouchTap={this.loginUser} primary={true}/>
+                      <RaisedButton style={{width:'100%',marginTop:'10px'}} label="LOGIN" onTouchTap={this.loginUser} primary={true}/>
                 </div>
+                <div style={styles.container} className={this.state.showloader}>
+                <RefreshIndicator
+                  size={40}
+                  left={10}
+                  top={0}
+                  status="loading"
+                  style={styles.refresh}
+                 />
+               </div>
 		     </div>
+		     <div style={
+                        {
+                          fontFamily: this.context.muiTheme.fontFamily, 
+                          
+                          textAlign: 'center',
+                          marginTop:'20px'
+
+                        }
+                    }>
+                    <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none',color:'#4DB6AC',fontWeight:'600',cursor:'pointer'}}>{"Forgot Password?"}</Link>
+              </div>
+              <div style={{
+              	          fontFamily: this.context.muiTheme.fontFamily, 
+                          color: '#00bcd4',
+                          textAlign: 'center',
+                          marginTop:'20px'
+              }}>
+              <div style={{color: this.context.muiTheme.palette.canvasColor,fontSize:'15px',display:'inline'}}>Do not have an account?</div>{" "}
+              <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',fontWeight:'600',cursor:'pointer',color:'#4DB6AC'}}>{"Sign Up"}</Link>
+              </div>
+              
 		     <Snackbar
                     open={this.state.showSnackbar}
                     message={this.state.errorMessage}
                     autoHideDuration={3000}
                     onRequestClose={this.handleRequestClose.bind(this)}
                 />
-		     </div>
 		    </div>
 			);
 		

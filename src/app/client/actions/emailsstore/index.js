@@ -22,9 +22,10 @@ export function update_emails_store(  ){
 				if(err){
 					dispatch ( error_new_emails( err ) )
 				}else{
-					console.log( data )
 					if( data == 'INVALID_LOGIN'){
 						dispatch ( error_new_emails( "You are not logged in!!" ) )
+					}else if( data == 'SETTINGS_NOT_FOUND'){
+						dispatch ( error_new_emails( "Imap settings not found" ) )
 					}else if( data == 0 ){
 						dispatch ( empty_new_emails( 'No new emails found' ) )
 					}else{

@@ -8,12 +8,13 @@ import reducer from './reducers/index';
 import { Accounts } from 'meteor/accounts-base';
 import invariant from 'redux-immutable-state-invariant';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {registerContainer} from './containers'
+import {RegisterContainer} from './containers'
 import { createStore, applyMiddleware, compose } from 'redux'
 import {Router , Route, IndexRoute, hashHistory, browserHistory} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LoginContainer from './containers/Login';
-
+import ConfigurationContainer from './containers/configurationContainer';
+import EmailSettingContainer from './containers/configurationContainer/emailSetting';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
 
@@ -32,7 +33,6 @@ Meteor.startup(
         getMonitor: (monitor) => { isMonitorAction = monitor.isMonitorAction; }
         }) : f => f
       ));
-    
     ReactDOM.render(
       <MuiThemeProvider>
         <Provider store={store}>
@@ -40,8 +40,12 @@ Meteor.startup(
             <Route path="/" component={LoginContainer}></Route>
               <Route path="home" component={Page_Home}></Route>
               <Route path="login" component={LoginContainer}></Route>
-              <Route path="register" component={registerContainer}></Route>
+              <Route path="register" component={RegisterContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword} />
+              <Route path="/config">
+                <IndexRoute Component={ConfigurationContainer} />
+                <Route path="/config/emailSetting" component={EmailSettingContainer}></Route>
+              </Route>
           </Router>
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));
