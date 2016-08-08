@@ -47,7 +47,7 @@ export default class EmailSettingList extends React.Component {
                 >
                   <TableRow>
                     <TableHeaderColumn colSpan="4"  >
-                      <h4 style={{float: 'left', "marginLeft":"-2%"}}>IMAP/POP3 Settings</h4>
+                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%"}}>IMAP/POP3 Settings</h4>
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow>
