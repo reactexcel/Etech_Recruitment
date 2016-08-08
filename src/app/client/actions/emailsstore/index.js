@@ -22,11 +22,18 @@ export function update_emails_store(  ){
 				if(err){
 					dispatch ( error_new_emails( err ) )
 				}else{
-					if( data == 0 ){
+					console.log( data )
+					if( data == 'INVALID_LOGIN'){
+						dispatch ( error_new_emails( "You are not logged in!!" ) )
+					}else if( data == 0 ){
 						dispatch ( empty_new_emails( 'No new emails found' ) )
 					}else{
 						let msg = data + ' new emails found'
 						dispatch ( success_new_emails( msg ) )
+						if( data == 100 ){
+							//if response hase 100 emails then call again to fetch more as api has limit of 100 emails
+							dispatch ( update_emails_store(  ) )
+						}
 					}
 				}
 			})
