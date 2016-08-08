@@ -150,17 +150,9 @@ export default class Register extends React.Component {
           <div>
             <div style={{textAlign: 'center' }}>
                 <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
-                  <div style={{marginBottom:'10px'}}>
+                  <div style={{marginBottom:'50px'}}>
                     <img src={Logo} style={{cursor:"pointer"}} />
                   </div>
-                    <div style={{
-                              fontFamily: this.context.muiTheme.fontFamily,
-                              color: this.context.muiTheme.palette.canvasColor,
-                              textAlign: 'center',fontSize:'17px',fontWeight:600,
-                              padding:'10px 10px 0px'}}>
-                      <span>Etech Recruitment</span>
-                    </div>
-                    
                 <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
                     <div style={{fontSize:'16px',marginBottom:'1rem',textAlign:'left'}}>Sign up</div>
                     <div>

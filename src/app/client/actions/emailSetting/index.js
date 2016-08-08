@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import {createAction} from 'redux-actions';
 
-=======
-import {createAction} from 'redux-actions'
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
 export const FETCH_SETTINGS_FROM_DB = "FETCH_SETTINGS_FROM_DB";
 export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
