@@ -3,7 +3,6 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
-<<<<<<< HEAD
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 const style={
   "formInput":{
@@ -16,8 +15,6 @@ const style={
     "marginLeft": "5%"
   }
 }
-=======
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
 
 export default class EmailSettingForm extends React.Component {
   constructor(props) {
@@ -28,20 +25,13 @@ export default class EmailSettingForm extends React.Component {
       "server": this.props.emailSetting.server || "",
       "port": this.props.emailSetting.port || "",
       "encrypt": this.props.emailSetting.encrypt || "",
-<<<<<<< HEAD
       "_id": this.props.emailSetting._id || undefined,
       "label": "Save"
-=======
-      "_id": this.props.emailSetting._id || undefined
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
     this.update = this.update.bind(this);
-<<<<<<< HEAD
     this.clear = this.clear.bind(this);
-=======
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
     this.regExp= {
       "port" : /^[0-9]+$/,
       "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -51,18 +41,13 @@ export default class EmailSettingForm extends React.Component {
     }
   }
 
-<<<<<<< HEAD
   update(row, label) {
-=======
-  update(row) {
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
     this.setState({
       "emailId": row.emailId || "",
       "password": row.password || "",
       "server": row.server || "",
       "port": row.port || "",
       "encrypt": row.encrypt || "",
-<<<<<<< HEAD
       "_id": row._id || undefined,
       "label": label
     })
@@ -81,12 +66,6 @@ export default class EmailSettingForm extends React.Component {
     })
   }
 
-=======
-      "_id": row._id || undefined
-    })
-    this.error = [];
-  }
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
   saveSettings () {
     if (this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
@@ -97,32 +76,17 @@ export default class EmailSettingForm extends React.Component {
         "server": this.state.server ,
         "port": this.state.port ,
         "encrypt": this.state.encrypt,
-<<<<<<< HEAD
         "_id": this.state._id || undefined
       });
       this.clear();
     }else{
       this.props.snackbarOpen("Please fill all fields properly");
-=======
-        "_id": this.props.emailSetting._id || undefined
-      });
-      this.setState({
-        "emailId": "",
-        "password": "",
-        "server": "",
-        "port": "",
-        "encrypt": "",
-        "_id": undefined
-      })
-      this.props.snackbarOpen("We Catch your changes");
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
     }
   }
 
   render() {
     return (
       <div className="row">
-<<<<<<< HEAD
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
           <Paper zDepth={2} style={{"padding":"20px"}}>
             <h4 className="h4">IMAP/POP3 server </h4>
@@ -131,16 +95,6 @@ export default class EmailSettingForm extends React.Component {
                 <TextField
                   type="text"
                   floatingLabelText="Email"
-=======
-        <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12 well well-lg">
-          <Paper zDepth={2} style={{"padding":"20px"}}>
-            <h4 className="h4 text-center">Enter email server details </h4>
-            <form>
-              <div>
-                <TextField
-                  type="text"
-                  floatingLabelText="Username"
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                   hintText="Your email Id"
                   fullWidth={true}
                   onChange={
@@ -159,11 +113,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.emailId}
                 />
               </div>
-<<<<<<< HEAD
               <div className="form-group" style={style.formInput}>
-=======
-              <div>
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                 <TextField
                   type="text"
                   floatingLabelText="Password"
@@ -185,11 +135,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.password}
                 />
               </div>
-<<<<<<< HEAD
               <div className="form-group" style={style.formInput}>
-=======
-              <div>
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                 <TextField
                   type="text"
                   floatingLabelText="SMTP Server"
@@ -211,11 +157,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.server}
                 />
               </div>
-<<<<<<< HEAD
               <div className="form-group" style={style.formInput}>
-=======
-              <div>
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                 <TextField
                   type="text"
                   floatingLabelText="Server port"
@@ -237,11 +179,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.port}
                 />
               </div>
-<<<<<<< HEAD
               <div className="form-group" style={style.formInput}>
-=======
-              <div>
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                 <TextField
                   type="text"
                   floatingLabelText="encrypt"
@@ -249,11 +187,7 @@ export default class EmailSettingForm extends React.Component {
                   fullWidth={true}
                   onChange={
                     (evt) =>{
-<<<<<<< HEAD
-                      this.setState({"Encrypt": evt.target.value});
-=======
                       this.setState({"encrypt": evt.target.value});
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
                       if (!evt.target.value.length > 0 ) {
                         this.error.encrypt = "encrypt is required";
                       }else if (!this.regExp.encrypt.test()) {
@@ -267,7 +201,6 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.encrypt}
                 />
               </div>
-<<<<<<< HEAD
               <div className="form-group" style={style.formButton}>
                 <RaisedButton
                   label={this.state.label}
@@ -283,21 +216,6 @@ export default class EmailSettingForm extends React.Component {
                   onClick={this.clear}
                 />
               </div>
-=======
-              <div>
-                <RaisedButton
-                  backgroundColor="#a4c639"
-                  labelColor="#444"
-                  icon={<FontIcon className="fa fa-floppy-o fa-2x"/>}
-                  style={
-                    {
-                      "marginTop": "2%"
-                    }
-                  }
-                  onClick={this.saveSettings}
-                />
-              </div>
->>>>>>> 6b8c84a997434bcb13a1e8a729ee38c819e486c0
             </form>
           </Paper>
         </div>

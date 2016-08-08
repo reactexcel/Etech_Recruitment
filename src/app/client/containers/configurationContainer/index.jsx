@@ -52,18 +52,18 @@ class ConfigurationContainer extends React.Component {
             iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
             zDepth={2}
             />
-          <div className="col-lg-3 col-sm-3 col-xs-12">
+          <div className="col-lg-2 col-sm-2 col-xs-12">
             <Menu desktop={true} style={{"float": "left"}}>
-              <MenuItem primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
+              <MenuItem style={{"color": "#fff"}} primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
               <Divider />
-              <MenuItem primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
+              <MenuItem style={{"color": "#fff"}} primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
               <Divider />
-              <MenuItem primaryText="Inbox setting" value="config/emailSetting" onTouchTap={this.redirect}/>
+              <MenuItem style={{"color": "#fff"}} primaryText="Inbox setting" value="config/emailSetting" onTouchTap={this.redirect}/>
               <Divider />
-              <MenuItem primaryText="Menu Item" value="config/emailSetting" onTouchTap={this.redirect}/>
+              <MenuItem style={{"color": "#fff"}} primaryText="Menu Item" value="config/emailSetting" onTouchTap={this.redirect}/>
             </Menu>
           </div>
-          <div className="col-lg-9 col-sm-9 col-xs-12 well well-lg" style={{"height": "100%"}}>
+          <div className="col-lg-10 col-sm-10 col-xs-12 well well-lg" style={{"height": "100%"}}>
             {this.props.children}
           </div>
           <Drawer
