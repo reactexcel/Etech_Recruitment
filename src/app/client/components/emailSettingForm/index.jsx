@@ -4,6 +4,9 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Divider from 'material-ui/Divider';
+import {TableHeader, TableHeaderColumn, TableRow}from 'material-ui/Table';
+
 const style={
   "formInput":{
     "marginLeft": "5%",
@@ -89,7 +92,12 @@ export default class EmailSettingForm extends React.Component {
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
           <Paper zDepth={2} style={{"padding":"20px"}}>
-            <h4 className="h4">IMAP/POP3 server </h4>
+            <TableRow>
+              <TableHeaderColumn colSpan="4"  style={{float: 'left'}}>
+                <h4 className="h4">IMAP/POP3 server </h4>
+              </TableHeaderColumn>
+            </TableRow>
+            <Divider/>
             <form className="form-inline">
               <div className="form-group" style={style.formInput}>
                 <TextField

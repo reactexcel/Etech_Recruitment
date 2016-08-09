@@ -46,8 +46,8 @@ export default class EmailSettingList extends React.Component {
                   adjustForCheckbox={true}
                 >
                   <TableRow>
-                    <TableHeaderColumn colSpan="4"  style={{float: 'left'}}>
-                      <h3>IMAP/POP3 Settings</h3>
+                    <TableHeaderColumn colSpan="4"  >
+                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%"}}>IMAP/POP3 Settings</h4>
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow>
