@@ -4,7 +4,6 @@ import { Email } from 'meteor/email';
 Meteor.methods({
   "sendMail": function(email){
     if (Meteor.isServer) {
-      this.unblock();	
       Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
