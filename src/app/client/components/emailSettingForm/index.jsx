@@ -29,6 +29,7 @@ export default class EmailSettingForm extends React.Component {
       "port": this.props.emailSetting.port || "",
       "encrypt": this.props.emailSetting.encrypt || "",
       "_id": this.props.emailSetting._id || undefined,
+      "status": this.props.emailSetting.status || 0,
       "label": "Save"
     }
     this.error = [];
@@ -52,6 +53,7 @@ export default class EmailSettingForm extends React.Component {
       "port": row.port || "",
       "encrypt": row.encrypt || "",
       "_id": row._id || undefined,
+      "status": row.status || 0,
       "label": label
     })
     this.error = [];
@@ -70,20 +72,19 @@ export default class EmailSettingForm extends React.Component {
   }
 
   saveSettings () {
-    if (this.state.emailId.length && this.state.password.length
+    if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
-            && this.state.encrypt.length){
+            && this.state.encrypt.length)){
       this.props.onSaveSettings({
         "emailId": this.state.emailId ,
         "password": this.state.password ,
         "server": this.state.server ,
         "port": this.state.port ,
         "encrypt": this.state.encrypt,
+        "status": 0,
         "_id": this.state._id || undefined
       });
       this.clear();
-    }else{
-      this.props.snackbarOpen("Please fill all fields properly");
     }
   }
 
@@ -188,40 +189,34 @@ export default class EmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
-                <TextField
-                  type="text"
-                  floatingLabelText="encrypt"
-                  hintText="ssl/stl"
-                  fullWidth={true}
-                  onChange={
-                    (evt) =>{
-                      this.setState({"encrypt": evt.target.value});
-                      if (!evt.target.value.length > 0 ) {
-                        this.error.encrypt = "encrypt is required";
-                      }else if (!this.regExp.encrypt.test()) {
-                        this.error.encrypt = "invalid encrypt";
-                      }else{
-                        this.error.encrypt = "";
+                <RadioButtonGroup name="encrypt" labelPosition="right"
+                  style={{maxWidth: 250}}
+                    onChange={
+                      (evt, value) =>{
+                        console.log(value);
+                        this.setState({"encrypt": value});
+                        if ( typeof value == "undefined" ) {
+                          this.error.encrypt = "encrypt is required";
+                        }else{
+                          this.error.encrypt = "";
+                        }
                       }
-                    }
-                  }
-                  errorText={this.error.encrypt}
-                  value={this.state.encrypt}
-                />
+                    }>
+                  <RadioButton style={{fontWeight:"normal"}}
+                    value="ssl"
+                    label="SSL"
+                    />
+                  <RadioButton style={{fontWeight:"normal"}}
+                    value="tls"
+                    label="TLS"
+                    />
+                </RadioButtonGroup>
               </div>
               <div className="form-group" style={style.formButton}>
                 <RaisedButton
                   label={this.state.label}
                   primary={true}
                   onClick={this.saveSettings}
-                />
-              </div>
-              <div className="form-group" style={style.formButton}>
-                <RaisedButton
-                  type="reset"
-                  label="Clear"
-                  secondary={true}
-                  onClick={this.clear}
                 />
               </div>
             </form>
@@ -234,6 +229,5 @@ export default class EmailSettingForm extends React.Component {
 
 EmailSettingForm.propTypes = {
   onSaveSettings: PropTypes.func.isRequired,
-  snackbarOpen: PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
 };

@@ -20,6 +20,7 @@ class EmailSettingContainer extends React.Component {
 EmailSettingContainer.propTypes = {
   onFetchSettings: React.PropTypes.func.isRequired,
   onSaveSettings: React.PropTypes.func.isRequired,
+  onTestDetails: React.PropTypes.func.isRequired,
   emailSetting: React.PropTypes.any.isRequired,
 };
 
@@ -38,7 +39,10 @@ const mapDispatchToProps = (dispatch) => {
       },
       onSaveSettings: (detail) =>{
         dispatch(action.onSaveSettingsToDB(detail));
-      }
+      },
+      onTestDetails: (detail) =>{
+        dispatch(action.onTestDetails(detail));
+      },
     }
 }
 
