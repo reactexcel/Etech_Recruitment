@@ -67,7 +67,7 @@ class ConfigurationContainer extends React.Component {
               <MenuItem style={{"color": "#fff"}} primaryText="Menu Item" value="config/emailSetting" onTouchTap={this.redirect}/>
             </Menu>
           </div>
-          <div className="col-lg-10 col-sm-10 col-xs-12 well well-lg" style={{"height": "100%"}}>
+          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"height": "100%"}}>
             {this.props.children}
           </div>
           <MenuDrawer
