@@ -127,6 +127,7 @@ export default class Register extends React.Component {
       }).catch( (error) => {
         this.setState({
           loading:'hide',
+          signup:'show',
           snackbarOpen:true,
           snackbarmsg:"Error : Username already exist"
         })

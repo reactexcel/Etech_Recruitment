@@ -64,7 +64,6 @@ export default class Login extends React.Component{
     this.autorun.stop()
   }
 	loginUser(){
-		
         let email=this.state.email.trim()
 		let password=this.state.password.trim()
 		if(email == ""){
@@ -99,7 +98,6 @@ export default class Login extends React.Component{
 		     })
            }).catch((error)=>{
            	this.setState({
-           		
 			   errorMessage:"Invalid Email/Password",
 			   showSnackbar:true,
 			   showloader:'hide',
@@ -119,7 +117,6 @@ export default class Login extends React.Component{
 		return(
 			<div className="col-md-12" style={{textAlign:'center'}}>
 			<div style={{marginBottom:'40px'}}><img src={LogoImg}/></div>
-                    
 		     <div style={{
 		     	width:320,
 		     	padding:30,

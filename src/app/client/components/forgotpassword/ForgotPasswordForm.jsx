@@ -64,23 +64,33 @@ class ForgotPasswordForm extends React.Component {
       emailValid = true
     } 
         if(emailid.length > 0 && emailValid == true){
+            this.setState({
+                loading:'show',
+                submit:'hidden'
+            })
             this.props.doForgotPassword( emailid ).then( (data) => {
                 if(data == 0){
                 this.setState({
                     emailid:'',
                     status_message:'Check your email for new password',
-                    showSnackbar:true
+                    showSnackbar:true,
+                    loading:'hidden',
+                    submit:'show',
                 })
                 }else{
                 this.setState({
                     status_message:data,
-                    showSnackbar:true
+                    showSnackbar:true,
+                    loading:'hidden',
+                    submit:'show',
                 })
                 }
             }).catch( (error) => {
                 this.setState({
                     status_message:error.toString(),
-                    showSnackbar:true
+                    showSnackbar:true,
+                    loading:'hidden',
+                    submit:'show',
                 })
             })
         }
