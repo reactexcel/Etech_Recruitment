@@ -144,6 +144,16 @@ Meteor.methods({
   	}
 
   	var allEmails = EmailsStore.find( {}, { skip : skip, limit: emails_per_page }).fetch()
+
+  	if( allEmails.length > 0 ){
+  		allEmails = _.map( allEmails, function( email ){
+  			let email_date = email.email_date
+  			email.email_date = moment(email_date).format("dddd, Do MMM")
+  			//console.log( da )
+  			return email
+  		})
+  	}
+
   	return {
 		emails : allEmails,
 		previous_page : previous_page,

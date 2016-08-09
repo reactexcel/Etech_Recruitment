@@ -26,9 +26,6 @@ export function getInboxData( emails_per_page, page_num ){
 					if( data.emails.length == 0 ){
 						dispatch ( empty_inbox( 'No more emails' ) )
 					}else{
-
-						console.log( data )
-
 						dispatch ( success_inbox( data  ) ) 
 					}
 				}

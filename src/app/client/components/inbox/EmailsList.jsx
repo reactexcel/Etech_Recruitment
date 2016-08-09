@@ -1,25 +1,12 @@
 import React, {PropTypes} from 'react'
-
-import List from 'material-ui/List'
-import Paper from 'material-ui/Paper';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+import { Link } from 'react-router'
 
 import EmailsListItem from './EmailsListItem';
-
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-
-
-const style = {display: 'inline-block',margin: '16px 32px 16px 0'};
 
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
+
     }
     componentDidMount(){
     }
@@ -28,8 +15,8 @@ class EmailsList extends React.Component {
     submitForm( evt ){
     }
     render(){
-
-        let emailsList = this.props.emails.map( (email) => {
+        let emails = this.props.inbox.emails
+        let emailsList = emails.map( (email) => {
             return (
                 <div key={email._id}>
                     <EmailsListItem email={email} />
@@ -37,38 +24,51 @@ class EmailsList extends React.Component {
             )
         })
 
+        let prev_page_num = this.props.inbox.previous_page
+        let next_page_num = this.props.inbox.next_page
+
+        let prev_page_link = <li  onClick={ () => this.props.doPageChange(prev_page_num)}><span aria-hidden="true">&laquo;</span></li>
+        if( prev_page_num == '' ){
+            prev_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(prev_page_num)} ><span aria-hidden="true">&laquo;</span></li>
+        }
+
+        let next_page_link = <li onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
+        if( next_page_link == '' ){
+            next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
+        }
+        
         return(
-            <div class="container">
-                    <div className="row">
-                         <div className="col-xs-2" style={{"backgroundColor": "#fff"}}>
-                            <Paper style={{display: 'inline-block'}}>
-                                  <Menu>
-                                    <MenuItem primaryText="Refresh" />
-                                    <MenuItem primaryText="Help &amp; feedback" />
-                                    <MenuItem primaryText="Settings" />
-                                    <MenuItem primaryText="Sign out" />
-                                  </Menu>
-                                </Paper>
-                         </div>
-                         <div className="col-xs-10" style={{"backgroundColor": "#fff"}}>
-
-                            <div className="row">
-                               <nav aria-label="...">
-          <ul className="pager">
-            <li><a href="#">Previous</a></li>
-            <li><a href="#">Next</a></li>
-          </ul>
-        </nav>
-                            </div>
-
-                            <List>
-                                {emailsList}
-                            </List>
-                         </div>
+            <div>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <div className="col-xs-2" >
+                        </div>
+                        <div className="col-xs-10" >
+                            <nav aria-label="Page navigation">
+                                <ul className="pagination pull-right">
+                                    {prev_page_link}
+                                    {next_page_link}
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
-
                 </div>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <div className="col-xs-2" >
+                            <div className="list-group">
 
+                                <button type="button" className="list-group-item" style={{ 'borderRadius':'0px'}}><Link to="/inbox">Inbox</Link></button>
+                            </div>
+                        </div>
+                        <div className="col-xs-10" >
+                            <ul className="list-group">
+                                {emailsList}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

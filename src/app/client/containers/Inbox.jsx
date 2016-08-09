@@ -12,9 +12,10 @@ class Inbox extends React.Component {
     constructor( props ){
         super( props )
         this.state = {
-            emails_per_page : 2,
+            emails_per_page : 20,
             page_num : 1
         }
+        this.doPageChange = this.doPageChange.bind(this)
     }
     componentWillMount(){
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
@@ -22,21 +23,15 @@ class Inbox extends React.Component {
     componentWillReceiveProps( props ){
     }
     doPageChange( page_num ){
-        this.props.onInboxData( this.state.emails_per_page, page_num )
+        if( page_num != '' ){
+            this.props.onInboxData( this.state.emails_per_page, page_num )
+        }
     }
     render(){
         return(
-        	<div class="container">
+        	<div>
                 <Header title="Inbox"/>
-                
-                <EmailsList emails={this.props.inbox.emails} />
-
-        		Inbox x
-                <br/>
-
-                <input type="button" value={this.props.inbox.previous_page} onClick={ () => this.doPageChange( this.props.inbox.previous_page )}/>
-                <br/>
-                <input type="button" value={this.props.inbox.next_page} onClick={ () => this.doPageChange( this.props.inbox.next_page )}/>
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} />
         	</div>
         )
     }
