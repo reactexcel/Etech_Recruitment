@@ -22,26 +22,32 @@ export default class EmailSettingList extends React.Component {
     this.select = this.select.bind(this);
   }
 
-  select(evt, row){
-    this.props.selectedRow(row, evt.target.checked);
+  select(row, checked){
+    this.props.selectedRow(row, checked);
   }
 
   render() {
     return (
       <div>
         <div className="row">
-          <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12 well well-lg">
+          <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" style={{"marginTop": "2%"}}>
             <Paper zDepth={2}>
               <Table
                 fixedHeader={true}
                 fixedFooter={true}
+                onRowSelection={
+                  (rowNumber) => {
+                    rowNumber.length == 1 ?this.select(this.props.emailSetting[rowNumber], true)
+                      :null;
+                  }
+                }
               >
                 <TableHeader
                   adjustForCheckbox={true}
                 >
                   <TableRow>
-                    <TableHeaderColumn colSpan="4"  style={{textAlign: 'center'}}>
-                      <h3>Email Settings</h3>
+                    <TableHeaderColumn colSpan="4"  >
+                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%"}}>IMAP/POP3 Settings</h4>
                     </TableHeaderColumn>
                   </TableRow>
                   <TableRow>
@@ -57,7 +63,9 @@ export default class EmailSettingList extends React.Component {
                   stripedRows={true}
                 >
                   {_.map(this.props.emailSetting, (row) => (
-                    <TableRow key={row._id} onChange={ (evt) => {this.select(evt, row)}}>
+                    <TableRow key={row._id}
+                      onChange={ (evt) => {this.select(row, evt.target.checked)}}
+                    >
                       <TableRowColumn>{row.emailId}</TableRowColumn>
                       <TableRowColumn>{row.server}</TableRowColumn>
                       <TableRowColumn>{row.port}</TableRowColumn>
@@ -65,7 +73,6 @@ export default class EmailSettingList extends React.Component {
                     </TableRow>
                     ))}
                 </TableBody>
-
               </Table>
             </Paper>
           </div>

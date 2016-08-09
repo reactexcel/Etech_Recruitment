@@ -8,13 +8,14 @@ import reducer from './reducers/index';
 import { Accounts } from 'meteor/accounts-base';
 import invariant from 'redux-immutable-state-invariant';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {RegisterContainer} from './containers'
+import {RegisterContainer} from './containers';
 import { createStore, applyMiddleware, compose } from 'redux'
 import {Router , Route, IndexRoute, hashHistory, browserHistory} from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LoginContainer from './containers/Login';
 import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
+import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
@@ -26,8 +27,6 @@ injectTapEventPlugin();
 
 Meteor.startup(
   () => {
-
-
     let store = createStore(reducer,Immutable.Map({}),compose(
       applyMiddleware(invariant(), logger,thunk),
     window.devToolsExtension ? window.devToolsExtension({
@@ -38,16 +37,17 @@ Meteor.startup(
       <MuiThemeProvider>
         <Provider store={store}>
           <Router history={hashHistory}>
-            <Route path="/" component={LoginContainer}></Route>
+            <Route path="/" component={AppContainer}>
+              <IndexRoute component={LoginContainer} />
               <Route path="home" component={Page_Home}></Route>
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={RegisterContainer}></Route>
-              <Route path="forgotpassword" component={Page_ForgotPassword} />
-              <Route path="/config">
-                <IndexRoute Component={ConfigurationContainer} />
+              <Route path="forgotpassword" component={Page_ForgotPassword}> </Route>
+              <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/emailSetting" component={EmailSettingContainer}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
+            </Route>
           </Router>
         </Provider>
       </MuiThemeProvider>, document.getElementById('app-container'));

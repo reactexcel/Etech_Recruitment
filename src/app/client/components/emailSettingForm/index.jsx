@@ -3,6 +3,21 @@ import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Divider from 'material-ui/Divider';
+import {TableHeader, TableHeaderColumn, TableRow}from 'material-ui/Table';
+
+const style={
+  "formInput":{
+    "marginLeft": "5%",
+    "marginRight": "5%",
+    "width": "40%"
+  },
+  "formButton":{
+    "marginTop": "2%",
+    "marginLeft": "5%"
+  }
+}
 
 export default class EmailSettingForm extends React.Component {
   constructor(props) {
@@ -13,11 +28,13 @@ export default class EmailSettingForm extends React.Component {
       "server": this.props.emailSetting.server || "",
       "port": this.props.emailSetting.port || "",
       "encrypt": this.props.emailSetting.encrypt || "",
-      "_id": this.props.emailSetting._id || undefined
+      "_id": this.props.emailSetting._id || undefined,
+      "label": "Save"
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
     this.update = this.update.bind(this);
+    this.clear = this.clear.bind(this);
     this.regExp= {
       "port" : /^[0-9]+$/,
       "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -27,17 +44,31 @@ export default class EmailSettingForm extends React.Component {
     }
   }
 
-  update(row) {
+  update(row, label) {
     this.setState({
       "emailId": row.emailId || "",
       "password": row.password || "",
       "server": row.server || "",
       "port": row.port || "",
       "encrypt": row.encrypt || "",
-      "_id": row._id || undefined
+      "_id": row._id || undefined,
+      "label": label
     })
     this.error = [];
   }
+
+  clear() {
+    this.setState({
+      "emailId": "",
+      "password": "",
+      "server": "",
+      "port": "",
+      "encrypt": "",
+      "_id": undefined,
+      "label": "Save"
+    })
+  }
+
   saveSettings () {
     if (this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
@@ -48,31 +79,30 @@ export default class EmailSettingForm extends React.Component {
         "server": this.state.server ,
         "port": this.state.port ,
         "encrypt": this.state.encrypt,
-        "_id": this.props.emailSetting._id || undefined
+        "_id": this.state._id || undefined
       });
-      this.setState({
-        "emailId": "",
-        "password": "",
-        "server": "",
-        "port": "",
-        "encrypt": "",
-        "_id": undefined
-      })
-      this.props.snackbarOpen("We Catch your changes");
+      this.clear();
+    }else{
+      this.props.snackbarOpen("Please fill all fields properly");
     }
   }
 
   render() {
     return (
       <div className="row">
-        <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12 well well-lg">
+        <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
           <Paper zDepth={2} style={{"padding":"20px"}}>
-            <h4 className="h4 text-center">Enter email server details </h4>
-            <form>
-              <div>
+            <TableRow>
+              <TableHeaderColumn colSpan="4"  style={{float: 'left'}}>
+                <h4 className="h4">IMAP/POP3 server </h4>
+              </TableHeaderColumn>
+            </TableRow>
+            <Divider/>
+            <form className="form-inline">
+              <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
-                  floatingLabelText="Username"
+                  floatingLabelText="Email"
                   hintText="Your email Id"
                   fullWidth={true}
                   onChange={
@@ -91,7 +121,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.emailId}
                 />
               </div>
-              <div>
+              <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
                   floatingLabelText="Password"
@@ -113,7 +143,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.password}
                 />
               </div>
-              <div>
+              <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
                   floatingLabelText="SMTP Server"
@@ -135,7 +165,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.server}
                 />
               </div>
-              <div>
+              <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
                   floatingLabelText="Server port"
@@ -157,7 +187,7 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.port}
                 />
               </div>
-              <div>
+              <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
                   floatingLabelText="encrypt"
@@ -179,17 +209,19 @@ export default class EmailSettingForm extends React.Component {
                   value={this.state.encrypt}
                 />
               </div>
-              <div>
+              <div className="form-group" style={style.formButton}>
                 <RaisedButton
-                  backgroundColor="#a4c639"
-                  labelColor="#444"
-                  icon={<FontIcon className="fa fa-floppy-o fa-2x"/>}
-                  style={
-                    {
-                      "marginTop": "2%"
-                    }
-                  }
+                  label={this.state.label}
+                  primary={true}
                   onClick={this.saveSettings}
+                />
+              </div>
+              <div className="form-group" style={style.formButton}>
+                <RaisedButton
+                  type="reset"
+                  label="Clear"
+                  secondary={true}
+                  onClick={this.clear}
                 />
               </div>
             </form>

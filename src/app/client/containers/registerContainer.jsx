@@ -1,20 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {withRouter} from 'react-router'
- 
-import AppBar from 'material-ui/AppBar';
+import {withRouter} from 'react-router';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Register from '../components/Register'
-import {registerUser} from '../actions'
+import {registerUser} from '../actions/register'
+
+
 
 
 class RegisterContainer extends React.Component {
   constructor(props){
     super(props);
-    
+
   }
   getChildContext() {
       return { muiTheme: getMuiTheme(baseTheme) };
@@ -23,11 +23,11 @@ class RegisterContainer extends React.Component {
   render() {
 
       return (
-            <Register 
-              router={this.props.router}  
+            <Register
+              router={this.props.router}
               onRegisterUser={this.props.registerUser}
             />
-         
+
       )
   }
 }
@@ -38,7 +38,7 @@ RegisterContainer.childContextTypes = {
 
 
 function mapStateToProps(state,props){
-  state = state.toJS()    
+  state = state.toJS()
   return {
     users: state
   }

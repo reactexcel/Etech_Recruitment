@@ -17,7 +17,7 @@ class LoginContainer extends React.Component{
      }
      render(){
 		return(
-			<div className="container" style={{'paddingTop':'30px'}}>
+			<div className="container" style={{'paddingTop':'20px'}}>
             <div className="row">
              <Login 
 			   router={this.props.router} 

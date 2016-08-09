@@ -2,29 +2,37 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Router, browserHistory, Link, withRouter } from 'react-router'
 import * as _ from 'lodash'
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import * as actions_forgotpassword from './../actions/forgotpassword/forgotpassword'
-
 import ForgotPasswordForm from './../components/forgotpassword/ForgotPasswordForm'
 
 class ForgotPassword extends React.Component {
     constructor( props ){
         super( props );
-        this.doForgotPassword = this.doForgotPassword.bind( this )
     }
-    componentWillReceiveProps( props ){
-    }
-    doForgotPassword( emailid ){
-    	this.props.onForgotPassword( emailid )
-    }
+      getChildContext() {
+      return { muiTheme: getMuiTheme(baseTheme) };
+  }
     render(){
         return(
         	<div>
-        		<ForgotPasswordForm doForgotPassword={this.doForgotPassword} status_message={this.props.forgotpassword.status }/>
+        		<ForgotPasswordForm 
+                    doForgotPassword={this.props.onForgotPassword} 
+                    status_message={this.props.forgotpassword.status } 
+                />
         	</div>
         )
     }
 }
+
+ForgotPassword.childContextTypes = {
+    muiTheme: React.PropTypes.object.isRequired,
+};
+
+
 function mapStateToProps( state ){
     return {
 		forgotpassword : state.toJS().entities.forgotpassword
