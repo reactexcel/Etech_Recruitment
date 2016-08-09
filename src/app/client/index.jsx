@@ -47,9 +47,6 @@ Meteor.startup(
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/emailSetting" component={EmailSettingContainer}></Route>
               </Route>
-              <Route path="/display" component={DisplayContainer}>
-                <Route path="/display/logs" component={LogsContainer}></Route>
-              </Route>
             </Route>
           </Router>
         </Provider>
