@@ -20,4 +20,5 @@ Meteor.startup(function () {
     process.env.MONGO_URL =  config_ENV.MongoDB._url();
     process.env.ROOT_URL = config_ENV.host._url();
   }
+console.log(process.env.MAIL_URL);
 });

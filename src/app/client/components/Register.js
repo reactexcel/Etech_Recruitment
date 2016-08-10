@@ -65,11 +65,12 @@ export default class Register extends React.Component {
     let name = this.state.name.trim()
     let password = this.state.password.trim()
     let emailValid = true
+     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if(email == ""){
       this.setState({
         errorEmail:"Email required"
       })
-    }else if(!/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(email)){
+    }else if(!re.test(email)){
       this.setState({
         errorEmail:"Enter a valid email"
       })
@@ -149,7 +150,7 @@ export default class Register extends React.Component {
             <div style={{textAlign: 'center' }}>
                 <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
                   <div style={{marginBottom:'40px'}}>
-                    <img src={Logo} style={{cursor:"pointer"}} />
+                    <img src={Logo} style={{cursor:"pointer",paddingRight:"20px"}} />
                   </div>
                 <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
                     <div style={{fontSize:'16px',marginBottom:'1rem',textAlign:'left'}}>Sign up</div>

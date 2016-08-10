@@ -1,9 +1,15 @@
 import React from 'react'
+import { withRouter, router } from 'react-router'
+
 
 class EmailListItem extends React.Component {
 
     constructor( props ){
         super( props );
+        this.openemail = this.openemail.bind(this);
+    }
+    openemail(){
+      this.props.router.push('emailbody/'+this.props.email._id)
     }
     render(){
       let m_from = this.props.email.from
@@ -30,7 +36,7 @@ class EmailListItem extends React.Component {
       return(
         <li className="list-group-item" style={{ 'backgroundColor': `${mail_bg_color}`, 'borderRadius':'0px'}}>
           <div className="row">
-            <div className="col-xs-2">
+            <div className="col-xs-2" onClick={this.openemail} >
               <b>{ m_from }</b>
             </div>
             <div className="col-xs-5">
@@ -49,4 +55,4 @@ class EmailListItem extends React.Component {
     }
 }
 
-export default EmailListItem
+export default withRouter(EmailListItem)

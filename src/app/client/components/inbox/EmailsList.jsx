@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
-
+import { withRouter, router } from 'react-router'
 import EmailsListItem from './EmailsListItem';
 
 class EmailsList extends React.Component {
@@ -72,5 +72,5 @@ class EmailsList extends React.Component {
         );
     }
 }
-export default EmailsList
+export default withRouter(EmailsList)
 
