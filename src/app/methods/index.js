@@ -12,11 +12,9 @@ Meteor.methods({
       name: name,
       username: email,
       password: password
-    })  
+    })
   },
   'log.insert':function(action_type,user_id,details){
-    check(action_type,string)
-    check(user_id,string)
     let logId = Logs.insert({
       action_type:action_type,
       user_id:user_id,
