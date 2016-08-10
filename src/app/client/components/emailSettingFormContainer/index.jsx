@@ -14,6 +14,7 @@ export default class EmailSettingFormContainer extends React.Component {
       "message" : "",
     }
     this.selectedRow = this.selectedRow.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentWillMount(){
@@ -28,6 +29,10 @@ export default class EmailSettingFormContainer extends React.Component {
     }
   }
 
+  clear(){
+    this.refs.form.clear();
+  }
+
   render() {
     return (
       <div>
@@ -37,6 +42,7 @@ export default class EmailSettingFormContainer extends React.Component {
               ref="form"
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
+              logging = {this.props.logging}
               />
           </div>
         </div>
@@ -46,6 +52,7 @@ export default class EmailSettingFormContainer extends React.Component {
               emailSetting={this.props.emailSetting}
               selectedRow={this.selectedRow}
               onTestDetails={this.props.onTestDetails}
+              clear={this.clear}
               />
           </div>
         </div>
@@ -58,5 +65,6 @@ EmailSettingFormContainer.propTypes = {
   onFetchSettings: PropTypes.func.isRequired,
   onSaveSettings: PropTypes.func.isRequired,
   onTestDetails: PropTypes.func.isRequired,
+  logging: React.PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
 };
