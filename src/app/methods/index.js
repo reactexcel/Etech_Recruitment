@@ -18,8 +18,7 @@ Meteor.methods({
     let logId = Logs.insert({
       action_type:action_type,
       user_id:user_id,
-      details:details,
-      created_on:new Date()
+      details:details
     });
     let logDisplay={
       logId:logId,

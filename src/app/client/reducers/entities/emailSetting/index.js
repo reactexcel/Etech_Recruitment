@@ -10,6 +10,7 @@ export function emailSetting (state = initialState, action ){
     });
     return Immutable.List(nextState);
   }else if (action.type === ACTION.SAVE_SETTINGS_TO_DB) {
+    console.log(action.payload);
     return state.push(Immutable.Map(action.payload));
   }else if (action.type === ACTION.UPDATE_SETTINGS_TO_DB) {
     return  state.map(
@@ -20,16 +21,6 @@ export function emailSetting (state = initialState, action ){
                  .set("server", action.payload.server)
                  .set("port", action.payload.port)
                  .set("encrypt", action.payload.encrypt)
-          }else{
-            return value;
-          }
-        }
-      );
-  }else if (action.type === ACTION.TEST_DETAILS) {
-    return  state.map(
-        ( value ) => {
-          if(value.get("_id") === action.payload._id) {
-            return value.set("status", action.payload.status)
           }else{
             return value;
           }
