@@ -4,6 +4,9 @@ import Toggle from 'material-ui/Toggle';
 import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
+const classNames = require('classnames');
+import CircularProgress from 'material-ui/CircularProgress';
+import Dialog from 'material-ui/Dialog';
 
 const styles = {
   propContainer: {
@@ -19,14 +22,49 @@ const styles = {
 export default class EmailSettingList extends React.Component {
   constructor(props) {
     super(props);
+    this.state ={
+      "open" : false,
+      "title": "",
+     };
     this.select = this.select.bind(this);
+    this.checkMailServer = this.checkMailServer.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.flag = 0;
   }
+
+  handleOpen (email) {
+    this.setState({
+      "open" : true,
+      "title": "Testing for Email: "+ email,
+    });
+    this.flag++;
+  };
+
+  handleClose () {
+    this.setState({
+      "open" : false,
+      "title": "",
+    });
+  };
 
   select(row, checked){
     this.props.selectedRow(row, checked);
   }
 
+  checkMailServer( row, event ){
+    event.stopPropagation();
+    this.handleOpen(row.emailId)
+    this.props.onTestDetails( row );
+  }
+  componentWillUpdate () {
+    if (this.flag % 4 == 0) {
+      this.handleClose();
+      this.flag = 0 ;
+    }
+  }
   render() {
+    this.flag++;
     return (
       <div>
         <div className="row">
@@ -70,11 +108,34 @@ export default class EmailSettingList extends React.Component {
                       <TableRowColumn>{row.server}</TableRowColumn>
                       <TableRowColumn>{row.port}</TableRowColumn>
                       <TableRowColumn>{row.encrypt}</TableRowColumn>
+                      <TableRowColumn><IconButton iconClassName={
+                          classNames("fa" ,"fa-2x",
+                                      {"fa-check": (row.status == 1)},
+                                      {"fa-times": (row.status == -1)},
+                                      {"fa-minus": (row.status == 0)},
+                                     )
+                       } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
                 </TableBody>
               </Table>
             </Paper>
+            <div>
+              <Dialog
+                title={this.state.title}
+                modal={true}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+                children={
+                  <CircularProgress size={1} />
+                }
+                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+                titleClassName = "text-center text-muted"
+                titleStyle={{"color": "#666"}}
+                contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
+                ></Dialog>
+            </div>
           </div>
         </div>
       </div>
