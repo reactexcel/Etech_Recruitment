@@ -4,7 +4,7 @@ import { combineReducers } from 'redux-immutable'
 
 
 
-import { ADD_USER } from '../../../actions/register'
+import { ADD_USER } from '../../actions'
 
 
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {withRouter} from 'react-router';
+import {withRouter} from 'react-router'
+
+import AppBar from 'material-ui/AppBar';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Register from '../components/Register'
-import {registerUser} from '../actions/register'
-
-
+import {registerUser} from '../actions'
 
 
 class RegisterContainer extends React.Component {

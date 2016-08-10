@@ -134,30 +134,5 @@ Meteor.methods({
   	emailData.m_insert_timestamp = currentDateTime.getTime()*1,
   	emailData.m_read_status = 0*1
 	EmailsStore.insert( emailData );
-  },
-  getEmailsForInbox : function( emails_per_page, page_num ){
-  	var skip = emails_per_page * ( page_num - 1 )
-	var next_page = page_num + 1
-  	var previous_page = page_num - 1
-  	if( previous_page == 0 ){
-  		previous_page = ''
-  	}
-
-  	var allEmails = EmailsStore.find( {}, { skip : skip, limit: emails_per_page }).fetch()
-
-  	if( allEmails.length > 0 ){
-  		allEmails = _.map( allEmails, function( email ){
-  			let email_date = email.email_date
-  			email.email_date = moment(email_date).format("dddd, Do MMM")
-  			//console.log( da )
-  			return email
-  		})
-  	}
-
-  	return {
-		emails : allEmails,
-		previous_page : previous_page,
-		next_page : next_page
-  	}
   }
 });
