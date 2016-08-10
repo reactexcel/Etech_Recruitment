@@ -19,7 +19,6 @@ import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
-import EmailbodyContainer from './containers/emailBodyContainer'
 
 export let isMonitorAction;
 
@@ -48,7 +47,6 @@ Meteor.startup(
                 <Route path="/config/emailSetting" component={EmailSettingContainer}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
-              <Route path="emailbody/:id" component={EmailbodyContainer}></Route>
             </Route>
           </Router>
         </Provider>
