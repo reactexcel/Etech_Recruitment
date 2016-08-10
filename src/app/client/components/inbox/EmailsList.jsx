@@ -1,7 +1,11 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 
-import EmailsListItem from './EmailsListItem';
+import List from 'material-ui/List'
+
+import EmailsListItem from './EmailsListItem'
+
+import {Menu, MenuItem} from 'material-ui/Menu'
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -38,35 +42,31 @@ class EmailsList extends React.Component {
         }
         
         return(
-            <div>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <div className="col-xs-2" >
-                        </div>
-                        <div className="col-xs-10" >
-                            <nav aria-label="Page navigation">
-                                <ul className="pagination pull-right">
-                                    {prev_page_link}
-                                    {next_page_link}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <div className="col-xs-2" >
-                            <div className="list-group">
+            
+            <div className="row" style={{ "margin":"0px", "position" : "relative"}}> 
+                <div className="col-xs-1" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
+                    
+                    <Menu desktop={true}>
+                      <MenuItem  primaryText={
+                            <Link to="inbox">Inbox</Link>
+                        } />
+                      <MenuItem  primaryText="Trash"/>
+                    </Menu>
 
-                                <button type="button" className="list-group-item" style={{ 'borderRadius':'0px'}}><Link to="/inbox">Inbox</Link></button>
-                            </div>
-                        </div>
-                        <div className="col-xs-10" >
-                            <ul className="list-group">
-                                {emailsList}
+
+                </div>
+                <div className="col-xs-11" style={{ "float":"right"}}>
+                    <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>
+                        <nav aria-label="Page navigation">
+                            <ul className="pagination pull-right">
+                                {prev_page_link}
+                                {next_page_link}
                             </ul>
-                        </div>
+                        </nav>
                     </div>
+                    <List>
+                        {emailsList}
+                    </List>
                 </div>
             </div>
         );
