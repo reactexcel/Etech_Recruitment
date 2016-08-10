@@ -37,7 +37,7 @@ Meteor.methods({
       previous_page = ''
     }
 
-    var allLogs = Logs.find( {}, { skip : skip, limit: log_per_page }).fetch()
+    var allLogs = Logs.find( {}, {limit: log_per_page }).fetch()
 
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){

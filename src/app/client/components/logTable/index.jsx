@@ -1,20 +1,17 @@
 import React, {PropTypes} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
 import _ from 'lodash';
 const classNames = require('classnames');
+import {
+  Step,
+  Stepper,
+  StepButton,
+  StepContent,
+} from 'material-ui/Stepper';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
-const styles = {
-  propContainer: {
-    width: 200,
-    overflow: 'hidden',
-    margin: '20px auto 0',
-  },
-  propToggleHeader: {
-    margin: '20px auto 10px',
-  },
-};
 
 export default class Login extends React.Component{
 	static contextTypes={
@@ -22,68 +19,86 @@ export default class Login extends React.Component{
     }
     constructor(props){
 		super(props);
+    this.state={
+      stepIndex: 0,
+      log_per_page_afterFirstPage:this.props.prestent_per_page
+    }
 	}
+  handleNext = () => {
+    const {stepIndex} = this.state.stepIndex;
+    if (stepIndex < 2) {
+      this.setState({stepIndex: stepIndex + 1});
+    }
+  };
+
+  handlePrev = () => {
+    const {stepIndex} = this.state.stepIndex;
+    if (stepIndex > 0) {
+      this.setState({stepIndex: stepIndex - 1});
+    }
+  };
+  
 	componentWillMount(){
     }
     componentWillReceiveProps( props ){
-    }
+    } 
 	render(){
+    console.log(this.state.stepIndex,"ddddd")
+    const stepIndex = this.state.stepIndex;
 		let logs=this.props.log.logs
-		let logList=logs.map((log)=>{
-			return(
-				<TableRow>
-                <TableRowColumn>{log.user_id}</TableRowColumn>
-                <TableRowColumn>{log.action_type}</TableRowColumn>
-                <TableRowColumn>{log.details}</TableRowColumn>
-                <TableRowColumn>{log.created_on}</TableRowColumn>
-                </TableRow>
-				);
-		})
-		let prev_page_num = this.props.log.previous_page
+    let logList=logs.map((log,i)=>{
+      return(
+        <Step>
+            <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
+              <div>{log.user_id}</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({log.created_on})</div>
+            </StepButton>
+            <StepContent style={{marginTop:'5px'}}>
+              <div>
+              <div style={{fontWeight:'bold'}}>
+              Action:{log.action_type}
+              </div>
+              <p>
+                {log.details}
+              </p>
+              </div>
+            </StepContent>
+          </Step>
+        );
+    })
         let next_page_num = this.props.log.next_page
-
-        let prev_page_link = <li style={{cursor:'pointer'}} onClick={ () => this.props.pageChange(prev_page_num)}><span aria-hidden="true">&laquo;</span></li>
-        if( prev_page_num == '' ){
-            prev_page_link = <li style={{cursor:'pointer'}} className="disabled" onClick={ () => this.props.pageChange(prev_page_num)} ><span aria-hidden="true">&laquo;</span></li>
-        }
-
-        let next_page_link = <li style={{cursor:'pointer'}} onClick={ () => this.props.pageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
+        let next_page_link=<RaisedButton label="Load More" secondary={true} onTouchTap={ () =>{
+          this.setState({
+            log_per_page_afterFirstPage:this.state.log_per_page_afterFirstPage+3
+          });
+          this.props.pageChange(next_page_num,this.state.log_per_page_afterFirstPage)
+        }}/>
         if( next_page_link == '' ){
-            next_page_link = <li style={{cursor:'pointer'}} className="disabled" onClick={ () => this.props.pageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
+            next_page_link=<RaisedButton label="Load More" secondary={true} onTouchTap={ () =>{
+          this.setState({
+            log_per_page_afterFirstPage:this.state.log_per_page_afterFirstPage+3
+          });
+          this.props.pageChange(next_page_num,this.state.log_per_page_afterFirstPage)
+        }}/>
         }
 		return(
-		<div>
-              <Table
-              fixedHeader={true}
-              fixedFooter={true}
-              >
-    <TableHeader
-    adjustForCheckbox={false}
-    displaySelectAll={false}
-    >
-    <TableRow>
-        <TableHeaderColumn colSpan="4"  style={{textAlign: 'center'}}>
-           <h4>Candidate Logs</h4>
-        </TableHeaderColumn>
-    </TableRow>
-      <TableRow>
-        <TableHeaderColumn>User Id</TableHeaderColumn>
-        <TableHeaderColumn>Action</TableHeaderColumn>
-        <TableHeaderColumn>Details</TableHeaderColumn>
-        <TableHeaderColumn>Date</TableHeaderColumn>
-      </TableRow>
-    </TableHeader>
-    <TableBody displayRowCheckbox={false}>
-      {logList}
-    </TableBody>
-  </Table>
-  <div style={{textAlign:'center'}}>
-   <ul className="pagination">
-   {prev_page_link}
-   {next_page_link}
-   </ul>
-   </div>
-  </div>
+      <div>
+		<div style={{margin: 'auto',backgroundColor:'white',borderRadius:'3px',padding:'10'}}>
+    <div style={{marginLeft:'4px'}}>
+    <h4>Candidate Logs:</h4>
+    </div>
+        <Stepper
+          activeStep={stepIndex}
+          linear={false}
+          orientation="vertical"
+        >
+          {logList}
+        </Stepper>
+      </div>
+      <div style={{textAlign:'center',marginTop:'10px'}}>
+        {next_page_link}
+      </div>
+      </div>
 			);
 	}
 }

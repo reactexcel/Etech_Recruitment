@@ -11,7 +11,7 @@ class LogsContainer extends React.Component {
 	constructor(props) {
       super(props);
       this.state = {
-            log_per_page : 10,
+            log_per_page : 3,
             page_num : 1
         }
         this.pageChange = this.pageChange.bind(this)
@@ -21,9 +21,13 @@ class LogsContainer extends React.Component {
     }
     componentWillReceiveProps( props ){
     }
-    pageChange( page_num ){
+    pageChange( page_num,log_per_page_afterFirstPage ){
         if( page_num != '' ){
+            if(page_num==1){
             this.props.onLogData( this.state.log_per_page, page_num )
+          }else{
+            this.props.onLogData( log_per_page_afterFirstPage, page_num )
+          }
         }
     }
     getChildContext() {
@@ -34,7 +38,7 @@ class LogsContainer extends React.Component {
     render() {
     return (
       <div>
-        <LogTable log={this.props.log} pageChange={this.pageChange}/>
+        <LogTable prestent_per_page={this.state.log_per_page} log={this.props.log} pageChange={this.pageChange}/>
       </div>
       );
     }
