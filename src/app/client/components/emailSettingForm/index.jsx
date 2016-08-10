@@ -29,7 +29,9 @@ export default class EmailSettingForm extends React.Component {
       "port": this.props.emailSetting.port || "",
       "encrypt": this.props.emailSetting.encrypt || "",
       "_id": this.props.emailSetting._id || undefined,
-      "label": "Save"
+      "status": this.props.emailSetting.status || 0,
+      "label": "Save",
+      "edit": 0,
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -52,7 +54,9 @@ export default class EmailSettingForm extends React.Component {
       "port": row.port || "",
       "encrypt": row.encrypt || "",
       "_id": row._id || undefined,
-      "label": label
+      "status": row.status || 0,
+      "label": label,
+      "edit": 1,
     })
     this.error = [];
   }
@@ -65,7 +69,9 @@ export default class EmailSettingForm extends React.Component {
       "port": "",
       "encrypt": "",
       "_id": undefined,
-      "label": "Save"
+      "label": "Save",
+      "status": this.state.status,
+      "edit": 0,
     })
   }
 
@@ -81,6 +87,13 @@ export default class EmailSettingForm extends React.Component {
         "encrypt": this.state.encrypt,
         "_id": this.state._id || undefined
       });
+      if(this.state.edit == 1){
+        this.props.logging("Edit email information",
+          Meteor.userId(), "edited information of email id : "+this.state.emailId)
+      }else if (this.state.edit == 0){
+        this.props.logging("New eamil server added",
+          Meteor.userId(), "New server email id : "+this.state.emailId)
+      }
       this.clear();
     }else{
       this.props.snackbarOpen("Please fill all fields properly");

@@ -36,9 +36,9 @@ class EmailListItem extends React.Component {
 
       let email_date = this.props.email.email_date
 
-    	let m_source_email_id = this.props.email.m_source_email_id
-		  let f_char = m_from.charAt(0)
-    	f_char = f_char.toUpperCase();
+      let m_source_email_id = this.props.email.m_source_email_id
+      let f_char = m_from.charAt(0)
+      f_char = f_char.toUpperCase();
 
       let m_read_status = this.props.email.m_read_status
       let mail_bg_color = "#fff"

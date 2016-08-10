@@ -3,16 +3,15 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
-import {withRouter} from 'react-router';
 import {Menu, MenuItem} from 'material-ui/Menu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import MenuDrawer from '../../components/menuDrawer';
-import verge from 'verge';
+import MenuDrawer from '../menuDrawer';
 
-class ConfigurationContainer extends React.Component {
-  constructor(props) {
+
+class EmailBodyHeader extends React.Component {
+	constructor(props) {
     super(props);
     this.state={"open": false}
     this.handleToggel = this.handleToggel.bind(this);
@@ -34,12 +33,9 @@ class ConfigurationContainer extends React.Component {
 
   render() {
     return (
-        <div>
+          <div>
           <AppBar
-            title={_.isEmpty(_.upperFirst(_.split(this.props.location.pathname,'/')[2]))
-              ?"Settings"
-              :_.map(_.split(_.split(this.props.location.pathname,'/')[2],'-'), (v)=>(_.upperFirst(v)+" "))
-            }
+            title={'Email Body'}
             showMenuIconButton={true}
             iconElementRight={
               <IconMenu
@@ -57,15 +53,6 @@ class ConfigurationContainer extends React.Component {
             iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
             zDepth={2}
             />
-          <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
-            <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
-              <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
-              <MenuItem  primaryText="Database setting" value="config/imap-server-setting" onTouchTap={this.redirect}/>
-            </Menu>
-          </div>
-          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
-            {this.props.children}
-          </div>
           <MenuDrawer
             open={this.state.open}
             router={this.props.router}
@@ -77,4 +64,4 @@ class ConfigurationContainer extends React.Component {
   }
 }
 
-export default withRouter(ConfigurationContainer);
+export default EmailBodyHeader

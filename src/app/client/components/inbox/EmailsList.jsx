@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
+import { withRouter, router } from 'react-router'
 
 import List from 'material-ui/List'
 
@@ -72,5 +73,6 @@ class EmailsList extends React.Component {
         );
     }
 }
-export default EmailsList
+
+export default withRouter(EmailsList)
 

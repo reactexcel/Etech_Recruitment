@@ -14,8 +14,7 @@ export default class EmailSettingFormContainer extends React.Component {
       "message" : "",
     }
     this.selectedRow = this.selectedRow.bind(this);
-    this.snackbarClose = this.snackbarClose.bind(this);
-    this.snackbarOpen = this.snackbarOpen.bind(this);
+    this.clear = this.clear.bind(this);
   }
 
   componentWillMount(){
@@ -44,6 +43,10 @@ export default class EmailSettingFormContainer extends React.Component {
     }
   }
 
+  clear(){
+    this.refs.form.clear();
+  }
+
   render() {
     return (
       <div>
@@ -53,7 +56,7 @@ export default class EmailSettingFormContainer extends React.Component {
               ref="form"
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
-              snackbarOpen={this.snackbarOpen}
+              logging = {this.props.logging}
               />
           </div>
         </div>
@@ -62,6 +65,8 @@ export default class EmailSettingFormContainer extends React.Component {
             <EmailSettingList
               emailSetting={this.props.emailSetting}
               selectedRow={this.selectedRow}
+              onTestDetails={this.props.onTestDetails}
+              clear={this.clear}
               />
           </div>
         </div>
@@ -79,5 +84,7 @@ export default class EmailSettingFormContainer extends React.Component {
 EmailSettingFormContainer.propTypes = {
   onFetchSettings: PropTypes.func.isRequired,
   onSaveSettings: PropTypes.func.isRequired,
+  onTestDetails: PropTypes.func.isRequired,
+  logging: React.PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
 };

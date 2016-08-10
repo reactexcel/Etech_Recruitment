@@ -19,17 +19,17 @@ Meteor.methods({
 	//check for imap settings
 	var checkSettings = Meteor.call('fetchSettings')
 	if( checkSettings.length == 0 ){
-		return 'SETTINGS_NOT_FOUND'		
+		return 'SETTINGS_NOT_FOUND'
 	}else{
 		var settings = checkSettings[0]
-		
+
 		var source_email_id = settings.emailId
   		var source_email_password = settings.password
   		var source_host = settings.server
   		var source_port = settings.port
   		var source_encryp = settings.encrypt
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
   	var date = new Date()
 	var todaysDate = moment(date).format("YYYY-MM-DD")
@@ -45,7 +45,7 @@ Meteor.methods({
 		fetchingEmailsFromId = last_email_id_stored + 1
 		fetchingEmailsForDate = last_email_id_stored_details.last_email_fetch_date
 		if( fetchingEmailsForDate == ''){
-			fetchingEmailsForDate = todaysDate	
+			fetchingEmailsForDate = todaysDate
 		}
 
 	}else{
@@ -61,7 +61,7 @@ Meteor.methods({
 		PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp+"&email_id="+fetchingEmailsFromId
 	}
 	var API_URL = BASE_URL + PARAMS
-	
+
 	try {
 		var ret = 0
     	var result = HTTP.call("GET", API_URL );
@@ -80,7 +80,7 @@ Meteor.methods({
 							if( email.email_id > last_email_id ){
 								last_email_id = email.email_id
 							}
-						}				
+						}
 					}
 					if(  typeof email.email_date != 'undefined' && email.email_date != '' ){
 						last_email_date = email.email_date
@@ -104,9 +104,9 @@ Meteor.methods({
   getLastEmailidStoredDetails : function( emailid ){
   	var checkExisting = EmailsStoreStatus.find({ 'source_email_id' : emailid }).fetch()
   	if( checkExisting.length > 0 ){
+    }else{
   		var record = checkExisting[0]
   		return record
-  	}else{
   		Meteor.call('insertNewEmailStoreStatus', emailid )
   		return false
   	}
@@ -122,7 +122,7 @@ Meteor.methods({
   	var where = {
   		source_email_id : source_email_id
   	}
-	EmailsStoreStatus.update( where, { $set: { 
+	EmailsStoreStatus.update( where, { $set: {
 		last_email_id_fetch: last_email_id_fetch*1,
 		last_email_fetch_date : last_email_fetch_date
 	}});
