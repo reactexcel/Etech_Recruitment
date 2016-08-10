@@ -143,9 +143,6 @@ Meteor.methods({
   		previous_page = ''
   	}
 
-<<<<<<< HEAD
-  	var allEmails = EmailsStore.find( {}, { skip : skip, limit: emails_per_page }).fetch()
-=======
   	//----
   	var totalPages = 0
   	var allEmailsCount = EmailsStore.find().count()
@@ -159,16 +156,11 @@ Meteor.methods({
 	}
 
 	var allEmails = EmailsStore.find( {}, { sort: {email_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch()
->>>>>>> 749a0d3d612b4125bc8fcf08e90d13c2b9879c33
 
   	if( allEmails.length > 0 ){
   		allEmails = _.map( allEmails, function( email ){
   			let email_date = email.email_date
   			email.email_date = moment(email_date).format("dddd, Do MMM")
-<<<<<<< HEAD
-  			//console.log( da )
-=======
->>>>>>> 749a0d3d612b4125bc8fcf08e90d13c2b9879c33
   			return email
   		})
   	}
