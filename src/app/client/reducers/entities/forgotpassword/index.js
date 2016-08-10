@@ -4,8 +4,6 @@ let initialState = {
 	status : ''
 }
 
-
- 
 export function forgotpassword( state = Immutable.Map(initialState), action ){
     if( action.type == 'ACTION_SUCCESS_FORGOT_PASSOWORD' ){
         return state.set('status', action.payload )

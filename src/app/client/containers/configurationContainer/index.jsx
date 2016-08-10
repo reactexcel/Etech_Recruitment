@@ -9,7 +9,6 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import MenuDrawer from '../../components/menuDrawer';
-import verge from 'verge';
 
 class ConfigurationContainer extends React.Component {
   constructor(props) {
@@ -38,7 +37,7 @@ class ConfigurationContainer extends React.Component {
           <AppBar
             title={_.isEmpty(_.upperFirst(_.split(this.props.location.pathname,'/')[2]))
               ?"Settings"
-              :_.map(_.split(_.split(this.props.location.pathname,'/')[2],'-'), (v)=>(_.upperFirst(v)+" "))
+              :_.upperFirst(_.split(this.props.location.pathname,'/')[2])
             }
             showMenuIconButton={true}
             iconElementRight={
@@ -57,13 +56,18 @@ class ConfigurationContainer extends React.Component {
             iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
             zDepth={2}
             />
-          <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
-            <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
-              <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
-              <MenuItem  primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
+          <div className="col-lg-2 col-sm-2 col-xs-12">
+            <Menu desktop={true} style={{"float": "left"}}>
+              <MenuItem style={{"color": "#fff"}} primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
+              <Divider />
+              <MenuItem style={{"color": "#fff"}} primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
+              <Divider />
+              <MenuItem style={{"color": "#fff"}} primaryText="Inbox setting" value="config/emailSetting" onTouchTap={this.redirect}/>
+              <Divider />
+              <MenuItem style={{"color": "#fff"}} primaryText="Menu Item" value="config/emailSetting" onTouchTap={this.redirect}/>
             </Menu>
           </div>
-          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
+          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"height": "100%"}}>
             {this.props.children}
           </div>
           <MenuDrawer

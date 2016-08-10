@@ -43,7 +43,6 @@ export default class Login extends React.Component{
     componentWillReceiveProps( props ){
     } 
 	render(){
-    console.log(this.state.stepIndex,"ddddd")
     const stepIndex = this.state.stepIndex;
 		let logs=this.props.log.logs
     let logList=logs.map((log,i)=>{
