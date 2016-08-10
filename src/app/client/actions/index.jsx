@@ -2,11 +2,6 @@ import { createAction } from 'redux-actions';
 
 export const ADD_USER = "ADD_USER";
 
-
-
-
-
-
 export function registerUser(email, name, password){
 	return function (dispatch, getState){
 		return new Promise( (resolve, reject) => {
