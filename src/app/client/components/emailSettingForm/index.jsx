@@ -4,6 +4,7 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+
 const style={
   "formInput":{
     "marginLeft": "5%",
@@ -27,7 +28,8 @@ export default class EmailSettingForm extends React.Component {
       "encrypt": this.props.emailSetting.encrypt || "",
       "_id": this.props.emailSetting._id || undefined,
       "status": this.props.emailSetting.status || 0,
-      "label": "Save"
+      "label": "Save",
+      "edit": 0,
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -51,7 +53,8 @@ export default class EmailSettingForm extends React.Component {
       "encrypt": row.encrypt || "",
       "_id": row._id || undefined,
       "status": row.status || 0,
-      "label": label
+      "label": label,
+      "edit": 1,
     })
     this.error = [];
   }
@@ -64,7 +67,9 @@ export default class EmailSettingForm extends React.Component {
       "port": "",
       "encrypt": "",
       "_id": undefined,
-      "label": "Save"
+      "label": "Save",
+      "status": this.state.status,
+      "edit": 0,
     })
   }
 
@@ -81,6 +86,13 @@ export default class EmailSettingForm extends React.Component {
         "status": 0,
         "_id": this.state._id || undefined
       });
+      if(this.state.edit == 1){
+        this.props.logging("Edit email information",
+          Meteor.userId(), "edited information of email id : "+this.state.emailId)
+      }else if (this.state.edit == 0){
+        this.props.logging("New eamil server added",
+          Meteor.userId(), "New server email id : "+this.state.emailId)
+      }
       this.clear();
     }
   }

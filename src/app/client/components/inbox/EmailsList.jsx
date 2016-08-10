@@ -33,7 +33,7 @@ class EmailsList extends React.Component {
         }
 
         let next_page_link = <li onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
-        if( next_page_num == '' ){
+        if( next_page_link == '' ){
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
         

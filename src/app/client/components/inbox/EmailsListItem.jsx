@@ -24,7 +24,7 @@ class EmailListItem extends React.Component {
 
       let m_read_status = this.props.email.m_read_status
       let mail_bg_color = "#fff"
-      if( typeof m_read_status == 'undefined' || m_read_status == 1 ){
+      if( typeof m_read_status == 'undefined' || m_read_status == 0 ){
         mail_bg_color = "rgb(229, 226, 226)"
       }
       return(
@@ -43,7 +43,7 @@ class EmailListItem extends React.Component {
               {email_date}
             </div>
           </div>
-
+          
         </li>
       );
     }
