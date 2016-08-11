@@ -110,9 +110,10 @@ Meteor.methods({
 
 		    	var result = HTTP.call("GET", API_URL );
 
-				if( typeof result.content != 'undefined' ){
+		    	if( typeof result.content != 'undefined' ){
 
 		    		var json = JSON.parse( result.content )
+		    		
 
 					if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
 						TYPE = "SUCCESS"
@@ -174,12 +175,31 @@ Meteor.methods({
 	
   },
   insertNewEmail : function ( source_email_id, emailData ){
+
   	var currentDateTime = new Date()
-	emailData.m_source_email_id = source_email_id
-  	emailData.m_insert_time = currentDateTime
-  	emailData.m_insert_timestamp = currentDateTime.getTime()*1,
-  	emailData.m_read_status = 0*1
-	EmailsStore.insert( emailData );
+  	emailData.m_source_email_id = source_email_id
+	emailData.m_insert_time = currentDateTime
+   	emailData.m_insert_timestamp = currentDateTime.getTime()*1,
+   	emailData.m_read_status = 0*1
+   	//---------------------------
+
+	var senderEmail = emailData.sender_mail
+	var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
+	
+	if( checkExistingSenderEmail.length > 0 ){
+		var existingEmail = checkExistingSenderEmail[0]
+		var existingEmail_mongoid = existingEmail._id
+
+		var dataToUpdate = {
+			'm_insert_time' : currentDateTime,
+   			'm_insert_timestamp' : currentDateTime.getTime()*1,
+   			'm_read_status' : 0*1
+  		}
+		EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } })
+
+	}else{
+		EmailsStore.insert( emailData );
+	}
   },
   getEmailsForInbox : function( emails_per_page, page_num ){
   	var skip = emails_per_page * ( page_num - 1 )
