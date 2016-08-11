@@ -59,8 +59,8 @@ class ConfigurationContainer extends React.Component {
             />
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
             <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
-              <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("config/emailSetting");}}/>
-              <MenuItem  primaryText="Database setting" value="config/imap-server-setting" onTouchTap={this.redirect}/>
+              <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}/>
+              <MenuItem  primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
             </Menu>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
