@@ -24,28 +24,16 @@ export default class Login extends React.Component{
       log_per_page_afterFirstPage:this.props.prestent_per_page
     }
 	}
-  handleNext = () => {
-    const {stepIndex} = this.state.stepIndex;
-    if (stepIndex < 2) {
-      this.setState({stepIndex: stepIndex + 1});
-    }
-  };
 
-  handlePrev = () => {
-    const {stepIndex} = this.state.stepIndex;
-    if (stepIndex > 0) {
-      this.setState({stepIndex: stepIndex - 1});
-    }
-  };
-  
 	componentWillMount(){
     }
     componentWillReceiveProps( props ){
-    } 
+    }
 	render(){
+    console.log(this.props.log.logs)
     const stepIndex = this.state.stepIndex;
 		let logs=this.props.log.logs
-    let logList=logs.map((log,i)=>{
+    let logList=_.map(logs,(log,i)=>{
       return(
         <Step>
             <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>

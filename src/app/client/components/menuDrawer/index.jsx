@@ -32,7 +32,7 @@ export default class MenuDrawer extends React.Component {
         <Divider/>
         <MenuItem onTouchTap={()=>{this.handleClose("/")}}>Home</MenuItem>
         <Divider/>
-        <MenuItem onTouchTap={this.handleClose}>Inbox</MenuItem>
+        <MenuItem onTouchTap={() => this.handleClose("/inbox")}>Inbox</MenuItem>
         <Divider/>
         <MenuItem onTouchTap={this.handleClose}>Candidate Liat</MenuItem>
         <Divider/>

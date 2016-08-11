@@ -12,11 +12,9 @@ Meteor.methods({
       name: name,
       username: email,
       password: password
-    })  
+    })
   },
   'log.insert':function(action_type,user_id,details){
-    check(action_type,string)
-    check(user_id,string)
     let logId = Logs.insert({
       action_type:action_type,
       user_id:user_id,
@@ -32,12 +30,12 @@ Meteor.methods({
     return logDisplay
   },
   'getlogsToDisplay' : function( log_per_page, page_num ){
-    var skip = log_per_page * ( page_num - 1 )
     var next_page = page_num + 1
+    /*var skip = log_per_page * ( page_num - 1 )
     var previous_page = page_num - 1
     if( previous_page == 0 ){
       previous_page = ''
-    }
+    }*/
 
     var allLogs = Logs.find( {}, {limit: log_per_page }).fetch()
 
@@ -51,7 +49,7 @@ Meteor.methods({
 
     return {
     logs : allLogs,
-    previous_page : previous_page,
+    //previous_page : previous_page,
     next_page : next_page
     }
   }
