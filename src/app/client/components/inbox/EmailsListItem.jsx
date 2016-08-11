@@ -36,10 +36,10 @@ class EmailListItem extends React.Component {
       return(
         <li className="list-group-item" style={{ 'backgroundColor': `${mail_bg_color}`, 'borderRadius':'0px'}}>
           <div className="row">
-            <div className="col-xs-2" onClick={this.openemail} >
+            <div className="col-xs-2" onClick={this.openemail} style={{cursor:'pointer'}} >
               <b>{ m_from }</b>
             </div>
-            <div className="col-xs-5">
+            <div className="col-xs-5" onClick={this.openemail} style={{cursor:'pointer'}}>
               {m_subject}
             </div>
             <div className="col-xs-3">

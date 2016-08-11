@@ -4,20 +4,21 @@ import {withRouter, Link} from 'react-router';
 
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
-
+import { getEmailData } from '../actions/inbox'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state={"open": false}
   }
   componentWillReceiveProps(props){
+  }
+  componentWillMount(){
+    this.props.onEmailDetail(this.props.params.id)
   }
   render() {
     return (
         <div>
           <EmailBodyHeader />
           <EmailBody {...this.props}/>
-          
         </div>
     );
   }
@@ -26,12 +27,14 @@ class EmailbodyContainer extends React.Component {
 function mapStateToProps( state ){
     state = state.toJS()
     return {
-        list : state.entities.inbox.emails
+        email : state.entities.email
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-
+      onEmailDetail : (email_id) => {
+        return dispatch(getEmailData( email_id ))
+      }
     }
 }
 
