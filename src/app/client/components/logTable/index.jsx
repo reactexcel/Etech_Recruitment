@@ -37,21 +37,20 @@ export default class Login extends React.Component{
       this.setState({stepIndex: stepIndex - 1});
     }
   };
-  
+
 	componentWillMount(){
     }
     componentWillReceiveProps( props ){
-    } 
+    }
 	render(){
-    console.log(this.state.stepIndex,"ddddd")
     const stepIndex = this.state.stepIndex;
 		let logs=this.props.log.logs
-    let logList=logs.map((log,i)=>{
+    let logList=_.map(logs,(log,i)=>{
       return(
         <Step>
             <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
               <div>{log.user_id}</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>({log.created_on})</div>
+              <div style={{color:'#8c8c8c'}}>({log.created_on.toString()})</div>
             </StepButton>
             <StepContent style={{marginTop:'5px'}}>
               <div>
