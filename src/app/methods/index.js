@@ -31,13 +31,8 @@ Meteor.methods({
   },
   'getlogsToDisplay' : function( log_per_page, page_num ){
     var next_page = page_num + 1
-    /*var skip = log_per_page * ( page_num - 1 )
-    var previous_page = page_num - 1
-    if( previous_page == 0 ){
-      previous_page = ''
-    }*/
 
-    var allLogs = Logs.find( {}, {limit: log_per_page }).fetch()
+    var allLogs = Logs.find( {}, {sort: {created_on: -1},limit: log_per_page }).fetch()
 
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){
@@ -49,7 +44,6 @@ Meteor.methods({
 
     return {
     logs : allLogs,
-    //previous_page : previous_page,
     next_page : next_page
     }
   }
