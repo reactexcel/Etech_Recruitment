@@ -90,7 +90,7 @@ class EmailListItem extends React.Component {
                 }
                 secondaryText={
                   <p>
-                    {m_from}
+                    <i><b> {m_source_email_id} </b></i> - From {m_from}
                   </p>
                 }
                 secondaryTextLines={2}

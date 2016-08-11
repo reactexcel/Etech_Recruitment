@@ -6,7 +6,7 @@ import FontIcon from 'material-ui/FontIcon';
 
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import ActionInfo from 'material-ui/svg-icons/action/info';
+import LinearProgress from 'material-ui/LinearProgress';
 
 class ImapAccountsListItem extends React.Component {
 
@@ -15,15 +15,11 @@ class ImapAccountsListItem extends React.Component {
     }
     render(){
 
-    	//console.log( this.props.imapEmail.fetch_email_status.email_fetch_response )
-
-    	let fetch_response_TYPE = "Pending"
+    	let fetch_response_TYPE = <LinearProgress mode="indeterminate" color="green" />
     	let fetch_response_EMAILS_FETCHED_COUNT = ""
     	let fetch_response_MESSAGE = ""
 
     	if( typeof this.props.imapEmail.fetch_email_status != 'undefined'){
-
-    		console.log( this.props.imapEmail.fetch_email_status  )
 
 			if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response != 'undefined' ){
 				if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.type != 'undefined' ){
@@ -55,12 +51,13 @@ class ImapAccountsListItem extends React.Component {
 				<ListItem 
 					primaryText= {
 						<p>
+
                     		<b>
                       			{this.props.imapEmail.emailId}
                     		</b>
+
                   		</p>
 					}
-            		rightIcon={<ActionInfo />}
             		secondaryText={
 	                  <p style={{"fontSize": "11px"}}>
 	                    {fetch_response_TYPE}
