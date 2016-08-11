@@ -11,7 +11,7 @@ class LogsContainer extends React.Component {
 	constructor(props) {
       super(props);
       this.state = {
-            log_per_page : 3,
+            log_per_page : 10,
             page_num : 1
         }
         this.pageChange = this.pageChange.bind(this)
