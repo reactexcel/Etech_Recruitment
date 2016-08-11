@@ -21,6 +21,7 @@ import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
 import DisplayContainer from './containers/displayLogs'
 import LogsContainer from './containers/displayLogs/logs'
+import EmailbodyContainer from './containers/emailBodyContainer'
 
 export let isMonitorAction;
 
@@ -52,6 +53,7 @@ Meteor.startup(
               <Route path="/display" component={DisplayContainer}>
                  <Route path="/display/logs" component={LogsContainer}></Route>
               </Route>
+              <Route path="emailbody/:id" component={EmailbodyContainer}></Route>
             </Route>
           </Router>
         </Provider>
