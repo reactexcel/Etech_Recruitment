@@ -21,9 +21,23 @@ export default class EmailSettingFormContainer extends React.Component {
     this.props.onFetchSettings();
   }
 
+  snackbarClose(){
+    this.setState({
+      "open": false,
+      "message" : "",
+    });
+  }
+
+  snackbarOpen(message){
+    this.setState({
+      "open": true,
+      "message" : message,
+    });
+  }
+
   selectedRow(row, checked){
     if(checked)
-      this.refs.form.update(row, "Save")
+      this.refs.form.update(row, "Edit")
     else {
       this.refs.form.update([], "Save")
     }
@@ -56,6 +70,12 @@ export default class EmailSettingFormContainer extends React.Component {
               />
           </div>
         </div>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={4000}
+          onRequestClose={this.sanckbarClose}
+        />
       </div>
     );
   }
