@@ -4,7 +4,8 @@ let initialState = {
 	status_inbox : '',
 	emails : [],
 	previous_page : '',
-	next_page : ''
+	next_page : '',
+    emails_fetch_status : []
 }
 
 export function inbox( state = Immutable.Map(initialState), action ){
@@ -20,6 +21,10 @@ export function inbox( state = Immutable.Map(initialState), action ){
     }else if( action.type == 'ACTION_ERROR_INBOX' ){
         
         return state.set('status_inbox', action.payload)
+
+    }else if( action.type == 'ACTION_SUCCESS_EMAILS_FETCH_STATUS' ){
+        //return state
+        return state.set('emails_fetch_status', action.payload)
 
     }
     return state

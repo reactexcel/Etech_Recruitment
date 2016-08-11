@@ -5,6 +5,7 @@ import { withRouter, router } from 'react-router'
 import List from 'material-ui/List'
 
 import EmailsListItem from './EmailsListItem'
+import ImapAccountsList from './ImapAccountsList'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 
@@ -45,7 +46,7 @@ class EmailsList extends React.Component {
         return(
             
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}> 
-                <div className="col-xs-1" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
+                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
                     
                     <Menu desktop={true}>
                       <MenuItem  primaryText={
@@ -54,9 +55,13 @@ class EmailsList extends React.Component {
                       <MenuItem  primaryText="Trash"/>
                     </Menu>
 
+                    <hr/>
+
+                    <ImapAccountsList imap_emails={this.props.imap_emails}/>
+
 
                 </div>
-                <div className="col-xs-11" style={{ "float":"right"}}>
+                <div className="col-xs-10" style={{ "float":"right"}}>
                     <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>
                         <nav aria-label="Page navigation">
                             <ul className="pagination pull-right">
