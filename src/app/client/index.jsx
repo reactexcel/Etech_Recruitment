@@ -19,13 +19,9 @@ import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
-<<<<<<< HEAD
 import DisplayContainer from './containers/displayLogs'
 import LogsContainer from './containers/displayLogs/logs'
-=======
 import EmailbodyContainer from './containers/emailBodyContainer'
-
->>>>>>> 7f9a623ba6fac5d02d6856ad3f27228c001b1328
 
 export let isMonitorAction;
 
