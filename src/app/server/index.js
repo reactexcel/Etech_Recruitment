@@ -14,7 +14,7 @@ import '../collections/EmailsStoreStatus.js';
 Meteor.startup(function () {
   // Configure MAIL_URL
   // config_ENV.emailServer._url() generate MAIL_URL as per the given information in config file under emailServer .
-  process.env.MAIL_URL = config_ENV.email._url();
+  process.env.MAIL_URL = config_ENV.emailServer._url();
   /*
     It will Configure the ROOT_URL and MONGO_URL when its not running on localhost.
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.

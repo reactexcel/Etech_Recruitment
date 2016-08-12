@@ -5,22 +5,36 @@ import ReactHtmlParser from 'react-html-parser';
 class EmailBody extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+        data:'',
+        attachmentlink:'',
+        bodysec:'col-xs-12',
+        attchsec:'hidden',
+    }
   }
-    componentWillReceiveProps(props){
-
+componentWillReceiveProps(props){
+ console.log(props.email)
+     let id = props.params.id
+    let data;
+    _.map(props.email,(email)=>{
+    console.log(email)
+        if(email._id == id){
+            this.setState({
+                data:email,
+            })
+            if(typeof email.attachments != 'undefined'){
+                this.setState({
+                    attachmentlink:email.attachments[0].link,
+                    bodysec:'col-xs-6',
+                    attchsec:'col-xs-6',
+                })
+            }
+        }
+    })
 }
 
 render(){
-  	   let data;
-    _.map(this.props.list, (email)=>{
-      if(email._id==this.props.params.id){
-      		data=email
-      }
-    })
-let attachmentlink;
-if(typeof data.attachments != 'undefined'){
-	attachmentlink=data.attachments[0].link
-}
+  	   let data = this.state.data;
 	return(
 		 <div className="row" style={{marginTop:'50px'}}>
                     <div className="col-xs-12">
@@ -38,7 +52,6 @@ if(typeof data.attachments != 'undefined'){
                             		Sender email : <b>{data['sender-mail']} </b>
                             		</div>
                             		<div className="col-xs-6" style={{textAlign:"right"}} dangerouslySetInnerHTML={{__html: data.email_date }}>
-                            		
                             		</div>
                             </div>
                             <div className="col-xs-12" style={{fontSize:'20px',padding:"10px 20px 20px",borderBottom:'1px solid gainsboro'}}>
@@ -46,11 +59,11 @@ if(typeof data.attachments != 'undefined'){
                             </div>
                           	<div className="col-xs-12" style={{marginBottom:'15px',borderBottom:'1px solid gainsboro'}}>
                                 <div className="row">
-                                <div className="col-xs-6" dangerouslySetInnerHTML={{__html:data.body }} >	
+                                <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }} >	
                                 
                                 </div>
-                                <div className="col-xs-6" style={{height:'100vh'}}>
-                                <iframe src={attachmentlink} 
+                                <div className={this.state.attchsec} style={{height:'100vh'}}>
+                                <iframe src={this.state.attachmentlink} 
                             		style={{height:'100%',width:'100%',border:'none'}}
                                 	scrolling="no"
             						></iframe>

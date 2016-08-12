@@ -1,11 +1,11 @@
 import ip from 'ip';
 
 export const config_ENV = {
-  "email": {
+  "emailServer": {
     "_id": "excellenceseo@gmail.com",
     "_password": "java@123",
     "_host": "smtp.gmail.com",
-    "_port": 465,
+    "_port": 25,
     "_url" : function(){
       return (
         'smtp://'+
