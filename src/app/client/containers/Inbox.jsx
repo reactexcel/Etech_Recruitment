@@ -9,6 +9,8 @@ import * as actions_emailSetting from './../actions/emailSetting'
 import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 
+import { onFetchTag, onAddTag} from '../actions/tags'
+
 class Inbox extends React.Component {
     constructor( props ){
         super( props )
@@ -38,13 +40,13 @@ class Inbox extends React.Component {
                 return email
             })
             if( this.state.imap_emails.length == 0 ){
-                this.props.onInboxData( this.state.emails_per_page, this.state.page_num )    
+                this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
             }
             this.setState({
                 'emails_fetch_status' : 1,
-                'imap_emails' : imap_email_with_fetch_response 
+                'imap_emails' : imap_email_with_fetch_response
             })
-            
+
         }else{
             if( typeof props.emailSetting != 'undefined' && props.emailSetting.length > 0 ){
                 let raw_imap_email = props.emailSetting
@@ -55,9 +57,9 @@ class Inbox extends React.Component {
                 this.setState({
                     'imap_emails' : imap_emails
                 })
-            }    
+            }
         }
-        
+
     }
     componentDidUpdate(){
         if( this.state.imap_emails.length > 0 &&   this.state.emails_fetch_status == 0 ){
@@ -76,7 +78,7 @@ class Inbox extends React.Component {
         return(
         	<div>
                 <Header title="Inbox"/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}  />
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} onAddTag={this.props.onAddTag}  />
         	</div>
         )
     }
@@ -85,6 +87,7 @@ function mapStateToProps( state ){
     state = state.toJS()
     return {
         inbox : state.entities.inbox,
+        tags : state.entities.inboxTag,
         emailSetting : state.entities.emailSetting
     }
 }
@@ -93,13 +96,15 @@ const mapDispatchToProps = (dispatch) => {
      	onInboxData : ( emails_per_page, page_num ) => {
             return dispatch( actions_inbox.getInboxData( emails_per_page, page_num ) )
         },
+        onAddTag: (title, color) =>{
+          dispatch(onAddTag(title, color));
+        },
         onFetchSettings : () => {
-            return dispatch( actions_emailSetting.onFetchSettingsFromDB());    
+            return dispatch( actions_emailSetting.onFetchSettingsFromDB());
         },
         onFetchNewEmails : ( imapEmails ) => {
             return dispatch( actions_inbox.fetchNewEmails( imapEmails ) )
         }
-
     }
 }
 
