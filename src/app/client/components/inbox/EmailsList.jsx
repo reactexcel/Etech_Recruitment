@@ -2,17 +2,21 @@ import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 
 import EmailsListItem from './EmailsListItem';
-
+import InboxTag from '../inboxTag'
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
-
+        this.toggle;
+        this.handleToggle = this.handleToggle.bind(this);
     }
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
     }
     submitForm( evt ){
+    }
+    handleToggle () {
+      this.toggle.handleOpen();
     }
     render(){
         let emails = this.props.inbox.emails
@@ -36,7 +40,7 @@ class EmailsList extends React.Component {
         if( next_page_link == '' ){
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
-        
+
         return(
             <div>
                 <div className="row">
@@ -57,8 +61,8 @@ class EmailsList extends React.Component {
                     <div className="col-xs-12">
                         <div className="col-xs-2" >
                             <div className="list-group">
-
                                 <button type="button" className="list-group-item" style={{ 'borderRadius':'0px'}}><Link to="/inbox">Inbox</Link></button>
+                                <button type="button" className="list-group-item" style={{ 'borderRadius':'0px'}} onClick={this.handleToggle}> Add Tag (<b>+</b>)</button>
                             </div>
                         </div>
                         <div className="col-xs-10" >
@@ -66,6 +70,7 @@ class EmailsList extends React.Component {
                                 {emailsList}
                             </ul>
                         </div>
+                        <InboxTag onAddTag={this.props.onAddTag} toggle={(toggle) => this.toggle = toggle}></InboxTag>
                     </div>
                 </div>
             </div>
@@ -73,4 +78,3 @@ class EmailsList extends React.Component {
     }
 }
 export default EmailsList
-

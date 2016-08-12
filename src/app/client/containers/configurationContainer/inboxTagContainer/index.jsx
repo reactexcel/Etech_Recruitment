@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
-import {addLogs} from '../../actions/logs'
-import * as actions from '../../actions/tags'
-import InboxTag from '../../components/inboxTag'
+import {addLogs} from '../../../actions/logs'
+import * as actions from '../../../actions/tags'
+import InboxTagList from '../../../components/inboxTag/inboxTagList'
 import {withRouter} from 'react-router'
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -18,9 +18,8 @@ class InboxTagContainer extends React.Component {
   }
   render() {
     return (
-      <div className="col-sm-8 col-sm-offset-2">
-        <InboxTag {...this.props} toggle={(toggle) => this.toggle = toggle}></InboxTag>
-        <RaisedButton onClick={this.handleToggle} />
+      <div className="col-sm-12">
+          <InboxTagList {...this.props} />
       </div>);
   }
 }
@@ -50,11 +49,7 @@ const mapDispatchToProps = (dispatch) => {
       onFetchTag: () =>{
         dispatch(actions.onFetchTag());
       },
-      onAddTag: (title, color) =>{
-        dispatch(actions.onAddTag(title, color));
-      },
       onEditTag: (title, _id, color) =>{
-        console.log(title, _id, color);
         dispatch(actions.onEditTag(title, _id ,color));
       },
       onRemoveTag: ( _id ) => {

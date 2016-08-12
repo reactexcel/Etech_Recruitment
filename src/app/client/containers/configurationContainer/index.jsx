@@ -10,6 +10,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import MenuDrawer from '../../components/menuDrawer';
 import verge from 'verge';
+import _ from 'lodash';
 
 class ConfigurationContainer extends React.Component {
   constructor(props) {
@@ -60,6 +61,7 @@ class ConfigurationContainer extends React.Component {
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
             <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
               <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}/>
+              <MenuItem  primaryText="Inbox Tag Setting" onTouchTap={()=>{this.props.router.push("/config/inbox-tag-setting");}}/>
               <MenuItem  primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
             </Menu>
           </div>

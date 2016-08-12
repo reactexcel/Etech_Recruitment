@@ -1,4 +1,5 @@
 import {createAction} from 'redux-actions';
+import {addLogs} from '../logs';
 
 export const ADD_TAG = "ADD_TAG";
 export const EDIT_TAG = "EDIT_TAG";

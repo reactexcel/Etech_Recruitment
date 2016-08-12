@@ -76,7 +76,7 @@ export default class InboxTag extends React.Component {
                contentClassName= "row"
                bodyClassName= " col-sm-offset-4 col-sm-12 col-xs-12"
                />
-             <div style={{"marginLeft": "2%", padding: "3%"}}>
+             <div style={{"marginLeft": "60%"}}>
                 <FlatButton
                    label="Select Color"
                    onTouchTap={this.handleColorOpen}
@@ -88,7 +88,6 @@ export default class InboxTag extends React.Component {
          contentStyle={{padding:"0px" ,width: "40%"}}
          bodyStyle={{padding:"0px opx"}}
          />
-       <InboxTagList {...this.props}/>
      </div>
    );
  }
@@ -97,8 +96,4 @@ export default class InboxTag extends React.Component {
 InboxTag.propTypes = {
   toggle: React.PropTypes.func.isRequired,
   onAddTag: React.PropTypes.func.isRequired,
-  onEditTag: React.PropTypes.func.isRequired,
-  onRemoveTag: React.PropTypes.func.isRequired,
-  onFetchTag: React.PropTypes.func.isRequired,
-  tags: React.PropTypes.any.isRequired,
 };
