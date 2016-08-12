@@ -11,7 +11,7 @@ class LogsContainer extends React.Component {
 	constructor(props) {
       super(props);
       this.state = {
-            log_per_page : 3,
+            log_per_page : 10,
             page_num : 1
         }
         this.pageChange = this.pageChange.bind(this)
@@ -31,8 +31,8 @@ class LogsContainer extends React.Component {
         }
     }
     getChildContext() {
-         return { 
-      	    muiTheme: getMuiTheme(baseTheme) 
+         return {
+      	    muiTheme: getMuiTheme(baseTheme)
          };
      }
     render() {
@@ -47,7 +47,7 @@ LogsContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,
 };
 function mapStateToProps(state,props){
-  state = state.toJS()  
+  state = state.toJS()
 
   return {
     log:state.entities.logs

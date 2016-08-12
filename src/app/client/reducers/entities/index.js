@@ -4,6 +4,7 @@ import register from './register/register'
 import { forgotpassword } from './forgotpassword'
 import {logs} from './logs'
 import { home } from './home'
+import { email } from './email'
 import { emailSetting } from './emailSetting';
 import { inbox } from './inbox';
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
 	logs,
 	home,
 	emailSetting,
-	inbox
+	inbox,
+	email
 })

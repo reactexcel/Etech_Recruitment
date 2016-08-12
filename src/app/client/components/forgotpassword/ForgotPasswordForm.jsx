@@ -107,7 +107,7 @@ class ForgotPasswordForm extends React.Component {
             <div style={{textAlign: 'center' }}>
                 <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
                   <div style={{marginBottom:'40px'}}>
-                    <img src={Logo} style={{cursor:"pointer",paddingRight:"20px"}} />
+                    <img src={Logo} style={{cursor:"pointer"}} />
                   </div>
                 <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
                     <div style={{fontSize:'16px',marginBottom:'1rem',textAlign:'left'}}>Forgot Password</div>

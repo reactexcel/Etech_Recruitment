@@ -242,5 +242,9 @@ Meteor.methods({
 		next_page : next_page,
 		count_unread_emails : count_unread_emails
   	}
+  },
+  getEmail : function(email_id){
+  	var emailData = EmailsStore.find({_id : email_id}).fetch()
+  	return emailData
   }
 });
