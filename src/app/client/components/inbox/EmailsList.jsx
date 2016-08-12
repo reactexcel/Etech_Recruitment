@@ -33,6 +33,12 @@ class EmailsList extends React.Component {
         let prev_page_num = this.props.inbox.previous_page
         let next_page_num = this.props.inbox.next_page
 
+        let count_unread_emails = ""
+        if( typeof this.props.inbox.count_unread_emails != 'undefined' && this.props.inbox.count_unread_emails > 0 ){
+            count_unread_emails  = "(" + this.props.inbox.count_unread_emails + ")"
+        }
+        
+
         let prev_page_link = <li  onClick={ () => this.props.doPageChange(prev_page_num)}><span aria-hidden="true">&laquo;</span></li>
         if( prev_page_num == '' ){
             prev_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(prev_page_num)} ><span aria-hidden="true">&laquo;</span></li>
@@ -50,9 +56,9 @@ class EmailsList extends React.Component {
                     
                     <Menu desktop={true}>
                       <MenuItem  primaryText={
-                            <Link to="inbox">Inbox</Link>
+                            <Link to="inbox">Inbox {count_unread_emails}</Link>
                         } />
-                      <MenuItem  primaryText="Trash"/>
+                      
                     </Menu>
 
                     <hr/>

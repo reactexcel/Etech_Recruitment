@@ -26,6 +26,7 @@ class Inbox extends React.Component {
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
+            //this will run after fetching new emails
             let imap_email_with_fetch_response = _.map( props.emailSetting,( email )=>{
                 let check_id = email._id._str
                 let checkFetchStatus = _.find( props.inbox.emails_fetch_status, {'imap_email_monogid': check_id } )
@@ -36,10 +37,14 @@ class Inbox extends React.Component {
                 }
                 return email
             })
+            if( this.state.imap_emails.length == 0 ){
+                this.props.onInboxData( this.state.emails_per_page, this.state.page_num )    
+            }
             this.setState({
                 'emails_fetch_status' : 1,
                 'imap_emails' : imap_email_with_fetch_response 
             })
+            
         }else{
             if( typeof props.emailSetting != 'undefined' && props.emailSetting.length > 0 ){
                 let raw_imap_email = props.emailSetting
@@ -49,7 +54,7 @@ class Inbox extends React.Component {
                 })
                 this.setState({
                     'imap_emails' : imap_emails
-                })    
+                })
             }    
         }
         
@@ -71,7 +76,7 @@ class Inbox extends React.Component {
         return(
         	<div>
                 <Header title="Inbox"/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} />
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}  />
         	</div>
         )
     }

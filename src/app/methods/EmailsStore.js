@@ -177,9 +177,12 @@ Meteor.methods({
   insertNewEmail : function ( source_email_id, emailData ){
 
   	var currentDateTime = new Date()
+  	var currentTimeStamp = currentDateTime.getTime()*1
+
+  	
   	emailData.m_source_email_id = source_email_id
 	emailData.m_insert_time = currentDateTime
-   	emailData.m_insert_timestamp = currentDateTime.getTime()*1,
+   	emailData.m_insert_timestamp = currentTimeStamp
    	emailData.m_read_status = 0*1
    	//---------------------------
 
@@ -192,7 +195,7 @@ Meteor.methods({
 
 		var dataToUpdate = {
 			'm_insert_time' : currentDateTime,
-   			'm_insert_timestamp' : currentDateTime.getTime()*1,
+   			'm_insert_timestamp' : currentTimeStamp,
    			'm_read_status' : 0*1
   		}
 		EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } })
@@ -217,11 +220,13 @@ Meteor.methods({
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
+	var count_unread_emails = EmailsStore.find({ 'm_read_status' : 0 * 1}).count()
+	//----
 	if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
 	}
 
-	var allEmails = EmailsStore.find( {}, { sort: {email_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch()
+	var allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch()
 
   	if( allEmails.length > 0 ){
   		allEmails = _.map( allEmails, function( email ){
@@ -234,7 +239,8 @@ Meteor.methods({
   	return {
 		emails : allEmails,
 		previous_page : previous_page,
-		next_page : next_page
+		next_page : next_page,
+		count_unread_emails : count_unread_emails
   	}
   }
 });

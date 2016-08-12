@@ -68,6 +68,18 @@ class EmailListItem extends React.Component {
       if( typeof this.props.email.attachments != 'undefined' && this.props.email.attachments.length > 0 ){
         hasAttachment = <EditorAttachFile style={{"marginRight":"2%","marginTop":"20px"}} />
       }
+
+      //--more emails
+      let more_emails = []
+      let more_emails_count = 0
+      if( typeof this.props.email.more_emails != 'undefined' ){
+        more_emails = this.props.email.more_emails
+        more_emails_count = more_emails.length
+      }
+      let show_more_email_count = ""
+      if( more_emails_count > 0 ){
+        show_more_email_count = "("+more_emails_count+")"
+      }
       
       return(
 
@@ -90,7 +102,7 @@ class EmailListItem extends React.Component {
                 }
                 secondaryText={
                   <p>
-                    <i><b> {m_source_email_id} </b></i> - From {m_from}
+                    <i><b> {m_source_email_id} </b></i> - From {m_from} &nbsp; <b>{show_more_email_count}</b>
                   </p>
                 }
                 secondaryTextLines={2}
