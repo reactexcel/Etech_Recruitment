@@ -6,11 +6,10 @@ const style={
   "formInput":{
     "marginLeft": "5%",
     "marginRight": "5%",
-    "width": "40%"
+    "width": "50%"
   },
   "formButton":{
-    "marginTop": "3%",
-    "marginLeft": "10%"
+    "marginTop": "5%",
   }
 }
 
