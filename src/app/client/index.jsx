@@ -31,7 +31,7 @@ injectTapEventPlugin();
 Meteor.startup(
   () => {
     let store = createStore(reducer,Immutable.Map({}),compose(
-      applyMiddleware(invariant(), logger,thunk),
+      applyMiddleware(invariant(), thunk),
     window.devToolsExtension ? window.devToolsExtension({
         getMonitor: (monitor) => { isMonitorAction = monitor.isMonitorAction; }
         }) : f => f
