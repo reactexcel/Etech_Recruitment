@@ -4,6 +4,7 @@ import '../methods/sendMail.js';
 import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
 import '../collections/config'
+import '../methods/email'
 import {config_ENV} from './../config/index.jsx';
 
 

@@ -46,15 +46,12 @@ class EmailsList extends React.Component {
             
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}> 
                 <div className="col-xs-1" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
-                    
                     <Menu desktop={true}>
                       <MenuItem  primaryText={
                             <Link to="inbox">Inbox</Link>
                         } />
                       <MenuItem  primaryText="Trash"/>
                     </Menu>
-
-
                 </div>
                 <div className="col-xs-11" style={{ "float":"right"}}>
                     <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>

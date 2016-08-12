@@ -170,9 +170,5 @@ Meteor.methods({
 		previous_page : previous_page,
 		next_page : next_page
   	}
-  },
-  getEmail : function(email_id){
-  	var emailData = EmailsStore.find({_id : email_id}).fetch()
-  	return emailData
   }
 });
