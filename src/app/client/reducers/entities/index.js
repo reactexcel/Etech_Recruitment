@@ -6,6 +6,7 @@ import {logs} from './logs'
 import { home } from './home'
 import { emailSetting } from './emailSetting';
 import { inbox } from './inbox';
+import { inboxTag } from './inboxTag';
 export default combineReducers({
 	users,
 	register,
@@ -13,5 +14,6 @@ export default combineReducers({
 	logs,
 	home,
 	emailSetting,
-	inbox
+	inbox,
+	inboxTag,
 })

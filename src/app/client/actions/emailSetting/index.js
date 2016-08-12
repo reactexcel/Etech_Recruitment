@@ -3,6 +3,7 @@ import {createAction} from 'redux-actions';
 export const FETCH_SETTINGS_FROM_DB = "FETCH_SETTINGS_FROM_DB";
 export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
+export const TEST_DETAILS = "TEST_DETAILS";
 
 const fetchSettingsFromDB = (fetchedData) => {
   return createAction(FETCH_SETTINGS_FROM_DB)(fetchedData);
@@ -14,6 +15,10 @@ const saveSettingsToDB = (details) => {
 
 const updateSettingsToDB = (details) => {
   return createAction(UPDATE_SETTINGS_TO_DB)(details);
+}
+
+const testDetails = (_id, status) => {
+  return createAction(TEST_DETAILS)({_id, status});
 }
 
 export function onFetchSettingsFromDB(){
@@ -43,6 +48,21 @@ export function onSaveSettingsToDB (detail) {
             }else{
               dispatch(saveSettingsToDB(storeData));
             }
+            resolve();
+          }
+      });
+    });
+  }
+}
+
+export function onTestDetails (detail) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('checkMailServer',detail,(err,status) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(testDetails(detail._id,status))
             resolve();
           }
       });
