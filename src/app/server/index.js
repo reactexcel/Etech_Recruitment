@@ -3,8 +3,8 @@ import '../methods/forgotpassword';
 import '../methods/sendMail.js';
 import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
-import '../methods/inboxTag';
-import '../collections/config'
+import '../collections/config';
+import '../methods/candidateHistory.js'
 import '../methods/email'
 import {config_ENV} from './../config/index.jsx';
 import '../collections/inboxTag';
