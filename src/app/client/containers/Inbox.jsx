@@ -87,7 +87,6 @@ function mapStateToProps( state ){
     state = state.toJS()
     return {
         inbox : state.entities.inbox,
-        tags : state.entities.inboxTag,
         emailSetting : state.entities.emailSetting
     }
 }
@@ -95,9 +94,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
      	onInboxData : ( emails_per_page, page_num ) => {
             return dispatch( actions_inbox.getInboxData( emails_per_page, page_num ) )
-        },
-        onAddTag: (title, color) =>{
-          dispatch(onAddTag(title, color));
         },
         onFetchSettings : () => {
             return dispatch( actions_emailSetting.onFetchSettingsFromDB());
