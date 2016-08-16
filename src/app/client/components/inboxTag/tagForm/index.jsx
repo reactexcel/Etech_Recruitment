@@ -39,7 +39,7 @@ export default class TagForm extends React.Component {
   render() {
     return (
       <div>
-        <form className="form-inline">
+        <form className="form-inline" onSubmit={(e) => e.preventDefault()}>
           <div className="form-group" style={style.formInput}>
             <TextField
               type="text"
