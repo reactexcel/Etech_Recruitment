@@ -4,7 +4,7 @@ import {withRouter, Link} from 'react-router';
 
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
-import { getEmailData } from '../actions/inbox'
+import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +34,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
       onEmailDetail : (email_id) => {
         return dispatch(getEmailData( email_id ))
+      },
+      onIgnore : (id, status) => {
+        return dispatch(tagUpdateArchive( id,status ))
+      },
+      onReject : (id,reject,reason) => {
+        return dispatch(updateReject(id,reject, reason))
       }
     }
 }
