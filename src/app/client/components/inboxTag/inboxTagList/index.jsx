@@ -140,6 +140,7 @@ export default class InboxTagList extends React.Component {
           </div>
         </div>
         <Dialog
+          title="Edit Tag"
           actions={
             <RaisedButton
               label="Save"
