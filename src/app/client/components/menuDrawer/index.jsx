@@ -28,13 +28,13 @@ export default class MenuDrawer extends React.Component {
         swipeAreaWidth={100}
         docked={false}
       >
-      <div style={{"backgroundColor":"#2e3e4e","textAlign": "center"}}><img src={LogoImg}/></div>
+      <div style={{"backgroundColor":"#2e3e4e","textAlign": "center", padding:"30px"}}><img src={LogoImg}/></div>
         <Divider/>
-        <MenuItem onTouchTap={()=>{this.handleClose("/")}}>Home</MenuItem>
+        <MenuItem onTouchTap={()=>{this.handleClose("/inbox")}}>Home</MenuItem>
         <Divider/>
         <MenuItem onTouchTap={() => this.handleClose("/inbox")}>Inbox</MenuItem>
         <Divider/>
-        <MenuItem onTouchTap={this.handleClose}>Candidate Liat</MenuItem>
+        <MenuItem onTouchTap={() => this.handleClose("display/logs")}>User Activity Logs</MenuItem>
         <Divider/>
         <MenuItem onTouchTap={()=>{this.handleClose("/config")}}>Settings</MenuItem>
         <Divider/>

@@ -77,7 +77,7 @@ class Inbox extends React.Component {
     render(){
         return(
         	<div>
-                <Header title="Inbox"/>
+                <Header {...this.props} position={1}/>
                 <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} onAddTag={this.props.onAddTag}  />
         	</div>
         )
