@@ -26,7 +26,7 @@ export function getInboxData( emails_per_page, page_num ){
 					if( data.emails.length == 0 ){
 						dispatch ( empty_inbox( 'No more emails' ) )
 					}else{
-						dispatch ( success_inbox( data  ) ) 
+						dispatch ( success_inbox( data  ) )
 					}
 				}
 			})
@@ -76,8 +76,8 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 		let toProcessId = imapEmails[0]._str
 		imapEmails.shift() // remove first element since it will process now
 		Meteor.call('doUpdateEmailsStore',toProcessId, ( err, data )=>{
-			let imap_email_monogid = toProcessId 
-			let email_fetch_response = "" 
+			let imap_email_monogid = toProcessId
+			let email_fetch_response = ""
 			if( err ){
 				email_fetch_response = err
 			}else{
@@ -96,7 +96,7 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 	}
 
 
-    
+
 }
 
 export function fetchNewEmails( imapEmails ){
@@ -111,4 +111,4 @@ export function fetchNewEmails( imapEmails ){
 			console.log( 'all are done')
 		}
 	}
-}	
+}

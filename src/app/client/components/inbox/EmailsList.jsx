@@ -57,8 +57,10 @@ class EmailsList extends React.Component {
         }
 
         return(
-            <div className="row" style={{ "margin":"0px", "position" : "relative"}}> 
-                <div className="col-xs-1" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
+
+            <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
+                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
+
                     <Menu desktop={true}>
                       <MenuItem  primaryText={
                             <Link to="inbox">Inbox {count_unread_emails}</Link>
@@ -69,8 +71,12 @@ class EmailsList extends React.Component {
                           label="Add Tag"
                            />}
                         />
-
                     </Menu>
+
+                    <hr/>
+
+                    <ImapAccountsList imap_emails={this.props.imap_emails}/>
+
 
                 </div>
                 <div className="col-xs-10" style={{ "float":"right"}}>

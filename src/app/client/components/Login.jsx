@@ -91,6 +91,7 @@ export default class Login extends React.Component{
 			   showloader:'hide',
 			   showButton:'show'
 		     })
+         this.props.router.push('/inbox');
            }).catch((error)=>{
            	this.setState({
 			   errorMessage:"Invalid Email/Password",
@@ -98,6 +99,7 @@ export default class Login extends React.Component{
 			   showloader:'hide',
 			   showButton:'show'
 		     })
+         this.props.router.push('/');
            })
 
         }
