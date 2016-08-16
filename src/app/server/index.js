@@ -5,7 +5,12 @@ import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
 import '../collections/config';
 import '../methods/candidateHistory.js'
-import {config_ENV} from '../config';
+import '../methods/email'
+import {config_ENV} from './../config/index.jsx';
+import '../collections/inboxTag';
+import '../collections/EmailsStore.js';
+import '../collections/EmailsStoreStatus.js';
+
 
 Meteor.startup(function () {
   // Configure MAIL_URL

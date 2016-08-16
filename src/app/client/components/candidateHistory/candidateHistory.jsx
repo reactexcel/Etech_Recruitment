@@ -17,54 +17,6 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 
-/*const history = [{
-                     "candidate_id":"123",
-                     "candidate_name":"Amit",
-                     "action_details":[
-                        {
-                          "action":"First Interview call",
-                          "Details":"Details here",
-                          "created_on":"01-05-2016"
-                        },
-                        {
-                          "action":"Machine Round",
-                          "Details":"Details here",
-                          "created_on":"04-05-2016"
-                        },
-                        {
-                          "action":"Rejected",
-                          "Details":"Performed worse in last round",
-                          "created_on":"10-05-2016"
-                        }
-                     ]
-                },{
-                     "candidate_id":"673",
-                     "candidate_name":"Abhinav",
-                     "action_details":[
-                        {
-                          "action":"First Interview call",
-                          "Details":"Details here",
-                          "created_on":"01-06-2016"
-                        },
-                        {
-                          "action":"Machine Round",
-                          "Details":"Details here",
-                          "created_on":"04-06-2016"
-                        },
-                        {
-                          "action":"Logical Round",
-                          "Details":"Performed well in last round",
-                          "created_on":"10-06-2016"
-                        },
-                        {
-                          "action":"Selected",
-                          "Details":"Please come with Original documents on 15-06-2016",
-                          "created_on":"12-06-2016"
-                        }
-                     ]
-                } 
-            ];*/
-
 class CandidateHistory extends React.Component {
 	constructor(props) {
     super(props);
@@ -222,4 +174,3 @@ export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
 )(CandidateHistory))
-//export default CandidateHistory

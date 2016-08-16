@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import {ACTION_SUCCESS_EMAIL_DATA,
-        ACTION_ERROR_EMAIL_DATA} from '../../../actions/inbox'
+        ACTION_ERROR_EMAIL_DATA} from '../../../actions/emailDetails'
 
 let initialState = {}
 

@@ -8,6 +8,7 @@ import { email } from './email'
 import { emailSetting } from './emailSetting';
 import { inbox } from './inbox';
 import {history} from './candidateHistory'
+import { inboxTag } from './inboxTag';
 export default combineReducers({
 	users,
 	register,
@@ -16,6 +17,7 @@ export default combineReducers({
 	home,
 	emailSetting,
 	inbox,
+	history,
+	inboxTag,
 	email,
-	history
 })
