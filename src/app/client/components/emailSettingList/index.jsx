@@ -86,23 +86,22 @@ export default class EmailSettingList extends React.Component {
                   displaySelectAll={false}
                 >
                   <TableRow>
-                    <TableHeaderColumn colSpan="4" >
-                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%"}}>IMAP/POP3 Settings</h4>
-                    </TableHeaderColumn>
+                    <TableRowColumn colSpan="4" >
+                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>IMAP/POP3 Settings</h4>
+                    </TableRowColumn>
                   </TableRow>
                   <TableRow>
-                    <TableHeaderColumn colSpan={2} tooltip="Email ID">Email ID</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Server">Server</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Port">Port</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Encrypt">Encrypt</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="status">Status</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Test">Test </TableHeaderColumn>
+                    <TableRowColumn colSpan={2} tooltip="Email ID" style={{"fontWeight": "bold"}}>Email ID</TableRowColumn>
+                    <TableRowColumn tooltip="Server" style={{"fontWeight": "bold"}}>Server</TableRowColumn>
+                    <TableRowColumn tooltip="Port" style={{"fontWeight": "bold"}}>Port</TableRowColumn>
+                    <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold"}}>Encrypt</TableRowColumn>
+                    <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
+                    <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test </TableRowColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
                   displayRowCheckbox={false}
                   showRowHover={true}
-                  stripedRows={true}
                 >
                   {_.map(this.props.emailSetting, (row) => (
                     <TableRow key={row._id}

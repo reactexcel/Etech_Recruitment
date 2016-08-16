@@ -49,7 +49,7 @@ Meteor.startup(
               <Route path="forgotpassword" component={Page_ForgotPassword}> </Route>
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/email-server-setting" component={EmailSettingContainer}></Route>
-                <Route path="/config/inbox-tag-setting" component={InboxTagContainer}></Route>
+                <Route path="/config/tag-setting" component={InboxTagContainer}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
               <Route path="/display" component={DisplayContainer}>

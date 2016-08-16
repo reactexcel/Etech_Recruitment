@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import TagForm from './tagForm'
 import InboxTagList from './inboxTagList'
 import { SketchPicker } from 'react-color';
+import TextField from 'material-ui/TextField';
 
 export default class InboxTag extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class InboxTag extends React.Component {
     this.handleClose = this.handleClose.bind(this);
     this.onChange = this.onChange.bind(this);
     this.props.toggle(this);
+    this.error=[];
   }
   handleOpen () {
     this.setState({open: true});
@@ -46,18 +48,13 @@ export default class InboxTag extends React.Component {
    return (
      <div>
        <Dialog
-         actions={
-           <FlatButton
-              label="Close"
-              onClick={this.handleClose}
-           />
-         }
+         title="Add New TAG"
          modal={true}
          open={this.state.open}
          onRequestClose={this.handleClose}
          children={
            <div>
-            <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} />
+            <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose}/>
              <Dialog
                modal={false}
                open={this.state.colorOpen}
@@ -76,13 +73,34 @@ export default class InboxTag extends React.Component {
                contentClassName= "row"
                bodyClassName= " col-sm-offset-4 col-sm-12 col-xs-12"
                />
-             <div style={{"marginLeft": "60%"}}>
-                <FlatButton
-                   label="Select Color"
-                   onTouchTap={this.handleColorOpen}
-                   labelStyle={{backgroundColor: this.state.color, padding:"10px"}}
-                />
-              </div>
+               <div className="form-group" style={{
+                 "marginLeft": "5%",
+                 "marginRight": "5%",
+                 "width": "50%"
+               }}>
+                 <TextField
+                   type="text"
+                   floatingLabelText="Tag Color"
+                   hintText="Enter Tag Color "
+                   fullWidth={true}
+                   onClick={() => this.handleColorOpen()}
+                   onChange={
+                     (evt) =>{
+                       this.setState({"color": evt.target.value});
+                       if (!evt.target.value.length > 0 ) {
+                         this.error.color = "Enter tag Color";
+                       }else if (!/^[a-zA-Z0-9#]+$/.test(evt.target.value)) {
+                         this.error.color = "Invalid tag color";
+                       }else{
+                         this.error.color = "";
+                       }
+                     }
+                   }
+                   errorText={this.error.color}
+                   value={this.state.color}
+                   inputStyle={{"color": this.state.color}}
+                 />
+               </div>
              </div>
          }
          contentStyle={{padding:"0px" ,width: "40%"}}

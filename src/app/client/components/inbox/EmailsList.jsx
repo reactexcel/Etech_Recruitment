@@ -8,24 +8,16 @@ import EmailsListItem from './EmailsListItem'
 import ImapAccountsList from './ImapAccountsList'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
-import FlatButton from 'material-ui/FlatButton'
-
-import InboxTag from '../inboxTag'
 
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
-        this.toggle;
-        this.handleToggle = this.handleToggle.bind(this);
     }
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
     }
     submitForm( evt ){
-    }
-    handleToggle () {
-      this.toggle.handleOpen();
     }
     render(){
         let emails = this.props.inbox.emails
@@ -65,12 +57,6 @@ class EmailsList extends React.Component {
                       <MenuItem  primaryText={
                             <Link to="inbox">Inbox {count_unread_emails}</Link>
                         } />
-                      <MenuItem
-                        children={<FlatButton
-                          onTouchTap={this.handleToggle}
-                          label="Add Tag"
-                           />}
-                        />
                     </Menu>
 
                     <hr/>
@@ -91,7 +77,6 @@ class EmailsList extends React.Component {
                     <List>
                         {emailsList}
                     </List>
-                    <InboxTag onAddTag={this.props.onAddTag} toggle={(toggle) => this.toggle = toggle}></InboxTag>
                 </div>
             </div>
         );

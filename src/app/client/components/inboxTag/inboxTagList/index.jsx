@@ -11,6 +11,9 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import { SketchPicker } from 'react-color';
+import Chip from 'material-ui/Chip';
+import Avatar from 'material-ui/Avatar';
+import Divider from 'material-ui/Divider';
 
 const styles = {
   "formInput":{
@@ -68,13 +71,11 @@ export default class InboxTagList extends React.Component {
     this.error.tagName = "";
   }
 
-  handleColorOpen ( row ) {
+  handleColorOpen ( ) {
     this.setState({
-      open: false,
+      open: true,
       colorOpen: true,
-      "_id": row._id,
-      tagName: row.name,
-      color: row.color,
+      color: this.state.color,
     });
   }
 
@@ -87,6 +88,7 @@ export default class InboxTagList extends React.Component {
     if(this.state.tagName.length > 0){
       this.props.onEditTag(this.state.tagName, this.state._id, this.state.color);
       this.handleClose();
+      this.handleColorClose();
     }else{
       this.error.tagName = "Enter tag title";
       this.setState({"tagName": ""});
@@ -99,59 +101,55 @@ export default class InboxTagList extends React.Component {
     return (
       <div>
         <div className="row">
-          <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" style={{"marginTop": "2%"}}>
-            <Paper zDepth={2}>
-              <Table
-                fixedHeader={true}
-                fixedFooter={true}
-              >
-                <TableHeader
-                  adjustForCheckbox={false}
-                  displaySelectAll={false}
-                >
-                  <TableRow>
-                    <TableHeaderColumn colSpan="4" >
-                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%"}}>Inbox Tags List</h4>
-                    </TableHeaderColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableHeaderColumn colSpan="2" tooltip="Title">Title</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Color (click on color to change)">Color</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Edit title">Edit Title</TableHeaderColumn>
-                    <TableHeaderColumn tooltip="Delete">Delete</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody
-                  displayRowCheckbox={false}
-                  showRowHover={true}
-                  stripedRows={true}
-                >
-                  {_.map(this.props.tags, (row) => (
-                    <TableRow key={row._id}
-                    >
-                      <TableRowColumn colSpan="2">{row.name}</TableRowColumn>
-                      <TableRowColumn>
-                        <FlatButton
-                          label="   "
-                          children={
-                            (row.color)
-                          }
-                          onClick={() => this.handleColorOpen(row)}
-                          labelStyle={{"backgroundColor": row.color, "width": "50px","height": "20px", marginLeft: "4px", padding: "5px"}}
-                         />
-                        </TableRowColumn>
-                      <TableRowColumn><IconButton iconClassName="fa fa-pencil-square-o fa-2x" iconStyle={{"color": "#C0CA33"}} onClick={(evt) => this.handleOpen(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><IconButton iconClassName="fa fa-times fa-2x" iconStyle={{"color": "#D32F2F"}}  onClick={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}/></TableRowColumn>
-                    </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+          <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12"
+            style={
+              {
+                "marginTop": "2%",
+              }
+            }
+          >
+            <Paper zDepth={2} style={{"padding": "1%"}}>
+              <h3 className="h3">Tags</h3>
+              <Divider />
+              <div style={
+                {
+                  "marginTop": "2%",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                }
+              }>
+                {_.map(this.props.tags, (row) => (
+                    <Chip
+                      key={row._id}
+                      backgroundColor={row.color}
+                      onRequestDelete={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}
+                      onTouchTap={(evt) => this.handleOpen(row, evt)}
+                      style={{ margin: 4}}>
+                      <Avatar
+                        backgroundColor={row.color}
+                        children={
+                          _.upperCase(row.name[0])
+                        }
+                        >
+                      </Avatar>
+                      {row.name}
+                    </Chip>
+                  ))}
+              </div>
             </Paper>
           </div>
         </div>
         <Dialog
+          actions={
+            <RaisedButton
+              label="Save"
+              primary={true}
+              onClick={this.edit}
+            />
+          }
           open={this.state.open}
           onRequestClose={this.handleClose}
+          modal={true}
           children={
             <div>
               <form className="form-inline">
@@ -177,11 +175,28 @@ export default class InboxTagList extends React.Component {
                     value={this.state.tagName}
                   />
                 </div>
-                <div className="form-group">
-                  <RaisedButton
-                    label="Edit Title"
-                    primary={true}
-                    onClick={this.edit}
+                <div className="form-group" style={styles.formInput}>
+                  <TextField
+                    type="text"
+                    floatingLabelText="Tag Color"
+                    hintText="Enter Tag Color "
+                    fullWidth={true}
+                    onClick={() => this.handleColorOpen()}
+                    onChange={
+                      (evt) =>{
+                        this.setState({"color": evt.target.value});
+                        if (!evt.target.value.length > 0 ) {
+                          this.error.color = "Enter tag Color";
+                        }else if (!/^[a-zA-Z0-9#]+$/.test(evt.target.value)) {
+                          this.error.color = "Invalid tag color";
+                        }else{
+                          this.error.color = "";
+                        }
+                      }
+                    }
+                    errorText={this.error.color}
+                    value={this.state.color}
+                    inputStyle={{"color": this.state.color}}
                   />
                 </div>
               </form>
@@ -203,13 +218,6 @@ export default class InboxTagList extends React.Component {
                   onChangeComplete={ this.onChange }
                   />
               </div>
-              <div style={{marginTop:"2%", marginLeft: "17%"}}>
-                  <RaisedButton
-                    label="Edit Color"
-                    labelStyle={{backgroundColor: this.state.color, padding:"10px"}}
-                    onClick={this.edit}
-                  />
-                </div>
             </div>
           }
           contentStyle={{padding:"0px"}}

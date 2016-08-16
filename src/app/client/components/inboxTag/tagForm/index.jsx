@@ -9,7 +9,9 @@ const style={
     "width": "50%"
   },
   "formButton":{
-    "marginTop": "5%",
+    position:"absolute",
+    top: "75%",
+    left: "77%"
   }
 }
 
