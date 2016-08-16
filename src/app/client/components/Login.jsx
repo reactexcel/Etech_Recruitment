@@ -51,14 +51,9 @@ export default class Login extends React.Component{
 		this.loginUser=this.loginUser.bind(this);
 	}
 	componentWillMount(){
-    let self = this
-    Meteor.autorun(function(c) {
-      self.autorun = c;
       if (Meteor.userId()) {
-        //self.props.router.push('/config/emailSetting')
-        //c.stop()
-      }  
-    });    
+       this.props.router.push('/inbox');
+      }
   }
   componentWillUnmount(){
     this.autorun.stop()
@@ -113,7 +108,6 @@ export default class Login extends React.Component{
         })
     }
 	render(){
-       
 		return(
 			<div className="col-md-12" style={{textAlign:'center'}}>
 			<div style={{marginBottom:'40px'}}><img src={LogoImg}/></div>
@@ -155,7 +149,7 @@ export default class Login extends React.Component{
 				<div>
                  <Checkbox labelStyle={styles.checkbox} label="Keep me signed in" style={styles.checkbox}/>
 				</div>
-				
+
 				<div style={{marginTop:'10px'}} className={this.state.showButton}>
 
                       <RaisedButton style={{width:'100%',marginTop:'10px'}} label="LOGIN" onTouchTap={this.loginUser} primary={true}/>
@@ -181,7 +175,7 @@ export default class Login extends React.Component{
                     <Link to="forgotpassword" className="link" style={{fontSize:'15px',textDecoration:'none',color:'#00BCD4',cursor:'pointer'}}>{"Forgot Password?"}</Link>
               </div>
               <div style={{
-              	          fontFamily: this.context.muiTheme.fontFamily, 
+              	          fontFamily: this.context.muiTheme.fontFamily,
                           color: '#00bcd4',
                           textAlign: 'center',
                           marginTop:'20px'
@@ -189,7 +183,7 @@ export default class Login extends React.Component{
               <div style={{color: this.context.muiTheme.palette.canvasColor,fontSize:'15px',display:'inline'}}>Do not have an account?</div>{" "}
               <Link to="register" className="link" style={{display:'inline',fontSize:'15px',textDecoration:'none',cursor:'pointer',color:'#00BCD4'}}>{"Sign Up"}</Link>
               </div>
-              
+
 		     <Snackbar
                     open={this.state.showSnackbar}
                     message={this.state.errorMessage}
@@ -198,7 +192,7 @@ export default class Login extends React.Component{
                 />
 		    </div>
 			);
-		
+
 	}
 }
 
