@@ -3,7 +3,8 @@ import '../methods/forgotpassword';
 import '../methods/sendMail.js';
 import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
-import '../collections/config'
+import '../collections/config';
+import '../methods/candidateHistory.js'
 import {config_ENV} from '../config';
 
 Meteor.startup(function () {
