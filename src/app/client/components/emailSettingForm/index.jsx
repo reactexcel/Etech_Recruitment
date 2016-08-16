@@ -103,7 +103,7 @@ export default class EmailSettingForm extends React.Component {
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
           <Paper zDepth={2} style={{"padding":"20px"}}>
             <h4 className="h4" style={{"fontWeight": "bold"}}>IMAP/POP3 server </h4>
-            <form className="form-inline">
+            <form className="form-inline" onSubmit={(e) => e.priventDefault()}>
               <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
