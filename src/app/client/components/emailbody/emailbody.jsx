@@ -159,10 +159,8 @@ render(){
         </div>
         </div>
 
-        <div className="row" style={{marginTop:'5px',marginBottom:'10px'}}>
-        <div className="col-xs-12">
+        <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
         <CandidateHistory id={this.props.params.id}/>
-        </div>
         </div>
 
     </div>
