@@ -21,11 +21,11 @@ class DisplayContainer extends React.Component{
     this.handleClose = this.handleClose.bind(this);
     this.requestChange = this.requestChange.bind(this);
 	  }
-	  getChildContext() {
+	  /*getChildContext() {
          return { 
       	    muiTheme: getMuiTheme(baseTheme) 
          };
-     }
+     }*/
      handleToggel(){
         this.setState({open: !this.state.open});
      }
@@ -74,7 +74,7 @@ class DisplayContainer extends React.Component{
 			);
 	 }
 }
-DisplayContainer.childContextTypes = {
+/*DisplayContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,
-};
+};*/
 export default withRouter(DisplayContainer);

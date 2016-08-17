@@ -19,10 +19,10 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 
-export default class Login extends React.Component{
-	static contextTypes={
+export default class LogTable extends React.Component{
+	/*static contextTypes={
 			muiTheme:React.PropTypes.object.isRequired
-    }
+    }*/
     constructor(props){
 		super(props);
     this.state={
@@ -137,7 +137,7 @@ export default class Login extends React.Component{
         }
 		return(
       <div>
-		<div style={{margin: 'auto',backgroundColor:'white',borderRadius:'3px',padding:'10'}}>
+		<div style={{margin: 'auto',backgroundColor:'white',borderRadius:'3px',padding:10}}>
     <div style={{marginLeft:'4px',fontSize:'x-large'}}>
     Candidate Log
       <IconMenu

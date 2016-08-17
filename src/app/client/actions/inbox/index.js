@@ -101,6 +101,8 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 
 export function fetchNewEmails( imapEmails ){
 
+	console.log( imapEmails )
+
 	return ( dispatch, getState ) => {
 
 		if( imapEmails.length > 0 ){
