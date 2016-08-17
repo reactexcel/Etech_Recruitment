@@ -130,7 +130,7 @@ render(){
     />
                         </div>
         </Dialog>
-        <div className="row" style={{marginLeft:'5px',marginRight:'5px'}}>
+        <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
         <div className="col-xs-12">
             <div className='row' style={{background: '#fff'}}>
 
@@ -159,9 +159,9 @@ render(){
         </div>
         </div>
 
-        <div className="row" style={{marginTop:'5px'}}>
+        <div className="row" style={{marginTop:'5px',marginBottom:'10px'}}>
         <div className="col-xs-12">
-        <CandidateHistory/>
+        <CandidateHistory id={this.props.params.id}/>
         </div>
         </div>
 
