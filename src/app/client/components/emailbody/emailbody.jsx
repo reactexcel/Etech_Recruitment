@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import TextField from 'material-ui/TextField';
 import List from 'material-ui/List'
+import CandidateHistory from './candidateHistory'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 
@@ -129,6 +130,7 @@ render(){
     />
                         </div>
         </Dialog>
+        <div className="row" style={{marginLeft:'5px',marginRight:'5px'}}>
         <div className="col-xs-12">
             <div className='row' style={{background: '#fff'}}>
 
@@ -155,6 +157,14 @@ render(){
 
             </div>
         </div>
+        </div>
+
+        <div className="row" style={{marginTop:'5px'}}>
+        <div className="col-xs-12">
+        <CandidateHistory/>
+        </div>
+        </div>
+
     </div>
 </div>
 		)

@@ -21,7 +21,7 @@ Meteor.startup(function () {
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.
   */
   if(!(/^192\.168\.[0-9]{1,3}\.[0-9]{1,3}$/.test(config_ENV.server_host))){
-    process.env.MONGO_URL =  config_ENV.MongoDB._url();
+    //process.env.MONGO_URL =  config_ENV.MongoDB._url();
     process.env.ROOT_URL = config_ENV.host._url();
   }
 });
