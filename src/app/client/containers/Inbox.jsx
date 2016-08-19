@@ -25,6 +25,7 @@ class Inbox extends React.Component {
     componentWillMount(){
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
         this.props.onFetchSettings()
+        this.props.onFetchTag()
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
@@ -78,7 +79,7 @@ class Inbox extends React.Component {
         return(
         	<div>
                 <Header {...this.props} position={1}/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} onAddTag={this.props.onAddTag}  />
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} />
         	</div>
         )
     }
@@ -87,7 +88,8 @@ function mapStateToProps( state ){
     state = state.toJS()
     return {
         inbox : state.entities.inbox,
-        emailSetting : state.entities.emailSetting
+        emailSetting : state.entities.emailSetting,
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -100,6 +102,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onFetchNewEmails : ( imapEmails ) => {
             return dispatch( actions_inbox.fetchNewEmails( imapEmails ) )
+        },
+        onFetchTag : () => {
+            return dispatch(onFetchTag());
         }
     }
 }

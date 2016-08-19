@@ -8,10 +8,14 @@ import EmailsListItem from './EmailsListItem'
 import ImapAccountsList from './ImapAccountsList'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
+import FlatButton from 'material-ui/FlatButton'
+import Avatar from 'material-ui/Avatar';
+import _ from 'lodash'
 
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
+        this.onClick = this.onClick.bind(this);
     }
     componentDidMount(){
     }
@@ -19,12 +23,15 @@ class EmailsList extends React.Component {
     }
     submitForm( evt ){
     }
+    onClick ( obj ) {
+      console.log(obj);
+    }
     render(){
         let emails = this.props.inbox.emails
         let emailsList = emails.map( (email) => {
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} />
+                    <EmailsListItem email={email}  tags={this.props.tags} />
                 </div>
             )
         })
@@ -47,16 +54,37 @@ class EmailsList extends React.Component {
         if( next_page_num == '' ){
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
-
         return(
-
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute"}}>
+                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute",}}>
 
-                    <Menu desktop={true}>
+                    <Menu>
                       <MenuItem  primaryText={
-                            <Link to="inbox">Inbox {count_unread_emails}</Link>
-                        } />
+                            <Link to="inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
+                        }/>
+                      <div >
+                        {_.map(this.props.tags, (t) => (
+                            <MenuItem
+                            key={t._id}
+                            primaryText={
+                                <FlatButton
+                                  icon={
+                                    <Avatar
+                                      backgroundColor={t.color}
+                                      style={{color:"#fff"}}
+                                      size={20}
+                                      children={
+                                        _.upperCase(t.name[0])
+                                      }></Avatar>
+                                  }
+                                  label={t.name}
+                                  ></FlatButton>
+                            }
+                            onTouchTap={() => this.onClick({"t_id": t._id, t_name: t.name,})}
+                           />
+
+                        ))}
+                      </div>
                     </Menu>
 
                     <hr/>

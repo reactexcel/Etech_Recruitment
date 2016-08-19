@@ -23,10 +23,11 @@ const fetchTag = (tags) => {
   return createAction(FETCH_TAG)(tags);
 }
 
-export function onAddTag(title, color){
+export function onAddTag(tag){
+  console.log(tag);
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('addTag', title, color,(err, tag) => {
+      Meteor.call('addTag', tag, (err, tag) => {
           if(err){
             reject(err);
           }else{
