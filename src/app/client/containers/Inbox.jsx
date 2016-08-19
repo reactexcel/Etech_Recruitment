@@ -9,7 +9,7 @@ import * as actions_emailSetting from './../actions/emailSetting'
 import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 
-import { onFetchTag, onAddTag} from '../actions/tags'
+import { onFetchTag, onAddTag, onAssignTag} from '../actions/tags'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -23,7 +23,7 @@ class Inbox extends React.Component {
         this.doPageChange = this.doPageChange.bind(this)
     }
     componentWillMount(){
-        this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
+        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
         this.props.onFetchSettings()
         this.props.onFetchTag()
     }
@@ -79,7 +79,9 @@ class Inbox extends React.Component {
         return(
         	<div>
                 <Header {...this.props} position={1}/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} />
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
+                  onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
+                  />
         	</div>
         )
     }
@@ -94,8 +96,8 @@ function mapStateToProps( state ){
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-     	onInboxData : ( emails_per_page, page_num ) => {
-            return dispatch( actions_inbox.getInboxData( emails_per_page, page_num ) )
+     	onInboxData : ( emails_per_page, page_num, tag ) => {
+            return dispatch( actions_inbox.getInboxData( emails_per_page, page_num, tag ) )
         },
         onFetchSettings : () => {
             return dispatch( actions_emailSetting.onFetchSettingsFromDB());
@@ -105,7 +107,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         onFetchTag : () => {
             return dispatch(onFetchTag());
-        }
+        },
+        onAssignTag : (m_id, t_id) => {
+            return dispatch(onAssignTag(m_id, t_id));
+        },
     }
 }
 

@@ -16,7 +16,7 @@ export default class TagMenu extends React.Component {
   }
 
   onClick ( obj ) {
-    console.log(obj);
+    this.props.onAssignTag(obj.m_id, obj.t_id);
   }
 
   render() {
@@ -32,7 +32,9 @@ export default class TagMenu extends React.Component {
             insetChildren={true}
             rightIcon={<ArrowDropRight />}
             menuItems={
-              _.map(this.props.tags, ( v ) =>(
+              _.map(this.props.tags, ( v ) =>{
+              return  typeof this.props.email.tags != 'undefined'?
+                (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem
                   primaryText={<Avatar
                     backgroundColor={v.color}
@@ -43,9 +45,21 @@ export default class TagMenu extends React.Component {
                   secondaryText={v.name}
                   key={v._id}
                   value={v._id+"-"+v.name}
-                  onTouchTap={() => this.onClick({"t_id": v._id, t_name: v.name, m_id: this.props.email._id})}
-                  />
-              ))
+                  onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
+                  />:<div></div>):
+                  <MenuItem
+                    primaryText={<Avatar
+                      backgroundColor={v.color}
+                      size={30}
+                      children={
+                        _.upperCase(v.name[0])
+                      }></Avatar>}
+                    secondaryText={v.name}
+                    key={v._id}
+                    value={v._id+"-"+v.name}
+                    onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
+                    />
+              })
             }
             />
         </IconMenu>

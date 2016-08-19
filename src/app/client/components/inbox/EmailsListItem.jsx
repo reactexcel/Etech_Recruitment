@@ -15,6 +15,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file'
 import TagMenu from '../../components/tagMenu';
+import _ from 'lodash';
 
 class EmailListItem extends React.Component {
 
@@ -52,6 +53,11 @@ class EmailListItem extends React.Component {
       let m_body = this.props.email.body
 
 
+      _.map(this.props.tags,(t) =>{
+        if(typeof this.props.email.tags != 'undefined')
+          if(t._id == this.props.email.tags[0] )
+            mail_left_border_color = t.color;
+      })
       let avatar1 = <Avatar backgroundColor={mail_left_border_color} color={darkBlack} style={{ "marginTop":"50%", "marginLeft":"30%"}} >{f_char}</Avatar>
       let avatar = <div style={{ "borderLeft":`5px solid ${mail_left_border_color}`,'height' : '100%', 'left' : '0px',"top":"0px"}}>{avatar1}</div>
 
@@ -117,10 +123,6 @@ class EmailListItem extends React.Component {
 
 
           </div>
-
-
-
-
 
       );
     }

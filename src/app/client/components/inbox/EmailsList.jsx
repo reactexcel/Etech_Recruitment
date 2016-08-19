@@ -11,6 +11,7 @@ import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
 import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
+import verge from 'verge';
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -24,14 +25,14 @@ class EmailsList extends React.Component {
     submitForm( evt ){
     }
     onClick ( obj ) {
-      console.log(obj);
+      this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
     }
     render(){
         let emails = this.props.inbox.emails
         let emailsList = emails.map( (email) => {
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email}  tags={this.props.tags} />
+                    <EmailsListItem email={email}  tags={this.props.tags} onAssignTag={this.props.onAssignTag}/>
                 </div>
             )
         })
@@ -56,11 +57,11 @@ class EmailsList extends React.Component {
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":"100%", "position":"absolute",}}>
+                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
 
                     <Menu>
                       <MenuItem  primaryText={
-                            <Link to="inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
+                            <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
                       <div >
                         {_.map(this.props.tags, (t) => (
@@ -80,7 +81,7 @@ class EmailsList extends React.Component {
                                   label={t.name}
                                   ></FlatButton>
                             }
-                            onTouchTap={() => this.onClick({"t_id": t._id, t_name: t.name,})}
+                            onTouchTap={() => this.onClick({"t_id": t._id})}
                            />
 
                         ))}

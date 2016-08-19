@@ -17,11 +17,11 @@ export function inbox( state = Immutable.Map(initialState), action ){
         .set('count_unread_emails', action.payload.count_unread_emails )
 
     }else if( action.type == 'ACTION_EMPTY_INBOX' ){
-        
+
         return state.set('status_inbox', action.payload )
 
     }else if( action.type == 'ACTION_ERROR_INBOX' ){
-        
+
         return state.set('status_inbox', action.payload)
 
     }else if( action.type == 'ACTION_SUCCESS_EMAILS_FETCH_STATUS' ){
@@ -29,5 +29,8 @@ export function inbox( state = Immutable.Map(initialState), action ){
         return state.set('emails_fetch_status', action.payload)
 
     }
+		else if(action.type == 'ASSIGN_TAG'){
+
+		}
     return state
 }

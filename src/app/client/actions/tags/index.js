@@ -5,6 +5,7 @@ export const ADD_TAG = "ADD_TAG";
 export const EDIT_TAG = "EDIT_TAG";
 export const REMOVE_TAG = "REMOVE_TAG";
 export const FETCH_TAG = "FETCH_TAG";
+export const ASSIGN_TAG = "ASSIGN_TAG";
 
 
 const addTag = (addTag) => {
@@ -21,6 +22,10 @@ const removeTag = ( _id ) => {
 
 const fetchTag = (tags) => {
   return createAction(FETCH_TAG)(tags);
+}
+
+const assignTag = (mail) => {
+  return createAction(ASSIGN_TAG)(mail);
 }
 
 export function onAddTag(tag){
@@ -77,6 +82,22 @@ export function onFetchTag (){
             reject(err);
           }else{
             dispatch(fetchTag( tags ));
+            resolve();
+          }
+      });
+    });
+  }
+}
+
+
+export function onAssignTag (m_id, t_id){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('assignTag',m_id, t_id,(err, tags) => {
+          if(err){
+            reject(err);
+          }else{
+           dispatch(assignTag( tags ));
             resolve();
           }
       });
