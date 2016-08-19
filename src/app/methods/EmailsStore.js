@@ -55,7 +55,7 @@ Meteor.methods({
 	}else{
 		var settings = false
 		var status_last_fetch_details = false
-		
+
 		_.forEach( checkSettings, function( imapEmail ){
 			if( mongoid == imapEmail._id._str ){
 				settings = imapEmail
@@ -99,12 +99,12 @@ Meteor.methods({
 				PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp+"&email_id="+fetchingEmailsFromId
 			}
 			var API_URL = BASE_URL + PARAMS
-			
+
 			var TYPE = ""
 			var MESSAGE = ""
 
 			try {
-				
+
 				var emails_fetched = 0
 				var emails_to_be_fetched = 0
 
@@ -113,7 +113,7 @@ Meteor.methods({
 		    	if( typeof result.content != 'undefined' ){
 
 		    		var json = JSON.parse( result.content )
-		    		
+
 
 					if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
 						TYPE = "SUCCESS"
@@ -121,7 +121,7 @@ Meteor.methods({
 						if( json.data.emails.length > 0 ){
 							var emails_to_be_fetched = json.data.count
 			    			var emails = json.data.emails
-							
+
 							var last_email_id = ''
 							var last_email_date = ''
 
@@ -154,7 +154,7 @@ Meteor.methods({
 		    			MESSAGE = json
 		    		}
 		    	}
-		    	
+
 				return {
 		    		'type' : TYPE,
 		    		'message' : MESSAGE,
@@ -167,19 +167,19 @@ Meteor.methods({
 
 
 		}
-		
+
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 
-	
+
+
   },
   insertNewEmail : function ( source_email_id, emailData ){
 
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
 
-  	
+
   	emailData.m_source_email_id = source_email_id
 	emailData.m_insert_time = currentDateTime
    	emailData.m_insert_timestamp = currentTimeStamp
@@ -188,7 +188,7 @@ Meteor.methods({
 
 	var senderEmail = emailData.sender_mail
 	var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
-	
+
 	if( checkExistingSenderEmail.length > 0 ){
 		var existingEmail = checkExistingSenderEmail[0]
 		var existingEmail_mongoid = existingEmail._id
@@ -204,7 +204,7 @@ Meteor.methods({
 		EmailsStore.insert( emailData );
 	}
   },
-  getEmailsForInbox : function( emails_per_page, page_num ){
+  getEmailsForInbox : function( emails_per_page, page_num ,tag){
   	var skip = emails_per_page * ( page_num - 1 )
 	var next_page = page_num + 1
   	var previous_page = page_num - 1
@@ -225,8 +225,11 @@ Meteor.methods({
 	if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
 	}
-
-	var allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch()
+	var allEmails;
+	if(tag == "")
+	  allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+	else
+	  allEmails = EmailsStore.find({ tags:{$in: [tag] }}, {$skip : skip},{$limit: emails_per_page }).fetch();
 
   	if( allEmails.length > 0 ){
   		allEmails = _.map( allEmails, function( email ){
