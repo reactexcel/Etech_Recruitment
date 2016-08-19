@@ -39,5 +39,20 @@ Meteor.methods({
       return 1;
     }
     return 0;
+  },
+  "sendEmailSettings":function(details){
+    const settings = Config.find({}).fetch();
+    let flag=true;
+    let id='';
+    _.map(settings,(setting)=>{
+    if(typeof setting.smtp != 'undefined' && setting.smtp.emailId == details.emailId){
+      flag=false;
+      id=Config.update({"_id": setting._id},{$set:{"smtp":details}});
+    }
+    })
+    if(flag){
+      id=Config.insert({"smtp":details});
+    }
+    return id;
   }
 });
