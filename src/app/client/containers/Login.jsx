@@ -10,11 +10,11 @@ class LoginContainer extends React.Component{
       constructor(props){
 		super(props);
 	  }
-	  getChildContext() {
+	  /*getChildContext() {
          return { 
       	    muiTheme: getMuiTheme(baseTheme) 
          };
-     }
+     }*/
      render(){
 		return(
 			<div className="container" style={{'paddingTop':'20px'}}>
@@ -30,9 +30,9 @@ class LoginContainer extends React.Component{
 			);
 	 }
 }
-LoginContainer.childContextTypes = {
+/*LoginContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,
-};
+};*/
 function mapStateToProps(state,props){
   state = state.toJS()  
 

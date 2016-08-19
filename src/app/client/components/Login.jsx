@@ -55,9 +55,6 @@ export default class Login extends React.Component{
        this.props.router.push('/inbox');
       }
   }
-  componentWillUnmount(){
-    this.autorun.stop()
-  }
 	loginUser(){
         let email=this.state.email.trim()
 		let password=this.state.password.trim()

@@ -30,11 +30,11 @@ class LogsContainer extends React.Component {
           }
         }
     }
-    getChildContext() {
+    /*getChildContext() {
          return {
       	    muiTheme: getMuiTheme(baseTheme)
          };
-     }
+     }*/
     render() {
     return (
       <div>
@@ -43,8 +43,12 @@ class LogsContainer extends React.Component {
       );
     }
 }
-LogsContainer.childContextTypes = {
+/*LogsContainer.childContextTypes = {
     muiTheme: React.PropTypes.object.isRequired,
+};*/
+LogsContainer.propTypes = {
+  onLogData: React.PropTypes.func.isRequired,
+  log:React.PropTypes.any.isRequired,
 };
 function mapStateToProps(state,props){
   state = state.toJS()

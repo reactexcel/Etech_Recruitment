@@ -22,7 +22,6 @@ import Page_Inbox from './containers/Inbox'
 import DisplayContainer from './containers/displayLogs'
 import LogsContainer from './containers/displayLogs/logs'
 import EmailbodyContainer from './containers/emailBodyContainer'
-import candidateHistoryContainer from './containers/candidateHistoryContainer'
 import InboxTagContainer from './containers/configurationContainer/inboxTagContainer'
 
 export let isMonitorAction;
@@ -57,7 +56,6 @@ Meteor.startup(
                  <Route path="/display/logs" component={LogsContainer}></Route>
               </Route>
               <Route path="emailbody/:id" component={EmailbodyContainer}></Route>
-              <Route path="/candidateHistory" component={candidateHistoryContainer}></Route>
             </Route>
           </Router>
         </Provider>
