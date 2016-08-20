@@ -4,8 +4,7 @@ import { withRouter, router } from 'react-router'
 
 import List from 'material-ui/List'
 
-import EmailsListItem from './EmailsListItem'
-import ImapAccountsList from './ImapAccountsList'
+import TextField from 'material-ui/TextField';
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
@@ -13,47 +12,20 @@ import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
 
-class EmailsList extends React.Component {
+class SendEmail extends React.Component {
     constructor( props ){
         super( props );
-        this.onClick = this.onClick.bind(this);
     }
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
     }
-    submitForm( evt ){
-    }
-    onClick ( obj ) {
-      this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
-    }
+   
     render(){
-        let emails = this.props.inbox.emails
-        let emailsList = emails.map( (email) => {
-            return (
-                <div key={email._id}>
-                    <EmailsListItem email={email}  tags={this.props.tags} onAssignTag={this.props.onAssignTag}/>
-                </div>
-            )
-        })
-
-        let prev_page_num = this.props.inbox.previous_page
-        let next_page_num = this.props.inbox.next_page
-
+    
         let count_unread_emails = ""
         if( typeof this.props.inbox.count_unread_emails != 'undefined' && this.props.inbox.count_unread_emails > 0 ){
             count_unread_emails  = "(" + this.props.inbox.count_unread_emails + ")"
-        }
-
-
-        let prev_page_link = <li  onClick={ () => this.props.doPageChange(prev_page_num)}><span aria-hidden="true">&laquo;</span></li>
-        if( prev_page_num == '' ){
-            prev_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(prev_page_num)} ><span aria-hidden="true">&laquo;</span></li>
-        }
-
-        let next_page_link = <li onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
-        if( next_page_num == '' ){
-            next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
@@ -90,29 +62,34 @@ class EmailsList extends React.Component {
                         ))}
                       </div>
                     </Menu>
-
                     <hr/>
-
-                    <ImapAccountsList imap_emails={this.props.imap_emails}/>
-
-
                 </div>
                 <div className="col-xs-10" style={{ "float":"right"}}>
-                    <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>
-                        <nav aria-label="Page navigation">
-                            <ul className="pagination pull-right">
-                                {prev_page_link}
-                                {next_page_link}
-                            </ul>
-                        </nav>
+                    <div className="row" style={{margin:'40px 4px 0px'}}>
+                    <div className="col-xs-12">
+            <div className='row' style={{background: '#fff'}}>
+                <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
+                    <div className="col-xs-12">
+                       <b><i>Send new mail</i></b> <br /> 
                     </div>
-                    <List>
-                        {emailsList}
-                    </List>
+                </div>
+                <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
+                    <TextField
+                    floatingLabelText="To"
+                    fullWidth='true'
+                    />
+                </div>
+                <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
+                  
+                </div>
+
+            </div>
+        </div>
+        </div>
                 </div>
             </div>
         );
     }
 }
 
-export default withRouter(EmailsList)
+export default withRouter(SendEmail)

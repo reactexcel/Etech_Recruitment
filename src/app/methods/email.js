@@ -17,41 +17,30 @@ Meteor.methods({
     }
     return emailData
   },
-  tagUpdateArchive : function(id,tagId,status){
-    let mail = EmailsStore.find({"_id": id}).fetch();
-    if(mail.tags != 'undefined'){
-      if(status=="ignore"){
-        EmailsStore.update(
-          { _id: id },
-          { $addToSet: { 'tags': tagId} }
-        )
-      }else{
-        EmailsStore.update(
-          { _id: id },
-          {$pull:{tags:tagId}}
-          )
-      }
-
-     
+  tagsUpdateArchive : function(id, status){
+    if(status!='undefined'){
+      EmailsStore.update(
+      { _id: id, 'tags.Archive':status },
+      { $set: { 'tags.$.Archive':!status } }
+      )
     }else{
-     EmailsStore.update(
-     { _id: id },
-     { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
-     )
+      EmailsStore.update(
+      { _id: id },
+      { $addToSet: { tags: { $each: [ {"Archive":true}] } } }
+      )
     }
   },
-  tagUpdateReject : function(id,tagId,reason){
-    let mail = EmailsStore.find({"_id": id}).fetch();
-    if(mail.tags != 'undefined'){
-        EmailsStore.update(
-          { _id: id },
-          { $addToSet: { 'tags': tagId},$set:{'Reason_of_rejection':reason} }
-        )
+  tagUpdateReject : function(id,reject, reason){
+    if(reject!='undefined'){
+      EmailsStore.update(
+      { _id: id, 'tags.Reject':reject },
+      { $set: { 'tags.$.Reject':!reject,'tags.$.Reason':reason } }
+      )
     }else{
-        EmailsStore.update(
-          { _id: id },
-          { $set: { 'tags': [tagId ],'Reason_of_rejection':reason }} ,{upsert:false, multi:true}
-        )
+      EmailsStore.update(
+      { _id: id },
+      { $push: { tags: { $each: [ {"Reject":true, "Reason":reason}] } } }
+      )
     }
   },
 });

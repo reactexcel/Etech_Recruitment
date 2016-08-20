@@ -9,7 +9,7 @@ import * as actions_emailSetting from './../actions/emailSetting'
 import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 
-import { onFetchTag, onAddTag} from '../actions/tags'
+import { onFetchTag, onAddTag, onAssignTag} from '../actions/tags'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -23,8 +23,9 @@ class Inbox extends React.Component {
         this.doPageChange = this.doPageChange.bind(this)
     }
     componentWillMount(){
-        this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
+        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
         this.props.onFetchSettings()
+        this.props.onFetchTag()
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
@@ -78,7 +79,9 @@ class Inbox extends React.Component {
         return(
         	<div>
                 <Header {...this.props} position={1}/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} onAddTag={this.props.onAddTag}  />
+                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
+                  onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
+                  />
         	</div>
         )
     }
@@ -87,20 +90,27 @@ function mapStateToProps( state ){
     state = state.toJS()
     return {
         inbox : state.entities.inbox,
-        emailSetting : state.entities.emailSetting
+        emailSetting : state.entities.emailSetting,
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-     	onInboxData : ( emails_per_page, page_num ) => {
-            return dispatch( actions_inbox.getInboxData( emails_per_page, page_num ) )
+     	onInboxData : ( emails_per_page, page_num, tag ) => {
+            return dispatch( actions_inbox.getInboxData( emails_per_page, page_num, tag ) )
         },
         onFetchSettings : () => {
             return dispatch( actions_emailSetting.onFetchSettingsFromDB());
         },
         onFetchNewEmails : ( imapEmails ) => {
             return dispatch( actions_inbox.fetchNewEmails( imapEmails ) )
-        }
+        },
+        onFetchTag : () => {
+            return dispatch(onFetchTag());
+        },
+        onAssignTag : (m_id, t_id) => {
+            return dispatch(onAssignTag(m_id, t_id));
+        },
     }
 }
 
