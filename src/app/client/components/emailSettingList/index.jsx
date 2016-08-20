@@ -66,12 +66,6 @@ export default class EmailSettingList extends React.Component {
   }
   render() {
     this.flag++;
-    let rowdata = [];
-    _.map(this.props.emailSetting, (row) => {
-                    if(typeof row.smtp == 'undefined'){
-                     rowdata.push(row)
-                    }
-                    })
     return (
       <div>
         <div className="row">
@@ -109,7 +103,7 @@ export default class EmailSettingList extends React.Component {
                   displayRowCheckbox={false}
                   showRowHover={true}
                 >
-                  {_.map(rowdata, (row) => (
+                  {_.map(this.props.emailSetting, (row) => (
                     <TableRow key={row._id}
                       onChange={ (evt) => {this.select(row, evt.target.checked)}}
                     >
