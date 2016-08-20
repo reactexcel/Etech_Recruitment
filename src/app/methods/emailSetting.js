@@ -32,7 +32,7 @@ Meteor.methods({
     let json = JSON.parse( result.content );
     if( typeof json.data == "undefined"){
       Config.update({"_id": detail._id},{$set:{"status": -1}});
-      return -1;
+      return(-1);
     }
     else if( typeof json.data != 'undefined' && json.data.length > 0 ){
       Config.update({"_id": detail._id},{$set:{"status": 1}});

@@ -45,7 +45,7 @@ export default class SendEmailSettingForm extends React.Component {
   }
 
   update(row, label) {
-    
+
     this.setState({
       "emailId": row.smtp.emailId || "",
       "password": row.smtp.password || "",
@@ -198,7 +198,6 @@ export default class SendEmailSettingForm extends React.Component {
                   style={{maxWidth: 250}}
                     onChange={
                       (evt, value) =>{
-                        console.log(value);
                         this.setState({"encrypt": value});
                         if ( typeof value == "undefined" ) {
                           this.error.encrypt = "encrypt is required";
