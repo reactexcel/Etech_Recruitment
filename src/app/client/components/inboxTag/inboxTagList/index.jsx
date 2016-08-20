@@ -109,7 +109,7 @@ export default class InboxTagList extends React.Component {
             }
           >
             <Paper zDepth={2} style={{"padding": "1%"}}>
-              <h4 className="h4">Defdault tag(s)</h4>
+              <h3 className="h3">Tags</h3>
               <Divider />
               <div style={
                 {
@@ -118,37 +118,8 @@ export default class InboxTagList extends React.Component {
                   flexWrap: 'wrap',
                 }
               }>
-                {_.map(this.props.tags, (row) => {
-                  if(row.default)
-                    return <Chip
-                      key={row._id}
-                      backgroundColor={row.color}
-                      style={{ margin: 4}}>
-                      <Avatar
-                        backgroundColor={row.color}
-                        children={
-                          _.upperCase(row.name[0])
-                        }
-                        >
-                      </Avatar>
-                      {row.name}
-                    </Chip>
-                  })}
-              </div>
-            </Paper>
-            <Paper zDepth={2} style={{"padding": "1%", marginTop: "2%"}}>
-              <h4 className="h4">Manual tag(s)</h4>
-              <Divider />
-              <div style={
-                {
-                  "marginTop": "2%",
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                }
-              }>
-                {_.map(this.props.tags, (row) => {
-                  if(!row.automatic)
-                  return  <Chip
+                {_.map(this.props.tags, (row) => (
+                    <Chip
                       key={row._id}
                       backgroundColor={row.color}
                       onRequestDelete={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}
@@ -163,37 +134,7 @@ export default class InboxTagList extends React.Component {
                       </Avatar>
                       {row.name}
                     </Chip>
-                  })}
-              </div>
-            </Paper>
-            <Paper zDepth={2} style={{"padding": "1%", marginTop: "2%"}}>
-              <h4 className="h4">Automatic tag(s)</h4>
-              <Divider />
-              <div style={
-                {
-                  "marginTop": "2%",
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                }
-              }>
-                {_.map(this.props.tags, (row) => {
-                  if(row.automatic)
-                    return <Chip
-                      key={row._id}
-                      backgroundColor={row.color}
-                      onRequestDelete={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}
-                      onTouchTap={(evt) => this.handleOpen(row, evt)}
-                      style={{ margin: 4}}>
-                      <Avatar
-                        backgroundColor={row.color}
-                        children={
-                          _.upperCase(row.name[0])
-                        }
-                        >
-                      </Avatar>
-                      {row.name}
-                    </Chip>
-                  })}
+                  ))}
               </div>
             </Paper>
           </div>

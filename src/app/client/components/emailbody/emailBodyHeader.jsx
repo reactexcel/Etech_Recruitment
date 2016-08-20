@@ -5,7 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 
 import Divider from 'material-ui/Divider';
-import {withRouter} from 'react-router'
+
 import IconMenu from 'material-ui/IconMenu';
 
 import {Menu, MenuItem} from 'material-ui/Menu';
