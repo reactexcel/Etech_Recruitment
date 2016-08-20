@@ -5,6 +5,8 @@ import {withRouter, Link} from 'react-router';
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
+import {onFetchTag} from '../actions/tags'
+import {addLogs} from '../actions/logs'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ class EmailbodyContainer extends React.Component {
   render() {
     return (
         <div>
-          <EmailBodyHeader />
+          <EmailBodyHeader router={this.props.router}/>
           <EmailBody {...this.props}/>
         </div>
     );
@@ -27,7 +29,8 @@ class EmailbodyContainer extends React.Component {
 function mapStateToProps( state ){
     state = state.toJS()
     return {
-        email : state.entities.email
+        email : state.entities.email,
+        inboxTag: state.entities.inboxTag
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -35,11 +38,14 @@ const mapDispatchToProps = (dispatch) => {
       onEmailDetail : (email_id) => {
         return dispatch(getEmailData( email_id ))
       },
-      onIgnore : (id, status) => {
-        return dispatch(tagUpdateArchive( id,status ))
+      onIgnore : (id, tagId,status) => {
+        return dispatch(tagUpdateArchive( id,tagId,status))
       },
-      onReject : (id,reject,reason) => {
-        return dispatch(updateReject(id,reject, reason))
+      onReject : (id,tagId,reason) => {
+        return dispatch(updateReject(id,tagId,reason))
+      },
+      onAddAction: (actiontype, id, details)=>{
+        return dispatch(addLogs(actiontype, id, details))
       }
     }
 }

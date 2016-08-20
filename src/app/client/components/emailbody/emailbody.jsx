@@ -28,12 +28,18 @@ class EmailBody extends React.Component {
         rejectpop:false,
         reason:'',
         errortxt:'',
+        ignoreTagId:'',
+        rejectTagId:'',
+        message:'',
+        messageDialog:false
+
     }
     this.handleClose=this.handleClose.bind(this)
     this.submitreason=this.submitreason.bind(this)
   }
+
 componentWillReceiveProps(props){
-     let id = props.params.id
+    let id = props.params.id
     let data;
     _.map(props.email,(email)=>{
         if(email._id == id){
@@ -49,16 +55,30 @@ componentWillReceiveProps(props){
             }
         }
     })
+    _.map(props.inboxTag,(tag)=>{
+      if(tag.name=="Ignore"){
+        this.setState({
+          ignoreTagId:tag._id
+        })
+      }
+      if(tag.name=="Reject"){
+        this.setState({
+          rejectTagId:tag._id
+        })
+      }
+    })
+
 }
 
 
   handleClose(){
-    this.setState({rejectpop: false});
+    this.setState({rejectpop: false,messageDialog:false});
   }
-  submitreason(id,reject){
+  submitreason(id){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject(id,reject,reason)
+        this.props.onReject(id,this.state.rejectTagId,reason)
+        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),{"action apply on candidate id" :id,"Reason of rejection":reason})
         this.handleClose()
     }else{
         this.setState({
@@ -68,20 +88,17 @@ componentWillReceiveProps(props){
   }
 
 render(){
-  	   let data = this.state.data;
+       let data = this.state.data;
        let ig="ignore";
-       let reg="Reject"
-       let archive='undefined';
-       let reject ='undefined';
-       _.map(data.tags,(tag)=>{
-        archive=tag.Archive;
-        reject=tag.Reject;
-        if(tag.Archive == true){
-            ig="Ignored";
+       let reg="Reject";
+       let ignoreActionType="";
+       _.map(data.tags,(tagID)=>{
+        if(tagID==this.state.ignoreTagId){
+          ig="Ignored"
         }
-        if(reject==true){
-            reg="Rejected"
-        }   
+        if(tagID==this.state.rejectTagId){
+          reg="Rejected"
+        }
        })
            const actions = [
       <FlatButton
@@ -92,28 +109,50 @@ render(){
       <FlatButton
         label="Submit"
         primary={true}
-        onTouchTap={()=>{this.submitreason(data._id,reject)}}
+        onTouchTap={()=>{this.submitreason(data._id)}}
       />,
     ];
-	return(
+  return(
             <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
-    <div className="col-xs-2" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
+    <div className="col-xs-1" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
         <Menu desktop={true}>
             <MenuItem primaryText={ <Link to="inbox">Inbox</Link>
             } />
             <MenuItem primaryText="Trash" />
         </Menu>
     </div>
-    <div className="col-xs-10" style={{ "float": "right"}}>
+    <div className="col-xs-11" style={{ "float": "right"}}>
         <div style={{ "marginBottom": "50px", "marginTop": "-15px"}}>
             <nav aria-label="Page navigation">
                 <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
-                    <li  onClick={ () => this.props.onIgnore(data._id,archive)} style={{cursor:'pointer'}}><span aria-hidden="true" >{ig}</span></li>
-                    <li  onClick={ () => this.setState({rejectpop:true})} style={{cursor:'pointer'}}><span aria-hidden="true">{reg}</span></li>
+                    <li  onClick={ () => {
+                      if(ig=="Ignored"){
+                        ignoreActionType="Candidate is remove from ignore tag"
+                      }
+                      if(ig=="ignore"){
+                        ignoreActionType="Candidate is moved to ignore tag"
+                      }
+                      this.props.onIgnore(data._id,this.state.ignoreTagId,ig),
+                      this.props.onAddAction(ignoreActionType,Meteor.userId(),"Action apply on Candidate id : "+data._id)
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true" >{ig}</span></li>
+                    <li  onClick={ () => {
+                      if(reg=="Reject"){
+                        this.setState({rejectpop:true})
+                      }else{
+                        this.setState({message:"Allready rejected",messageDialog:true})
+                      }
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true">{reg}</span></li>
                     <li  onClick={ () => this.props.schedule(data._id)} style={{cursor:'pointer'}}><span aria-hidden="true">Schedule</span></li>
                 </ul>
             </nav>
         </div>
+        <Dialog
+          title={this.state.message}
+          modal={false}
+          open={this.state.messageDialog}
+          onRequestClose={this.handleClose}
+        >
+        </Dialog>
         <Dialog
           title="Give the reason to reject"
           actions={actions}
@@ -165,7 +204,7 @@ render(){
 
     </div>
 </div>
-		)
+    )
 }
 }
 
