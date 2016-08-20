@@ -43,7 +43,6 @@ const mapDispatchToProps = (dispatch) => {
         return dispatch(onFetchTag())
       },
       onIgnore : (id, tagId,status) => {
-        console.log(id,tagId,"innnnn action");
         return dispatch(tagUpdateArchive( id,tagId,status))
       },
       onReject : (id,tagId,reason) => {

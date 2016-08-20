@@ -15,7 +15,6 @@ export default class MenuDrawer extends React.Component {
     this.setState({open: false});
     this.props.handleClose();
     if(path !== ""){
-      //console.log(this.props.router,"ffffffffffffff");
       this.props.router.push(path);
     }
   }

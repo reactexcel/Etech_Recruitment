@@ -33,7 +33,6 @@ export function getEmailData( email_id ){
 
 
 export function tagUpdateArchive( id, tagId,status){
-    console.log(id,tagId,"inaction")
     return ( dispatch, getState ) => {
         return new Promise( ( resolve, reject ) => { 
             Meteor.call('tagUpdateArchive', id, tagId,status, (err, data) => {
