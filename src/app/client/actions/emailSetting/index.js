@@ -5,6 +5,8 @@ export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
 export const TEST_DETAILS = "TEST_DETAILS";
 
+export const FETCH_SMTP_SETTINGS = "FETCH_SMTP_SETTINGS";
+
 const fetchSettingsFromDB = (fetchedData) => {
   return createAction(FETCH_SETTINGS_FROM_DB)(fetchedData);
 }
@@ -63,6 +65,41 @@ export function onTestDetails (detail) {
             reject(err);
           }else{
             dispatch(testDetails(detail._id,status))
+            resolve();
+          }
+      });
+    });
+  }
+}
+//-----------
+export function saveSendSettings (detail) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('sendEmailSettings',detail,(err,data) => {
+          if(err){
+            reject(err);
+          }else{
+            if(data != ""){
+              dispatch(fetchSMTPSettings());
+            }
+            resolve();
+          }
+      });
+    });
+  }
+}
+
+const actionFetchSMTPSettings = (Data) => {
+  return createAction(FETCH_SMTP_SETTINGS)(Data);
+}
+export function fetchSMTPSettings(){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('fetchSettings',(err, Data) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(actionFetchSMTPSettings(Data));
             resolve();
           }
       });

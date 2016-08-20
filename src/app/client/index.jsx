@@ -15,6 +15,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LoginContainer from './containers/Login';
 import ConfigurationContainer from './containers/configurationContainer';
 import EmailSettingContainer from './containers/configurationContainer/emailSetting';
+import EmailSendingContainer from './containers/configurationContainer/emailSending';
 import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
 import Page_Home from './containers/Home'
@@ -32,7 +33,7 @@ injectTapEventPlugin();
 Meteor.startup(
   () => {
     let store = createStore(reducer,Immutable.Map({}),compose(
-      applyMiddleware(invariant(), thunk),
+      applyMiddleware(invariant(), thunk, logger),
     window.devToolsExtension ? window.devToolsExtension({
         getMonitor: (monitor) => { isMonitorAction = monitor.isMonitorAction; }
         }) : f => f
@@ -50,6 +51,7 @@ Meteor.startup(
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/email-server-setting" component={EmailSettingContainer}></Route>
                 <Route path="/config/tag-setting" component={InboxTagContainer}></Route>
+                <Route path="/config/email-sending" component={EmailSendingContainer}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
               <Route path="/display" component={DisplayContainer}>
