@@ -57,7 +57,7 @@ Meteor.methods({
 		var status_last_fetch_details = false
 
 		_.forEach( checkSettings, function( imapEmail ){
-			if( mongoid == imapEmail._id._str ){
+			if( mongoid == imapEmail._id ){
 				settings = imapEmail
 			}
 		})
@@ -113,8 +113,6 @@ Meteor.methods({
 		    	if( typeof result.content != 'undefined' ){
 
 		    		var json = JSON.parse( result.content )
-
-
 					if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
 						TYPE = "SUCCESS"
 
@@ -201,7 +199,18 @@ Meteor.methods({
 		EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } })
 
 	}else{
-		EmailsStore.insert( emailData );
+		let m_id = EmailsStore.insert( emailData );
+		let tagList = Meteor.call('fetchTag');
+		_.forEach(tagList, ( tag ) => {
+			if ( tag.automatic ){
+				if(tag.email == emaildata.sender_mail){
+					Meteor.call('assignTag',m_id, tag._id)
+				}
+			}
+			if(emaildata.subject.indexOf(tag.name) >= 0){
+				Meteor.call('assignTag',m_id, tag._id)
+			}
+		})
 	}
   },
   getEmailsForInbox : function( emails_per_page, page_num ,tag){
