@@ -93,11 +93,41 @@ export function onFetchTag (){
 export function onAssignTag (m_id, t_id){
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('assignTag',m_id, t_id,(err, tags) => {
+      Meteor.call('assignTag',m_id,t_id,(err, tags) => {
           if(err){
             reject(err);
           }else{
-           dispatch(assignTag( tags ));
+           dispatch(assignTag(tags));
+            resolve();
+          }
+      });
+    });
+  }
+}
+
+export function onIgnoreMultipleCandidate (idList, tagId){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('ignoreMultipleCandidate',idList,tagId,Meteor.userId(),(err, mails) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(assignTag(mails));
+            resolve();
+          }
+      });
+    });
+  }
+}
+
+export function onRejectMultipleCandidate (idList, tagId, reason){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('rejectMultipleCandidate',idList,tagId,reason,Meteor.userId(),(err, mails) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(assignTag(mails));
             resolve();
           }
       });

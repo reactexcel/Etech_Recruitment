@@ -5,11 +5,10 @@ import * as _ from 'lodash'
 
 import * as actions_inbox from './../actions/inbox'
 import * as actions_emailSetting from './../actions/emailSetting'
-
 import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
-
-import { onFetchTag, onAddTag, onAssignTag} from '../actions/tags'
+import {addLogs} from '../actions/logs'
+import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -80,8 +79,8 @@ class Inbox extends React.Component {
         	<div>
                 <Header {...this.props} position={1}/>
                 <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
-                  onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
-                  route={this.props.router}
+                  onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num} inboxTag={this.props.inboxTag} onIgnoreMultipleCandidate={this.props.onIgnoreMultipleCandidate}
+                  onRejectMultipleCandidate={this.props.onRejectMultipleCandidate} route={this.props.router}
                   />
         	</div>
         )
@@ -93,6 +92,7 @@ function mapStateToProps( state ){
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
+        inboxTag:state.entities.inboxTag
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -112,6 +112,12 @@ const mapDispatchToProps = (dispatch) => {
         onAssignTag : (m_id, t_id) => {
             return dispatch(onAssignTag(m_id, t_id));
         },
+        onIgnoreMultipleCandidate : (idList, tagId) => {
+            return dispatch(onIgnoreMultipleCandidate( idList,tagId))
+        },
+        onRejectMultipleCandidate : (idList,tagId,reason) => {
+            return dispatch(onRejectMultipleCandidate(idList,tagId,reason))
+        }
     }
 }
 

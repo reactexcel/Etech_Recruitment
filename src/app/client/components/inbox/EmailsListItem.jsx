@@ -13,10 +13,12 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file'
+import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file';
+import Checkbox from 'material-ui/Checkbox';
 import TagMenu from '../../components/tagMenu';
 import _ from 'lodash';
-
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 class EmailListItem extends React.Component {
 
     constructor( props ){
@@ -90,16 +92,27 @@ class EmailListItem extends React.Component {
 
       return(
 
-          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`}} >
-            <div style={{"width": "100%"}}>
+          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`, "marginBottom":"0px"}} >
               <ListItem
-                onClick={( e ) => this.props.route.push(m_link)}
+                style={{"marginBottom":"0px"}}
                 leftAvatar={avatar}
                 rightIcon={hasAttachment}
                 rightIconButton={
-                  <div style={{left:"95%","top":"2%"}} >
+                  <div style={{left:"95%","top":"2%"}}>
                     <TagMenu {...this.props}/>
                   </div>
+                }
+                leftCheckbox={
+                  <Checkbox
+                    onCheck={(e, check)=>{
+                      if(check==true){
+                        this.props.addEmailId()
+                      }else{
+                        this.props.removeEmailId()
+                      }
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
                 }
                 primaryText={
                   <p>
@@ -117,9 +130,9 @@ class EmailListItem extends React.Component {
                   </p>
                 }
                 secondaryTextLines={2}
+                onClick={() => this.props.route.push(m_link)}
               />
 
-            </div>
             <Divider inset={true} />
           </div>
 
@@ -128,8 +141,3 @@ class EmailListItem extends React.Component {
 }
 
 export default EmailListItem
-
-/*
-
-
-*/
