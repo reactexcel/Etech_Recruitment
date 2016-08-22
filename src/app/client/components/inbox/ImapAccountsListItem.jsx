@@ -23,11 +23,11 @@ class ImapAccountsListItem extends React.Component {
 
 			if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response != 'undefined' ){
 				if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.type != 'undefined' ){
-					fetch_response_TYPE = this.props.imapEmail.fetch_email_status.email_fetch_response.type	
+					fetch_response_TYPE = this.props.imapEmail.fetch_email_status.email_fetch_response.type
 				}
 
 				if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.message != 'undefined' ){
-					fetch_response_MESSAGE = this.props.imapEmail.fetch_email_status.email_fetch_response.message	
+					fetch_response_MESSAGE = this.props.imapEmail.fetch_email_status.email_fetch_response.message
 				}
 
 
@@ -41,21 +41,19 @@ class ImapAccountsListItem extends React.Component {
 				}
     		}
     	}
-		
-		let imap_emailid = this.props.imapEmail.emailId
+
+		let imap_emailid = this.props.imapEmail.emailId || ""
     	let f_char = imap_emailid.charAt(0)
       	f_char = f_char.toUpperCase();
-      
+
       	return(
 			<div  key={ this.props.imapEmail._id}>
-				<ListItem 
+				<ListItem
 					primaryText= {
 						<p>
-
                     		<b>
                       			{this.props.imapEmail.emailId}
                     		</b>
-
                   		</p>
 					}
             		secondaryText={

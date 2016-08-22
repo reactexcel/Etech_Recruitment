@@ -81,6 +81,7 @@ class Inbox extends React.Component {
                 <Header {...this.props} position={1}/>
                 <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                   onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
+                  route={this.props.router}
                   />
         	</div>
         )

@@ -12,7 +12,6 @@ import FlatButton from 'material-ui/FlatButton'
 import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
-
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
@@ -24,7 +23,8 @@ class EmailsList extends React.Component {
     }
     submitForm( evt ){
     }
-    onClick ( obj ) {
+    onClick ( obj, e ) {
+      e.stopPropagation();
       this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
     }
     render(){
@@ -32,7 +32,7 @@ class EmailsList extends React.Component {
         let emailsList = emails.map( (email) => {
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email}  tags={this.props.tags} onAssignTag={this.props.onAssignTag}/>
+                    <EmailsListItem email={email}  tags={this.props.tags} onAssignTag={this.props.onAssignTag} route={this.props.route}/>
                 </div>
             )
         })
@@ -57,15 +57,20 @@ class EmailsList extends React.Component {
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
+                <div className="col-xs-2 col-sm-2 " style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px",}}>
 
                     <Menu>
                       <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
                       <div >
-                        {_.map(this.props.tags, (t) => (
-                            <MenuItem
+                        {_.map(this.props.tags, (t) => {
+                          let unread_mail = 0;
+                          _.forEach(emails, (email) => {
+                            if(_.indexOf(email.tags,t._id) >= 0 && email.unread)
+                              ++unread_mail;
+                          })
+                        return <MenuItem
                             key={t._id}
                             primaryText={
                                 <FlatButton
@@ -78,13 +83,13 @@ class EmailsList extends React.Component {
                                         _.upperCase(t.name[0])
                                       }></Avatar>
                                   }
-                                  label={t.name}
+                                  label={t.name + " ("+ unread_mail+")"}
                                   ></FlatButton>
                             }
-                            onTouchTap={() => this.onClick({"t_id": t._id})}
+                            onTouchTap={(e) => this.onClick({"t_id": t._id}, e)}
                            />
 
-                        ))}
+                       })}
                       </div>
                     </Menu>
 
@@ -94,19 +99,25 @@ class EmailsList extends React.Component {
 
 
                 </div>
-                <div className="col-xs-10" style={{ "float":"right"}}>
-                    <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>
+                <div className="col-xs-10 col-sm-10">
+                  <div className="row">
+                    <div className="col-xs-2 col-xs-offset-10" >
                         <nav aria-label="Page navigation">
-                            <ul className="pagination pull-right">
+                            <ul className="pagination  pull-right">
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
                         </nav>
                     </div>
+                </div>
+                <div className="row">
+                  <div className=" col-sm-12 col-xs-12" style={{"marginTop":"-20px"}}>
                     <List>
                         {emailsList}
                     </List>
+                  </div>
                 </div>
+              </div>
             </div>
         );
     }

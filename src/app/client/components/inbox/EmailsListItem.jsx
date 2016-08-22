@@ -73,7 +73,7 @@ class EmailListItem extends React.Component {
       let hasAttachment = <span>&nbsp;</span>
 
       if( typeof this.props.email.attachments != 'undefined' && this.props.email.attachments.length > 0 ){
-        hasAttachment = <EditorAttachFile style={{"marginRight":"2%","marginTop":"20px"}} />
+        hasAttachment = <EditorAttachFile style={{"marginRight":"3%","marginTop":"20px"}} />
       }
 
       //--more emails
@@ -91,12 +91,16 @@ class EmailListItem extends React.Component {
       return(
 
           <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`}} >
-            <div style={{"width": "95%"}}>
-            <Link to={m_link}>
-
+            <div style={{"width": "100%"}}>
               <ListItem
+                onClick={( e ) => this.props.route.push(m_link)}
                 leftAvatar={avatar}
-                rightIconButton={hasAttachment}
+                rightIcon={hasAttachment}
+                rightIconButton={
+                  <div style={{left:"95%","top":"2%"}} >
+                    <TagMenu {...this.props}/>
+                  </div>
+                }
                 primaryText={
                   <p>
                     <b>
@@ -114,14 +118,9 @@ class EmailListItem extends React.Component {
                 }
                 secondaryTextLines={2}
               />
-              </Link>
-            </div>
-            <div style={{"position": "relative", left:"94%", width:"5%"}} >
-              <TagMenu {...this.props}/>
+
             </div>
             <Divider inset={true} />
-
-
           </div>
 
       );
@@ -129,3 +128,8 @@ class EmailListItem extends React.Component {
 }
 
 export default EmailListItem
+
+/*
+
+
+*/

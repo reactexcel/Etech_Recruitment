@@ -6,6 +6,7 @@
   "main": "src/server.js",
   "browser": "src/client.js",
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "immutable": "^3.8.1",
     "immutable-redux": "^0.2.0",
     "ip": "^1.1.3",
