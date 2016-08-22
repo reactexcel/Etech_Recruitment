@@ -10,6 +10,10 @@ import List from 'material-ui/List'
 import CandidateHistory from './candidateHistory'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
+import _ from 'lodash';
 
 const styles = {
   errorStyle: {
@@ -88,7 +92,10 @@ componentWillReceiveProps(props){
   }
 
 render(){
+  console.log(this.props);
        let data = this.state.data;
+       let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
+       console.log(more_email);
        let ignoreText="Ignore";
        let rejectText="Reject";
        _.map(data.tags,(tagID)=>{
@@ -112,7 +119,7 @@ render(){
       />,
     ];
   return(
-            <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
+  <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
     <div className="col-xs-1" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
         <Menu desktop={true}>
             <MenuItem primaryText={ <Link to="inbox">Inbox</Link>
@@ -161,43 +168,81 @@ render(){
         <div>
          <TextField
          style={{width: '100%'}}
-      ref='reg'
-      errorText={this.state.errortxt}
-      floatingLabelText="Reason To Reject" 
-    />
-                        </div>
-        </Dialog>
-        <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
-        <div className="col-xs-12">
-            <div className='row' style={{background: '#fff'}}>
-
-                <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="col-xs-6">
-                        From : <b>{data.from}</b> <br /> Sender email : <b>{data['sender-mail']} </b>
-                    </div>
-                    <div className="col-xs-6" style={{textAlign: "right"}} dangerouslySetInnerHTML={{__html: data.email_date }}>
-                    </div>
-                </div>
-                <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
-                    {data.subject}
-                </div>
-                <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="row">
-                        <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}>
-
-                        </div>
-                        <div className={this.state.attchsec} style={{height: '100vh'}}>
-                            <iframe src={this.state.attachmentlink} style={{height: '100%',width: '100%',border: 'none'}} scrolling="no"></iframe>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+         ref='reg'
+         errorText={this.state.errortxt}
+         floatingLabelText="Reason To Reject"
+         />
         </div>
+      </Dialog>
+        <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
+          <div className="col-sm-12 col-sx-12 col-lg-12">
+              {_.map(more_email,( email, i) => (
+                <Card key={i}>
+                <Paper
+                  style={{marginTop:"5px"}}
+                  actAsExpander={i==0?false:true}
+                  zDepth={2}
+                  children={
+                    <CardHeader
+                      title={"From : "+ data.from }
+                      subtitle={"Email : "+ data['sender_mail'] + "( "+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+" )" }
+                      avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
+                      actAsExpander={i==0?false:true}
+                      showExpandableButton={i==0?false:true}
+                      />
+                  }
+                   />
+                    <CardText
+                      expandable={i==0?false:true}
+                      children={
+                          <div className="row">
+                              <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
+                              <div className={this.state.attchsec} style={{height: '100vh'}}>
+                                  <iframe src={this.state.attachmentlink} style={{height: '100%',width: '100%',border: 'none'}} scrolling="no"></iframe>
+                              </div>
+                          </div>
+                    }
+                      >
+                    </CardText>
+
+                </Card>
+              ))}
+              <Card>
+              <Paper
+                style={{marginTop:"5px"}}
+                actAsExpander={typeof data.more_emails === 'undefined'?false:true}
+                zDepth={2}
+                children={
+                  <CardHeader
+                    title={"From : "+ data.from }
+                    subtitle={"Email : "+ data['sender_mail'] + " ("+moment(data.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")" }
+                    avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
+                    actAsExpander={typeof data.more_emails === 'undefined'?false:true}
+                    showExpandableButton={typeof data.more_emails === 'undefined'?false:true}
+                    />
+                }
+                 />
+                <CardText
+                    expandable={typeof data.more_emails === 'undefined'?false:true}
+                    children={
+                        <div className="row">
+                            <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
+                            <div className={this.state.attchsec} style={{height: '100vh'}}>
+                                <iframe src={this.state.attachmentlink} style={{height: '100%',width: '100%',border: 'none'}} scrolling="no"></iframe>
+                            </div>
+                        </div>
+                  }
+                >
+                </CardText>
+
+              </Card>
+          </div>
         </div>
 
         <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
+          <div className="col-sm-12 col-sx-12 col-lg-12">
         <CandidateHistory id={this.props.params.id}/>
+        </div>
         </div>
 
     </div>
@@ -207,3 +252,56 @@ render(){
 }
 
 export default EmailBody
+
+
+
+/*
+
+
+<Card>
+  <CardHeader
+    title={"From : "+ data.from }
+    subtitle={"Email : "+ data['sender_mail']}
+    avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
+    actAsExpander={true}
+    showExpandableButton={true}
+    />
+  <CardText
+    expandable={true}
+    children={<div dangerouslySetInnerHTML={{__html:data.body }}></div>}
+    >
+  </CardText>
+</Card>
+
+
+
+
+
+
+<div className="col-xs-12">
+    <div className='row' style={{background: '#fff'}}>
+
+        <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
+            <div className="col-xs-6">
+                From : <b>{data.from}</b> <br /> Sender email : <b>{data['sender-mail']} </b>
+            </div>
+            <div className="col-xs-6" style={{textAlign: "right"}} dangerouslySetInnerHTML={{__html: data.email_date }}>
+            </div>
+        </div>
+        <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
+            {data.subject}
+        </div>
+        <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
+            <div className="row">
+                <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}>
+
+                </div>
+                <div className={this.state.attchsec} style={{height: '100vh'}}>
+                    <iframe src={this.state.attachmentlink} style={{height: '100%',width: '100%',border: 'none'}} scrolling="no"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+*/
