@@ -15,7 +15,6 @@ class EmailbodyContainer extends React.Component {
   }
   componentWillMount(){
     this.props.onEmailDetail(this.props.params.id)
-    this.props.onTagDetails()
   }
   render() {
     return (
@@ -39,11 +38,8 @@ const mapDispatchToProps = (dispatch) => {
       onEmailDetail : (email_id) => {
         return dispatch(getEmailData( email_id ))
       },
-      onTagDetails:()=>{
-        return dispatch(onFetchTag())
-      },
-      onIgnore : (id, tagId,status) => {
-        return dispatch(tagUpdateArchive( id,tagId,status))
+      onIgnore : (id, tagId) => {
+        return dispatch(tagUpdateArchive( id,tagId))
       },
       onReject : (id,tagId,reason) => {
         return dispatch(updateReject(id,tagId,reason))

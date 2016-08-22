@@ -78,7 +78,7 @@ componentWillReceiveProps(props){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
         this.props.onReject(id,this.state.rejectTagId,reason)
-        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),{"action apply on candidate id" :id,"Reason of rejection":reason})
+        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),{"Action apply on candidate id" :id,"Reason of rejection":reason})
         this.handleClose()
     }else{
         this.setState({
@@ -88,16 +88,15 @@ componentWillReceiveProps(props){
   }
 
 render(){
-  	   let data = this.state.data;
-       let ig="ignore";
-       let reg="Reject";
-       let ignoreActionType="";
+       let data = this.state.data;
+       let ignoreText="Ignore";
+       let rejectText="Reject";
        _.map(data.tags,(tagID)=>{
         if(tagID==this.state.ignoreTagId){
-          ig="Ignored"
+          ignoreText="Ignored"
         }
         if(tagID==this.state.rejectTagId){
-          reg="Rejected"
+          rejectText="Rejected"
         }
        })
            const actions = [
@@ -112,7 +111,7 @@ render(){
         onTouchTap={()=>{this.submitreason(data._id)}}
       />,
     ];
-	return(
+  return(
             <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
     <div className="col-xs-1" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
         <Menu desktop={true}>
@@ -126,22 +125,21 @@ render(){
             <nav aria-label="Page navigation">
                 <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
                     <li  onClick={ () => {
-                      if(ig=="Ignored"){
-                        ignoreActionType="Candidate is remove from ignore tag"
+                      if(ignoreText=="Ignored"){
+                        this.setState({message:"Already Ignored",messageDialog:true})
                       }
-                      if(ig=="ignore"){
-                        ignoreActionType="Candidate is moved to ignore tag"
+                      if(ignoreText=="Ignore"){
+                        this.props.onIgnore(data._id,this.state.ignoreTagId),
+                        this.props.onAddAction("Candidate is moved to ignore tag",Meteor.userId(),"Action apply on Candidate id : "+data._id)
                       }
-                      this.props.onIgnore(data._id,this.state.ignoreTagId,ig),
-                      this.props.onAddAction(ignoreActionType,Meteor.userId(),"Action apply on Candidate id : "+data._id)
-                    }} style={{cursor:'pointer'}}><span aria-hidden="true" >{ig}</span></li>
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true" >{ignoreText}</span></li>
                     <li  onClick={ () => {
-                      if(reg=="Reject"){
+                      if(rejectText=="Reject"){
                         this.setState({rejectpop:true})
                       }else{
-                        this.setState({message:"Allready rejected",messageDialog:true})
+                        this.setState({message:"Already rejected",messageDialog:true})
                       }
-                    }} style={{cursor:'pointer'}}><span aria-hidden="true">{reg}</span></li>
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true">{rejectText}</span></li>
                     <li  onClick={ () => this.props.schedule(data._id)} style={{cursor:'pointer'}}><span aria-hidden="true">Schedule</span></li>
                 </ul>
             </nav>
@@ -154,7 +152,7 @@ render(){
         >
         </Dialog>
         <Dialog
-          title="Give the reason to reject"
+          title="Give the reason of rejection"
           actions={actions}
           modal={false}
           open={this.state.rejectpop}
@@ -204,7 +202,7 @@ render(){
 
     </div>
 </div>
-		)
+    )
 }
 }
 

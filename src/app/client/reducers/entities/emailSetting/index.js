@@ -5,8 +5,11 @@ let initialState = Immutable.List([]);
 
 export function emailSetting (state = initialState, action ){
   if (action.type === ACTION.FETCH_SETTINGS_FROM_DB) {
-    const nextState = _.map(action.payload, ( value ) => {
-      return Immutable.Map(value);
+    let nextState=[];
+     _.map(action.payload, ( value ) => {
+       if(typeof value.smtp == 'undefined'){
+       nextState.push(Immutable.Map(value));
+    }
     });
     return Immutable.List(nextState);
   }else if (action.type === ACTION.SAVE_SETTINGS_TO_DB) {
@@ -35,6 +38,14 @@ export function emailSetting (state = initialState, action ){
           }
         }
       );
+  }else if (action.type === ACTION.FETCH_SMTP_SETTINGS) {
+    let smtpList=[];
+    _.map(action.payload, ( value ) => {
+      if(typeof value.smtp != 'undefined'){
+        smtpList.push(Immutable.Map(value));
+      }
+    });
+    return Immutable.List(smtpList);
   }
   return state;
 }

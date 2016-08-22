@@ -17,26 +17,17 @@ Meteor.methods({
     }
     return emailData
   },
-  tagUpdateArchive : function(id,tagId,status){
+  tagUpdateArchive : function(id,tagId){
     let mail = EmailsStore.find({"_id": id}).fetch();
     if(mail.tags != 'undefined'){
-      if(status=="ignore"){
         EmailsStore.update(
           { _id: id },
           { $addToSet: { 'tags': tagId} }
         )
-      }else{
-        EmailsStore.update(
-          { _id: id },
-          {$pull:{tags:tagId}}
-          )
-      }
-
-     
     }else{
      EmailsStore.update(
-     { _id: id },
-     { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
+        { _id: id },
+        { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
      )
     }
   },

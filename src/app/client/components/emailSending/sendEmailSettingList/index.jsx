@@ -21,7 +21,7 @@ const styles = {
   },
 };
 
-export default class EmailSettingList extends React.Component {
+export default class SendEmailSettingList extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
@@ -68,7 +68,7 @@ export default class EmailSettingList extends React.Component {
     this.flag++;
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
-                    if(typeof row.smtp == 'undefined'){
+                    if(typeof row.smtp != 'undefined'){
                      rowdata.push(row)
                     }
                     })
@@ -93,7 +93,7 @@ export default class EmailSettingList extends React.Component {
                 >
                   <TableRow>
                     <TableRowColumn colSpan="4" >
-                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>IMAP/POP3 Settings</h4>
+                      <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>SMTP Settings</h4>
                     </TableRowColumn>
                   </TableRow>
                   <TableRow>
@@ -109,21 +109,21 @@ export default class EmailSettingList extends React.Component {
                   displayRowCheckbox={false}
                   showRowHover={true}
                 >
-                  {_.map(rowdata, (row) => (
-                    <TableRow key={row._id}
+                  {_.map(rowdata,(row)=>(
+                      <TableRow key={row._id}
                       onChange={ (evt) => {this.select(row, evt.target.checked)}}
                     >
-                      <TableRowColumn colSpan={2}>{row.emailId}</TableRowColumn>
-                      <TableRowColumn>{row.server}</TableRowColumn>
-                      <TableRowColumn>{row.port}</TableRowColumn>
-                      <TableRowColumn>{row.encrypt}</TableRowColumn>
+                      <TableRowColumn colSpan={2}>{row.smtp.emailId}</TableRowColumn>
+                      <TableRowColumn>{row.smtp.server}</TableRowColumn>
+                      <TableRowColumn>{row.smtp.port}</TableRowColumn>
+                      <TableRowColumn>{row.smtp.encrypt}</TableRowColumn>
                       <TableRowColumn><IconButton iconClassName={
                           classNames("fa" ,"fa-2x",
-                                      {"fa-check": (row.status == 1)},
-                                      {"fa-times": (row.status == -1)},
-                                      {"fa-minus": (row.status == 0)},
+                                      {"fa-check": (row.smtp.status == 1)},
+                                      {"fa-times": (row.smtp.status == -1)},
+                                      {"fa-minus": (row.smtp.status == 0)},
                                      )
-                       } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
+                       } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
@@ -152,7 +152,7 @@ export default class EmailSettingList extends React.Component {
   }
 }
 
-EmailSettingList.propTypes = {
+SendEmailSettingList.propTypes = {
   selectedRow: PropTypes.func.isRequired,
   onTestDetails: PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,

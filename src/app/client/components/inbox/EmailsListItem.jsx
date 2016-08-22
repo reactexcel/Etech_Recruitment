@@ -13,7 +13,10 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file'
+import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file';
+import Checkbox from 'material-ui/Checkbox';
+import TagMenu from '../../components/tagMenu';
+import _ from 'lodash';
 
 class EmailListItem extends React.Component {
 
@@ -51,6 +54,11 @@ class EmailListItem extends React.Component {
       let m_body = this.props.email.body
 
 
+      _.map(this.props.tags,(t) =>{
+        if(typeof this.props.email.tags != 'undefined')
+          if(t._id == this.props.email.tags[0] )
+            mail_left_border_color = t.color;
+      })
       let avatar1 = <Avatar backgroundColor={mail_left_border_color} color={darkBlack} style={{ "marginTop":"50%", "marginLeft":"30%"}} >{f_char}</Avatar>
       let avatar = <div style={{ "borderLeft":`5px solid ${mail_left_border_color}`,'height' : '100%', 'left' : '0px',"top":"0px"}}>{avatar1}</div>
 
@@ -80,20 +88,31 @@ class EmailListItem extends React.Component {
       if( more_emails_count > 0 ){
         show_more_email_count = "("+more_emails_count+")"
       }
-      
+
       return(
 
           <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`}} >
 
+                <div style={{"position": "relative", width:"5%"}} >
+                <Checkbox onCheck={(e, check)=>{
+                  if(check==true){
+                    this.props.addEmailId()
+                  }else{
+                    this.props.removeEmailId()
+                  }
+                }}/>
+               </div>
+            <div style={{"width": "95%"}}>
             <Link to={m_link}>
 
               <ListItem
+                
                 leftAvatar={avatar}
                 rightIconButton={hasAttachment}
                 primaryText={
                   <p>
                     <b>
-                      {m_subject} 
+                      {m_subject}
                     </b>
                     <i style={{"fontSize": "12px"}}>
                       &nbsp;&nbsp;<span style={{color: darkBlack}}></span>&nbsp;&nbsp;{email_date}
@@ -108,15 +127,15 @@ class EmailListItem extends React.Component {
                 secondaryTextLines={2}
               />
               </Link>
+            </div>
+            <div style={{"position": "relative", left:"94%", width:"5%"}} >
+              <TagMenu {...this.props}/>
+            </div>
             <Divider inset={true} />
 
 
           </div>
 
-
-
-
-        
       );
     }
 }
