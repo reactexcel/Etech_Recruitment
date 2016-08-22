@@ -13,7 +13,8 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file'
+import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file';
+import Checkbox from 'material-ui/Checkbox';
 import TagMenu from '../../components/tagMenu';
 import _ from 'lodash';
 
@@ -91,10 +92,21 @@ class EmailListItem extends React.Component {
       return(
 
           <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`}} >
+
+                <div style={{"position": "relative", width:"5%"}} >
+                <Checkbox onCheck={(e, check)=>{
+                  if(check==true){
+                    this.props.addEmailId()
+                  }else{
+                    this.props.removeEmailId()
+                  }
+                }}/>
+               </div>
             <div style={{"width": "95%"}}>
             <Link to={m_link}>
 
               <ListItem
+                
                 leftAvatar={avatar}
                 rightIconButton={hasAttachment}
                 primaryText={

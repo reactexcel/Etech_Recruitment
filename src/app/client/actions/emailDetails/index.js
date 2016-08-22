@@ -32,10 +32,10 @@ export function getEmailData( email_id ){
 //-----
 
 
-export function tagUpdateArchive( id, tagId,status){
+export function tagUpdateArchive( id, tagId){
     return ( dispatch, getState ) => {
         return new Promise( ( resolve, reject ) => { 
-            Meteor.call('tagUpdateArchive', id, tagId,status, (err, data) => {
+            Meteor.call('tagUpdateArchive', id, tagId, (err, data) => {
                 if(err){
                     dispatch ( error_email( err ) )
                 }else{

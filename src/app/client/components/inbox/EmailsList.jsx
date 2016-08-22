@@ -1,41 +1,113 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
-
+const classNames = require('classnames');
 import List from 'material-ui/List'
 
 import EmailsListItem from './EmailsListItem'
 import ImapAccountsList from './ImapAccountsList'
-
+import Dialog from 'material-ui/Dialog';
 import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
+import TextField from 'material-ui/TextField';
 
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
+        this.state={
+          emailIdList:[],
+          ignoreTagId:'',
+          rejectTagId:'',
+          rejectpop:false,
+          errortxt:'',
+        }
         this.onClick = this.onClick.bind(this);
+        this.handleClose=this.handleClose.bind(this);
+        this.updateEmailIdList= this.updateEmailIdList.bind(this);
+        this.submitreason=this.submitreason.bind(this);
     }
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
+        _.map(props.inboxTag,(tag)=>{
+            if(tag.name=="Ignore"){
+               this.setState({
+                 ignoreTagId:tag._id
+               })
+            }
+            if(tag.name=="Reject"){
+              this.setState({
+                 rejectTagId:tag._id
+              })
+            }
+         })
     }
     submitForm( evt ){
     }
+    handleClose(){
+      this.setState({rejectpop: false});
+    }
+    submitreason(idList){
+    let reason = this.refs.reg.input.value.trim()
+    if(reason.length > 0){
+        this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason)
+        this.handleClose()
+    }else{
+        this.setState({
+            errortxt:'Reason required'
+        })
+    }
+  }
     onClick ( obj ) {
       this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
+    }
+    updateEmailIdList(emailId,check){
+        if(check==true){
+            this.state.emailIdList.push(emailId)
+            this.setState({
+                emailIdList : this.state.emailIdList
+            })
+        }else{
+            _.pull(this.state.emailIdList,emailId)
+            this.setState({
+                emailIdList:this.state.emailIdList
+            })
+        }
+
+        if(this.state.emailIdList.length>0){
+          this.refs.actionList.className = classNames("pagination","pull-left","show");
+        }else{
+          this.refs.actionList.className = classNames("pagination","pull-left","hidden");
+        }
+
     }
     render(){
         let emails = this.props.inbox.emails
         let emailsList = emails.map( (email) => {
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email}  tags={this.props.tags} onAssignTag={this.props.onAssignTag}/>
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}/>
                 </div>
             )
         })
+
+
+        const actions = [
+          <FlatButton
+           label="Cancel"
+           primary={true}
+           onTouchTap={this.handleClose}
+          />,
+          <FlatButton
+           label="Submit"
+           primary={true}
+           onTouchTap={()=>{this.submitreason(this.state.emailIdList)}}
+          />,
+    ];
 
         let prev_page_num = this.props.inbox.previous_page
         let next_page_num = this.props.inbox.next_page
@@ -100,12 +172,40 @@ class EmailsList extends React.Component {
                 <div className="col-xs-10" style={{ "float":"right"}}>
                     <div style={{ "marginBottom":"50px", "marginTop":"-16px"}}>
                         <nav aria-label="Page navigation">
+                            <ul ref="actionList" className="pagination pull-left hidden">
+                             <li style={{cursor:'pointer'}} onClick={ () => {
+                                   this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
+                                
+                             }}><span aria-hidden="true" >Ignore</span></li>
+                             <li style={{cursor:'pointer'}} onClick={ () => {
+                                   this.setState({rejectpop:true})
+                               
+                             }}><span aria-hidden="true" >Reject</span></li>
+                             <li style={{cursor:'pointer'}}><span aria-hidden="true" >Schedule</span></li>
+                            </ul>
+                            {      }
                             <ul className="pagination pull-right">
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
                         </nav>
                     </div>
+                    <Dialog
+                     title="Give the reason of rejection"
+                     actions={actions}
+                     modal={false}
+                     open={this.state.rejectpop}
+                     onRequestClose={this.handleClose}
+                    >
+                    <div>
+                    <TextField
+                     style={{width: '100%'}}
+                     ref='reg'
+                     errorText={this.state.errortxt}
+                     floatingLabelText="Reason to reject" 
+                     />
+                     </div>
+                    </Dialog>
                     <List>
                         {emailsList}
                     </List>

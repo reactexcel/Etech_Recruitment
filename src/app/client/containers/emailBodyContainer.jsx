@@ -38,8 +38,8 @@ const mapDispatchToProps = (dispatch) => {
       onEmailDetail : (email_id) => {
         return dispatch(getEmailData( email_id ))
       },
-      onIgnore : (id, tagId,status) => {
-        return dispatch(tagUpdateArchive( id,tagId,status))
+      onIgnore : (id, tagId) => {
+        return dispatch(tagUpdateArchive( id,tagId))
       },
       onReject : (id,tagId,reason) => {
         return dispatch(updateReject(id,tagId,reason))
