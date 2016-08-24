@@ -147,7 +147,7 @@ export default class InboxTagList extends React.Component {
                 }
               }>
                 {_.map(this.props.tags, (row) => {
-                  if(!row.automatic)
+                  if(!row.automatic && !row.default)
                   return  <Chip
                       key={row._id}
                       backgroundColor={row.color}

@@ -17,7 +17,8 @@ import EditorAttachFile from 'material-ui/svg-icons/editor/attach-file';
 import Checkbox from 'material-ui/Checkbox';
 import TagMenu from '../../components/tagMenu';
 import _ from 'lodash';
-
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 class EmailListItem extends React.Component {
 
     constructor( props ){
@@ -74,7 +75,7 @@ class EmailListItem extends React.Component {
       let hasAttachment = <span>&nbsp;</span>
 
       if( typeof this.props.email.attachments != 'undefined' && this.props.email.attachments.length > 0 ){
-        hasAttachment = <EditorAttachFile style={{"marginRight":"2%","marginTop":"20px"}} />
+        hasAttachment = <EditorAttachFile style={{"marginRight":"3%","marginTop":"20px"}} />
       }
 
       //--more emails
@@ -91,24 +92,28 @@ class EmailListItem extends React.Component {
 
       return(
 
-          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`}} >
-
-                <div style={{"position": "relative", width:"5%"}} >
-                <Checkbox onCheck={(e, check)=>{
-                  if(check==true){
-                    this.props.addEmailId()
-                  }else{
-                    this.props.removeEmailId()
-                  }
-                }}/>
-               </div>
-            <div style={{"width": "95%"}}>
-            <Link to={m_link}>
-
+          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`, "marginBottom":"0px"}} >
               <ListItem
-                
+                style={{"marginBottom":"0px"}}
                 leftAvatar={avatar}
-                rightIconButton={hasAttachment}
+                rightIcon={hasAttachment}
+                rightIconButton={
+                  <div style={{left:"95%","top":"2%"}}>
+                    <TagMenu {...this.props}/>
+                  </div>
+                }
+                leftCheckbox={
+                  <Checkbox
+                    onCheck={(e, check)=>{
+                      if(check==true){
+                        this.props.addEmailId()
+                      }else{
+                        this.props.removeEmailId()
+                      }
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                }
                 primaryText={
                   <p>
                     <b>
@@ -125,15 +130,10 @@ class EmailListItem extends React.Component {
                   </p>
                 }
                 secondaryTextLines={2}
+                onClick={() => this.props.route.push(m_link)}
               />
-              </Link>
-            </div>
-            <div style={{"position": "relative", left:"94%", width:"5%"}} >
-              <TagMenu {...this.props}/>
-            </div>
+
             <Divider inset={true} />
-
-
           </div>
 
       );

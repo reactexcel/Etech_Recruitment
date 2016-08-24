@@ -20,9 +20,8 @@ class SendEmail extends React.Component {
     }
     componentWillReceiveProps( props ){
     }
-   
+
     render(){
-    
         let count_unread_emails = ""
         if( typeof this.props.inbox.count_unread_emails != 'undefined' && this.props.inbox.count_unread_emails > 0 ){
             count_unread_emails  = "(" + this.props.inbox.count_unread_emails + ")"
@@ -30,7 +29,6 @@ class SendEmail extends React.Component {
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
                 <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
-
                     <Menu>
                         <MenuItem  primaryText={
                             <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
@@ -58,7 +56,6 @@ class SendEmail extends React.Component {
                             }
                             onTouchTap={() => this.onClick({"t_id": t._id})}
                            />
-
                         ))}
                       </div>
                     </Menu>
@@ -70,7 +67,7 @@ class SendEmail extends React.Component {
             <div className='row' style={{background: '#fff'}}>
                 <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
                     <div className="col-xs-12">
-                       <b><i>Send new mail</i></b> <br /> 
+                       <b><i>Send new mail</i></b> <br />
                     </div>
                 </div>
                 <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
@@ -80,7 +77,7 @@ class SendEmail extends React.Component {
                     />
                 </div>
                 <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
-                  
+
                 </div>
 
             </div>

@@ -7,6 +7,7 @@ import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import {onFetchTag} from '../actions/tags'
 import {addLogs} from '../actions/logs'
+import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,7 @@ class EmailbodyContainer extends React.Component {
   render() {
     return (
         <div>
-          <EmailBodyHeader router={this.props.router}/>
+          <Header {...this.props} position={0} altr="Email" />
           <EmailBody {...this.props}/>
         </div>
     );

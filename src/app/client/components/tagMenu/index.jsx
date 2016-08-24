@@ -23,7 +23,7 @@ export default class TagMenu extends React.Component {
     return (
       <div>
         <IconMenu
-          iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+          iconButtonElement={<IconButton onClick={(e) => e.stopPropagation()}><MoreVertIcon /></IconButton>}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           >
