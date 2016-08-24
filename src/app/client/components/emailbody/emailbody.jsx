@@ -169,7 +169,7 @@ render(){
               {_.map(more_email,( email, i) => (
                   <MyCard email={email} i={i} key={i} />
               ))}
-              <MyCard email={data} />
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} />
           </div>
         </div>
 

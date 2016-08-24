@@ -4,6 +4,7 @@ import Avatar from 'material-ui/Avatar';
 import LinearProgress from 'material-ui/LinearProgress';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
+
 export default class MyCard extends React.Component {
   constructor(props) {
     super(props);
@@ -23,13 +24,22 @@ export default class MyCard extends React.Component {
           zDepth={2}
           children={
             <CardHeader
-              title={<div> {typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"10px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:"From: "+email.from} </div>}
-              subtitle={<div> {typeof email['sender_mail'] == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"10px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />:
-                "Email : "+ email['sender_mail'] + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"
+              title={<div> {typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:<div>{email.subject} <br/> From: {email.from}</div>} </div>}
+              subtitle={<div> {typeof email.sender_mail == 'undefined'?
+                <div>
+                  <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                  <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                </div>:
+                <div style={{"width":"100%"}}>
+                  Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
+                  {typeof email.attachments == 'undefined'?"":<span className="pull-right" style={{"height":"10px",marginLeft:"20px"}}><i className="fa fa-paperclip fa-2x"></i></span>}
+                </div>
                 } </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
               actAsExpander={i==0?false:true}
               showExpandableButton={i==0?false:true}
+              titleStyle={{'fontSize':"12px"}}
+              subtitleStyle={{'fontSize':"11px"}}
               />
           }
            />
