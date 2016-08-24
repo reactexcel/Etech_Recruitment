@@ -8,11 +8,11 @@ import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
- import {Menu, MenuItem} from 'material-ui/Menu'
- import FlatButton from 'material-ui/FlatButton'
- import RaisedButton from 'material-ui/RaisedButton';
-// import Avatar from 'material-ui/Avatar';
-// import _ from 'lodash'
+import {Menu, MenuItem} from 'material-ui/Menu'
+import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from 'material-ui/Avatar';
+import _ from 'lodash'
  import verge from 'verge';
 // //import EditableDiv from 'react-wysiwyg-editor';
 // import FroalaEditor from 'react-froala-editor';
