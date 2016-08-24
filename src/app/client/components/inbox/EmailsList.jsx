@@ -14,6 +14,9 @@ import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
 import TextField from 'material-ui/TextField';
+import LinearProgress from 'material-ui/LinearProgress';
+import CircularProgress from 'material-ui/CircularProgress';
+
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
@@ -139,7 +142,13 @@ class EmailsList extends React.Component {
                         <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      <div >
+                      {this.props.tags.length == 0 ?
+                        <div style={{'marginLeft':"10%"}}>
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :<div >
                         {_.map(this.props.tags, (t) => {
                           let unread_mail = 0;
                           _.forEach(emails, (email) => {
@@ -165,7 +174,7 @@ class EmailsList extends React.Component {
                             onTouchTap={(e) => this.onClick({"t_id": t._id}, e)}
                            />
                        })}
-                      </div>
+                     </div>}
                     </Menu>
 
                     <hr/>
@@ -213,9 +222,18 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <List>
+                    {emails.length === 0?
+                      <div style={{position:'relative',left: '30%', width:"40%"}}>
+                        <div style={{marginLeft:"120px"}}>
+                          <CircularProgress size={1.5} />
+                        </div>
+                        <div className="text-center" style={{color:'lightgray',marginRight:"50px"}}><h4>Loading please wait ... </h4></div>
+                      </div>
+                      :
+                      <List>
                         {emailsList}
-                    </List>
+                      </List>
+                    }
                   </div>
                 </div>
               </div>
