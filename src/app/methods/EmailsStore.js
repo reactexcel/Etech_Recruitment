@@ -17,7 +17,6 @@ Meteor.methods({
 				"last_email_fetch_date" : ""
   			}
   		}
-			console.log(dataToUpdate,"update_status_last_fetch_details");
 		Config.update( mongoid, { $set: dataToUpdate})
 		return true
   	},
@@ -183,17 +182,40 @@ try{
    			'm_read_status' : 0*1
   		}
 			//insert mail to tha existing account
-			Meteor.call('addtag', tagList, emailData, function (err, emailData) {
-				if(!err)
-					EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } })
-			});
-
+			_.forEach(tagList, function ( tag ) {
+					if(tag.automatic){
+						if(tag.email == emailData.sender_mail){
+							if(_.indexOf(emailData.tags, tag._id) == -1){
+								emailData.tags.push(tag._id);
+							}
+						}
+					}
+					if(emailData.subject.search(tag.name) > -1){
+						if(_.indexOf(emailData.tags, tag._id) == -1 && !tag.default){
+							emailData.tags.push(tag._id);
+						}
+					}
+				}
+			);
+			EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } });
 		}else{
 			//Insert new mail with tags
-			Meteor.call('addtag', tagList, emailData, function ( err, emailData ) {
-				if(!err)
-		  		EmailsStore.insert( emailData );
-			});
+			_.forEach(tagList, function ( tag ) {
+					if(tag.automatic){
+						if(tag.email == emailData.sender_mail){
+							if(_.indexOf(emailData.tags, tag._id) == -1){
+								emailData.tags.push(tag._id);
+							}
+						}
+					}
+					if(emailData.subject.search(tag.name) > -1){
+						if(_.indexOf(emailData.tags, tag._id) == -1 && !tag.default){
+							emailData.tags.push(tag._id);
+						}
+					}
+				}
+			);
+		  EmailsStore.insert( emailData );
 		}
 	} catch (exception){
 		console.log("Error ==>>",exception);

@@ -142,7 +142,6 @@ class EmailsList extends React.Component {
                         <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      {console.log(emails)}
                       {this.props.tags.length == 0 ?
                         <div style={{'marginLeft':"10%"}}>
                           <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
