@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 import { Router, browserHistory, Link, withRouter } from 'react-router'
 import * as _ from 'lodash'
 
-import * as actions_inbox from './../actions/inbox'
-import * as actions_emailSetting from './../actions/emailSetting'
-
+import {saveTemplate, fetchTemplate, deleteTemplate} from '../actions/emailTemplates'
 import Header from './../components/generic/Header'
 import SendEmail from './../components/sendmail'
 
@@ -29,7 +27,7 @@ class SendMails extends React.Component {
     render(){
         return(
         	<div>
-                <Header {...this.props} position={1}/>
+                <Header {...this.props} position={0} altr={"Templates"}/>
                 <SendEmail {...this.props} />
         	</div>
         )
@@ -38,6 +36,7 @@ class SendMails extends React.Component {
 function mapStateToProps( state ){
     state = state.toJS()
     return {
+        emailTemplates : state.entities.emailTemplates,
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
@@ -45,7 +44,15 @@ function mapStateToProps( state ){
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        onSaveTemplate:(id, template)=>{
+            return dispatch(saveTemplate(id,template))
+        },
+        onfetchTemplate:()=>{
+            return dispatch(fetchTemplate())
+        },
+        onDeleteTemplate:(id)=>{
+            return dispatch(deleteTemplate(id))
+        }
     }
 }
 

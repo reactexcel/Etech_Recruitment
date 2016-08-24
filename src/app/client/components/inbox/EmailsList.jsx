@@ -164,7 +164,6 @@ class EmailsList extends React.Component {
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id}, e)}
                            />
-
                        })}
                       </div>
                     </Menu>
@@ -182,11 +181,9 @@ class EmailsList extends React.Component {
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
-
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
-
                              }}><span aria-hidden="true" >Reject</span></li>
                              <li style={{cursor:'pointer'}}><span aria-hidden="true" >Schedule</span></li>
                             </ul>
