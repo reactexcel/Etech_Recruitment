@@ -110,6 +110,7 @@ class SendEmail extends React.Component {
             tmpid:data._id
         })
     }
+
     saveTemplate() {
         let name=this.refs.Name.input.value.trim()
         let subject=this.refs.subject.input.value.trim()
@@ -135,6 +136,7 @@ class SendEmail extends React.Component {
           snackbarOpen:true,
           snackbarmsg:"Template saved successfully",
         })
+        this.gotoTmppage()
       }).catch( (error) => {
         this.setState({
           snackbarOpen:true,
@@ -157,11 +159,14 @@ class SendEmail extends React.Component {
         _.map(this.props.emailTemplates,(data, key)=>{
             templates.push(<div className='col-xs-12' key={key}>
                     <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'10px',padding:'10px',background: '#fff',}}>
-                    <div style={{textAlign:'center',color:'brown',fontWeight:'600',cursor:'pointer',fontSize:'16px'}}>Template #{key+1}</div>
-                    <hr />  
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Template Name : </span>{data.name}</div>
                     <hr />
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Subject : </span>{data.subject}</div>
+                    <hr />
+                    <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>
+                    Email Body : </span>
+                    <span style={{display:'block',width:'95%',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}} dangerouslySetInnerHTML={{__html:data.content }}></span></div>
+                    
                     <div style={{textAlign:'right'}}>
                     <FlatButton
                     style={{margin:'0px'}}
