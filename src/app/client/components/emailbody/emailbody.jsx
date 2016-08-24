@@ -97,14 +97,14 @@ render(){
     ];
 	return(
             <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
-    <div className="col-xs-1" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
+    <div className="col-xs-2" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
         <Menu desktop={true}>
             <MenuItem primaryText={ <Link to="inbox">Inbox</Link>
             } />
             <MenuItem primaryText="Trash" />
         </Menu>
     </div>
-    <div className="col-xs-11" style={{ "float": "right"}}>
+    <div className="col-xs-10" style={{ "float": "right"}}>
         <div style={{ "marginBottom": "50px", "marginTop": "-15px"}}>
             <nav aria-label="Page navigation">
                 <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
@@ -133,7 +133,6 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
         <div className="col-xs-12">
             <div className='row' style={{background: '#fff'}}>
-
                 <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
                     <div className="col-xs-6">
                         From : <b>{data.from}</b> <br /> Sender email : <b>{data['sender-mail']} </b>

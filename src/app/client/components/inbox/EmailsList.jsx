@@ -60,10 +60,13 @@ class EmailsList extends React.Component {
                 <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
 
                     <Menu>
-                      <MenuItem  primaryText={
+                        <MenuItem  primaryText={
+                            <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
+                        }/>
+                        <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      <div >
+                        <div >
                         {_.map(this.props.tags, (t) => (
                             <MenuItem
                             key={t._id}

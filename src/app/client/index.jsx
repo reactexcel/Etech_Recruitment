@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import createLogger from 'redux-logger';
 import reducer from './reducers/index';
 import { Accounts } from 'meteor/accounts-base';
-import invariant from 'redux-immutable-state-invariant';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {RegisterContainer} from './containers';
 import { createStore, applyMiddleware, compose } from 'redux'
@@ -24,6 +23,7 @@ import DisplayContainer from './containers/displayLogs'
 import LogsContainer from './containers/displayLogs/logs'
 import EmailbodyContainer from './containers/emailBodyContainer'
 import InboxTagContainer from './containers/configurationContainer/inboxTagContainer'
+import SendMails from './containers/sendmailContainer'
 
 export let isMonitorAction;
 
@@ -33,7 +33,7 @@ injectTapEventPlugin();
 Meteor.startup(
   () => {
     let store = createStore(reducer,Immutable.Map({}),compose(
-      applyMiddleware(invariant(), thunk, logger),
+      applyMiddleware(thunk, logger),
     window.devToolsExtension ? window.devToolsExtension({
         getMonitor: (monitor) => { isMonitorAction = monitor.isMonitorAction; }
         }) : f => f
@@ -54,6 +54,7 @@ Meteor.startup(
                 <Route path="/config/email-sending" component={EmailSendingContainer}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
+              <Route path="sendmail" component={SendMails}></Route>
               <Route path="/display" component={DisplayContainer}>
                  <Route path="/display/logs" component={LogsContainer}></Route>
               </Route>
