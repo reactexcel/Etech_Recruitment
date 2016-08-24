@@ -52,10 +52,10 @@ mobile-status-bar@1.0.12
 modules@0.7.6
 modules-runtime@0.7.6
 momentjs:moment@2.14.4
-mongo@1.1.12
+mongo@1.1.11
 mongo-id@1.0.5
 npm-bcrypt@0.9.1
-npm-mongo@1.5.48
+npm-mongo@1.5.46
 observe-sequence@1.0.12
 ordered-dict@1.0.8
 promise@0.8.4

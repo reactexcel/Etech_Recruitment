@@ -33,10 +33,9 @@ class ImapAccountsList extends React.Component {
                 <Subheader>IMAP Emails</Subheader>
                 {imapEmailsList}
             </div>
-            
+
         );
     }
 }
 
 export default withRouter(ImapAccountsList)
-

@@ -294,8 +294,10 @@ class SendEmail extends React.Component {
                   />
                 </div>
             </div>
+        
         );
     }
 }
 
 export default withRouter(SendEmail)
+

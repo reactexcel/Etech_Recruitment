@@ -73,7 +73,7 @@ export function success_emails_fetch_status( data ){
 function update_emails_store( imapEmails, responseToReturn, callback ){
 
 	if( imapEmails.length > 0 ){
-		let toProcessId = imapEmails[0]._str
+		let toProcessId = imapEmails[0]
 		imapEmails.shift() // remove first element since it will process now
 		Meteor.call('doUpdateEmailsStore',toProcessId, ( err, data )=>{
 			let imap_email_monogid = toProcessId

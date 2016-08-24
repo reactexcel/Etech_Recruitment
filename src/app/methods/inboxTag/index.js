@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import Tags  from './../../collections/inboxTag';
 import EmailsStore from './../../collections/EmailsStore'
 import {config_ENV} from './../../config/index.jsx'
+import _ from 'lodash'
+import Logs from 'app/collections/index';
 
 Meteor.methods({
   "fetchTag": function(){
@@ -44,10 +46,74 @@ Meteor.methods({
       )
     }else{
       EmailsStore.update(
-      { _id: id },
+      { _id: m_id },
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
     return EmailsStore.find({"_id": m_id}).fetch();
+  },
+  "ignoreMultipleCandidate": function (idList, tagId, userId){
+    var mail;
+     _.map(idList,(id)=>{
+       mail = EmailsStore.find({"_id": id}).fetch();
+       if(mail.tags != 'undefined'){
+         if(_.includes(mail.tags,tagId)==false){
+             EmailsStore.update(
+               { _id: id },
+               { $addToSet: { 'tags': tagId} }
+             );
+             Logs.insert({
+                action_type:"Candidate is moved to ignore tag",
+                user_id:userId,
+                details:"Action apply on Candidate id : "+id,
+                created_on:new Date()
+             });
+         }
+       }else{
+           EmailsStore.update(
+             { _id: id },
+             { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
+           );
+           Logs.insert({
+                action_type:"Candidate is moved to ignore tag",
+                user_id:userId,
+                details:"Action apply on Candidate id : "+id,
+                created_on:new Date()
+             });
+      }
+     })
+     return EmailsStore.find({}).fetch();
+  },
+  "rejectMultipleCandidate": function (idList, tagId, reason, userId){
+    var mail;
+     _.map(idList,(id)=>{
+       mail = EmailsStore.find({"_id": id}).fetch();
+       if(mail.tags != 'undefined'){
+         if(_.includes(mail.tags,tagId)==false){
+             EmailsStore.update(
+               { _id: id },
+               { $addToSet: { 'tags': tagId},$set:{'Reason_of_rejection':reason} }
+             );
+             Logs.insert({
+                action_type:"Candidate is moved to reject tag",
+                user_id:userId,
+                details:{"Action apply on candidate id" :id,"Reason of rejection":reason},
+                created_on:new Date()
+             });
+         }
+       }else{
+           EmailsStore.update(
+             { _id: id },
+             { $set: { 'tags': [tagId ],'Reason_of_rejection':reason }} ,{upsert:false, multi:true}
+           );
+           Logs.insert({
+                action_type:"Candidate is moved to reject tag",
+                user_id:userId,
+                details:{"Action apply on candidate id" :id,"Reason of rejection":reason},
+                created_on:new Date()
+             });
+      }
+     })
+     return EmailsStore.find({}).fetch();
   },
 });

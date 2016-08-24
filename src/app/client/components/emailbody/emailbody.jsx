@@ -10,7 +10,12 @@ import List from 'material-ui/List'
 import CandidateHistory from './candidateHistory'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
+import Paper from 'material-ui/Paper';
+import _ from 'lodash';
 
+import LinearProgress from 'material-ui/LinearProgress';
 const styles = {
   errorStyle: {
     textAlign:'left',
@@ -28,12 +33,19 @@ class EmailBody extends React.Component {
         rejectpop:false,
         reason:'',
         errortxt:'',
+        ignoreTagId:'',
+        rejectTagId:'',
+        message:'',
+        messageDialog:false,
+        show : true
+
     }
     this.handleClose=this.handleClose.bind(this)
     this.submitreason=this.submitreason.bind(this)
   }
+
 componentWillReceiveProps(props){
-     let id = props.params.id
+    let id = props.params.id
     let data;
     _.map(props.email,(email)=>{
         if(email._id == id){
@@ -49,16 +61,30 @@ componentWillReceiveProps(props){
             }
         }
     })
+    _.map(props.inboxTag,(tag)=>{
+      if(tag.name=="Ignore"){
+        this.setState({
+          ignoreTagId:tag._id
+        })
+      }
+      if(tag.name=="Reject"){
+        this.setState({
+          rejectTagId:tag._id
+        })
+      }
+    })
+
 }
 
 
   handleClose(){
-    this.setState({rejectpop: false});
+    this.setState({rejectpop: false,messageDialog:false});
   }
-  submitreason(id,reject){
+  submitreason(id){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject(id,reject,reason)
+        this.props.onReject(id,this.state.rejectTagId,reason)
+        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),{"Action apply on candidate id" :id,"Reason of rejection":reason})
         this.handleClose()
     }else{
         this.setState({
@@ -68,20 +94,17 @@ componentWillReceiveProps(props){
   }
 
 render(){
-  	   let data = this.state.data;
-       let ig="ignore";
-       let reg="Reject"
-       let archive='undefined';
-       let reject ='undefined';
-       _.map(data.tags,(tag)=>{
-        archive=tag.Archive;
-        reject=tag.Reject;
-        if(tag.Archive == true){
-            ig="Ignored";
+       let data = this.state.data;
+       let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
+       let ignoreText="Ignore";
+       let rejectText="Reject";
+       _.map(data.tags,(tagID)=>{
+        if(tagID==this.state.ignoreTagId){
+          ignoreText="Ignored"
         }
-        if(reject==true){
-            reg="Rejected"
-        }   
+        if(tagID==this.state.rejectTagId){
+          rejectText="Rejected"
+        }
        })
            const actions = [
       <FlatButton
@@ -92,7 +115,7 @@ render(){
       <FlatButton
         label="Submit"
         primary={true}
-        onTouchTap={()=>{this.submitreason(data._id,reject)}}
+        onTouchTap={()=>{this.submitreason(data._id)}}
       />,
     ];
 	return(
@@ -108,14 +131,35 @@ render(){
         <div style={{ "marginBottom": "50px", "marginTop": "-15px"}}>
             <nav aria-label="Page navigation">
                 <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
-                    <li  onClick={ () => this.props.onIgnore(data._id,archive)} style={{cursor:'pointer'}}><span aria-hidden="true" >{ig}</span></li>
-                    <li  onClick={ () => this.setState({rejectpop:true})} style={{cursor:'pointer'}}><span aria-hidden="true">{reg}</span></li>
+                    <li  onClick={ () => {
+                      if(ignoreText=="Ignored"){
+                        this.setState({message:"Already Ignored",messageDialog:true})
+                      }
+                      if(ignoreText=="Ignore"){
+                        this.props.onIgnore(data._id,this.state.ignoreTagId),
+                        this.props.onAddAction("Candidate is moved to ignore tag",Meteor.userId(),"Action apply on Candidate id : "+data._id)
+                      }
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true" >{ignoreText}</span></li>
+                    <li  onClick={ () => {
+                      if(rejectText=="Reject"){
+                        this.setState({rejectpop:true})
+                      }else{
+                        this.setState({message:"Already rejected",messageDialog:true})
+                      }
+                    }} style={{cursor:'pointer'}}><span aria-hidden="true">{rejectText}</span></li>
                     <li  onClick={ () => this.props.schedule(data._id)} style={{cursor:'pointer'}}><span aria-hidden="true">Schedule</span></li>
                 </ul>
             </nav>
         </div>
         <Dialog
-          title="Give the reason to reject"
+          title={this.state.message}
+          modal={false}
+          open={this.state.messageDialog}
+          onRequestClose={this.handleClose}
+        >
+        </Dialog>
+        <Dialog
+          title="Give the reason of rejection"
           actions={actions}
           modal={false}
           open={this.state.rejectpop}
@@ -124,47 +168,108 @@ render(){
         <div>
          <TextField
          style={{width: '100%'}}
-      ref='reg'
-      errorText={this.state.errortxt}
-      floatingLabelText="Reason To Reject" 
-    />
-                        </div>
-        </Dialog>
-        <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
-        <div className="col-xs-12">
-            <div className='row' style={{background: '#fff'}}>
-                <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="col-xs-6">
-                        From : <b>{data.from}</b> <br /> Sender email : <b>{data['sender-mail']} </b>
-                    </div>
-                    <div className="col-xs-6" style={{textAlign: "right"}} dangerouslySetInnerHTML={{__html: data.email_date }}>
-                    </div>
-                </div>
-                <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
-                    {data.subject}
-                </div>
-                <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="row">
-                        <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}>
-
-                        </div>
-                        <div className={this.state.attchsec} style={{height: '100vh'}}>
-                            <iframe src={this.state.attachmentlink} style={{height: '100%',width: '100%',border: 'none'}} scrolling="no"></iframe>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+         ref='reg'
+         errorText={this.state.errortxt}
+         floatingLabelText="Reason To Reject"
+         />
         </div>
+      </Dialog>
+        <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
+          <div className="col-sm-12 col-sx-12 col-lg-12">
+             {typeof data.more_emails == 'object'?<LinearProgress
+              mode="indeterminate"
+              style={{display: more_email.length == 0?"":"none"}}
+               />:""}
+              {_.map(more_email,( email, i) => (
+                <Card key={i}>
+                <Paper
+                  style={{marginTop:"5px",paddingBottom: "0px"}}
+                  actAsExpander={i==0?false:true}
+                  zDepth={2}
+                  children={
+                    <CardHeader
+                      title={<div> {typeof data.from == 'undefined'?<div style={{"height":"10px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px"}}></div>:"From: "+data.from} </div>}
+                      subtitle={<div> {typeof data['sender_mail'] == 'undefined'?<div style={{"height":"10px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}}></div>:
+                        "Email : "+ data['sender_mail'] + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"
+                        } </div>}
+                      avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
+                      actAsExpander={i==0?false:true}
+                      showExpandableButton={i==0?false:true}
+                      />
+                  }
+                   />
+                    <CardText
+                      expandable={i==0?false:true}
+                      children={
+                          <div className="row">
+                              <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
+                              <div className={this.state.attchsec} style={{height: '100vh'}}>
+                                {this.state.show?<LinearProgress mode="indeterminate" />:""}
+                                  <iframe
+                                    src={this.state.attachmentlink}
+                                    style={{height: '100%',width: '100%',border: 'none'}}
+                                    scrolling="no"
+                                    onLoad={(e) => this.setState({show:false})}
+                                    ></iframe>
+                              </div>
+                          </div>
+                    }
+                      >
+                    </CardText>
+
+                </Card>
+              ))}
+              <Card>
+              <Paper
+                style={{marginTop:"5px",paddingBottom: "0px"}}
+                actAsExpander={typeof data.more_emails === 'undefined'?false:true}
+                zDepth={2}
+                children={
+                  <CardHeader
+                    title={<div> {typeof data.from == 'undefined'?<div style={{"height":"10px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px"}}></div>:"From: "+data.from} </div>}
+                    subtitle={<div> {typeof data['sender_mail'] == 'undefined'?<div style={{"height":"10px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}}></div>:
+                      "Email : "+ data['sender_mail'] + " ("+moment(data.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"
+                      } </div>}
+                    avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
+                    actAsExpander={typeof data.more_emails === 'undefined'?false:true}
+                    showExpandableButton={typeof data.more_emails === 'undefined'?false:true}
+                    />
+                }
+                 />
+                <CardText
+                    expandable={typeof data.more_emails === 'undefined'?false:true}
+                    children={
+                      <div>
+                        <div className="row">
+                            <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
+                            <div className={this.state.attchsec} style={{height: '100vh'}}>
+                              {this.state.show?<LinearProgress mode="indeterminate" />:""}
+                                <iframe
+                                  src={this.state.attachmentlink}
+                                  style={{height: '100%',width: '100%',border: 'none'}}
+                                  scrolling="no"
+                                  onLoad={(e) => this.setState({show:false})}
+                                  ></iframe>
+                            </div>
+                        </div>
+
+                      </div>
+                  }
+                >
+                </CardText>
+              </Card>
+          </div>
         </div>
 
         <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
+          <div className="col-sm-12 col-sx-12 col-lg-12">
         <CandidateHistory id={this.props.params.id}/>
+        </div>
         </div>
 
     </div>
 </div>
-		)
+    )
 }
 }
 
