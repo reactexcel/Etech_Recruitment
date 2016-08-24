@@ -7,10 +7,12 @@ import '../collections/config';
 import '../methods/candidateHistory.js'
 import '../methods/inboxTag'
 import '../methods/email'
+import '../methods/emailTemplates.js'
 import {config_ENV} from './../config/index.jsx';
 import '../collections/inboxTag';
 import '../collections/EmailsStore.js';
 import '../collections/EmailsStoreStatus.js';
+import '../collections/emailTemplates';
 
 
 Meteor.startup(function () {
