@@ -50,24 +50,23 @@ class ImapAccountsListItem extends React.Component {
 			<div  key={ this.props.imapEmail._id}>
 				<ListItem
 					primaryText= {
-						<p>
-                    		<b>
-                      			{this.props.imapEmail.emailId}
-                    		</b>
-                  		</p>
+						<div>
+              <b>
+              	{this.props.imapEmail.emailId}
+              </b>
+            </div>
 					}
-            		secondaryText={
-	                  <p style={{"fontSize": "11px"}}>
-	                    {fetch_response_TYPE}
-	                    <br/>
-	                    {fetch_response_EMAILS_FETCHED_COUNT}
-	                  </p>
-	                }
-	                secondaryTextLines={2}
-
-            	/>
-            	<Divider />
-          	</div>
+          secondaryText={
+	          <div style={{"fontSize": "11px"}}>
+	              {fetch_response_TYPE}
+	              <br/>
+	              {fetch_response_EMAILS_FETCHED_COUNT}
+	          </div>
+	        }
+	        secondaryTextLines={2}
+          />
+        <Divider />
+      </div>
       	);
     }
 }

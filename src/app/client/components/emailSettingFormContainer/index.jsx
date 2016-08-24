@@ -20,9 +20,6 @@ export default class EmailSettingFormContainer extends React.Component {
   componentWillMount(){
     this.props.onFetchSettings();
   }
-    componentWillReceiveProps( props ){
-    this.props.onFetchSettings();
-  }
 
   selectedRow(row, checked){
     if(checked)

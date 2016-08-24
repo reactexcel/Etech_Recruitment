@@ -69,7 +69,7 @@ export function success_emails_fetch_status( data ){
 // 		})
 // 	}
 // }
-
+var i  = 0;
 function update_emails_store( imapEmails, responseToReturn, callback ){
 
 	if( imapEmails.length > 0 ){
@@ -80,6 +80,7 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 			let email_fetch_response = ""
 			if( err ){
 				email_fetch_response = err
+				console.log(err);
 			}else{
 				email_fetch_response = data
 			}
@@ -101,7 +102,7 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 
 export function fetchNewEmails( imapEmails ){
 
-	console.log( imapEmails )
+	console.log( imapEmails,++i )
 
 	return ( dispatch, getState ) => {
 

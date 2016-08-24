@@ -14,6 +14,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import _ from 'lodash';
+import MyCard from './MyCard';
 
 import LinearProgress from 'material-ui/LinearProgress';
 const styles = {
@@ -27,9 +28,6 @@ class EmailBody extends React.Component {
     super(props);
     this.state={
         data:'',
-        attachmentlink:'',
-        bodysec:'col-xs-12',
-        attchsec:'hidden',
         rejectpop:false,
         reason:'',
         errortxt:'',
@@ -37,7 +35,6 @@ class EmailBody extends React.Component {
         rejectTagId:'',
         message:'',
         messageDialog:false,
-        show : true
 
     }
     this.handleClose=this.handleClose.bind(this)
@@ -49,16 +46,9 @@ componentWillReceiveProps(props){
     let data;
     _.map(props.email,(email)=>{
         if(email._id == id){
-            this.setState({
-                data:email,
-            })
-            if(typeof email.attachments != 'undefined'){
-                this.setState({
-                    attachmentlink:email.attachments[0].link,
-                    bodysec:'col-xs-6',
-                    attchsec:'col-xs-6',
-                })
-            }
+          this.setState({
+            data:email,
+          })
         }
     })
     _.map(props.inboxTag,(tag)=>{
@@ -176,95 +166,20 @@ render(){
       </Dialog>
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
-             {typeof data.more_emails == 'object'?<LinearProgress
-              mode="indeterminate"
-              style={{display: more_email.length == 0?"":"none"}}
-               />:""}
               {_.map(more_email,( email, i) => (
-                <Card key={i}>
-                <Paper
-                  style={{marginTop:"5px",paddingBottom: "0px"}}
-                  actAsExpander={i==0?false:true}
-                  zDepth={2}
-                  children={
-                    <CardHeader
-                      title={<div> {typeof data.from == 'undefined'?<div style={{"height":"10px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px"}}></div>:"From: "+data.from} </div>}
-                      subtitle={<div> {typeof data['sender_mail'] == 'undefined'?<div style={{"height":"10px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}}></div>:
-                        "Email : "+ data['sender_mail'] + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"
-                        } </div>}
-                      avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
-                      actAsExpander={i==0?false:true}
-                      showExpandableButton={i==0?false:true}
-                      />
-                  }
-                   />
-                    <CardText
-                      expandable={i==0?false:true}
-                      children={
-                          <div className="row">
-                              <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
-                              <div className={this.state.attchsec} style={{height: '100vh'}}>
-                                {this.state.show?<LinearProgress mode="indeterminate" />:""}
-                                  <iframe
-                                    src={this.state.attachmentlink}
-                                    style={{height: '100%',width: '100%',border: 'none'}}
-                                    scrolling="no"
-                                    onLoad={(e) => this.setState({show:false})}
-                                    ></iframe>
-                              </div>
-                          </div>
-                    }
-                      >
-                    </CardText>
-
-                </Card>
+                  <MyCard email={email} i={i} key={i} />
               ))}
-              <Card>
-              <Paper
-                style={{marginTop:"5px",paddingBottom: "0px"}}
-                actAsExpander={typeof data.more_emails === 'undefined'?false:true}
-                zDepth={2}
-                children={
-                  <CardHeader
-                    title={<div> {typeof data.from == 'undefined'?<div style={{"height":"10px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px"}}></div>:"From: "+data.from} </div>}
-                    subtitle={<div> {typeof data['sender_mail'] == 'undefined'?<div style={{"height":"10px", width:"200px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}}></div>:
-                      "Email : "+ data['sender_mail'] + " ("+moment(data.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"
-                      } </div>}
-                    avatar={<Avatar size={40} children={(data.from || "" ).charAt(0)} />}
-                    actAsExpander={typeof data.more_emails === 'undefined'?false:true}
-                    showExpandableButton={typeof data.more_emails === 'undefined'?false:true}
-                    />
-                }
-                 />
-                <CardText
-                    expandable={typeof data.more_emails === 'undefined'?false:true}
-                    children={
-                      <div>
-                        <div className="row">
-                            <div className={this.state.bodysec} dangerouslySetInnerHTML={{__html:data.body }}></div>
-                            <div className={this.state.attchsec} style={{height: '100vh'}}>
-                              {this.state.show?<LinearProgress mode="indeterminate" />:""}
-                                <iframe
-                                  src={this.state.attachmentlink}
-                                  style={{height: '100%',width: '100%',border: 'none'}}
-                                  scrolling="no"
-                                  onLoad={(e) => this.setState({show:false})}
-                                  ></iframe>
-                            </div>
-                        </div>
-
-                      </div>
-                  }
-                >
-                </CardText>
-              </Card>
+              <MyCard email={data} />
           </div>
         </div>
 
         <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
-        <CandidateHistory id={this.props.params.id}/>
-        </div>
+              {typeof data !== 'object'?
+              <LinearProgress mode="indeterminate" style={{"height":"5px", backgroundColor:"lightgray", borderRadius:"20px 20px","marginTop": "10px"}} />:
+              <CandidateHistory id={this.props.params.id}/>
+              }
+          </div>
         </div>
 
     </div>

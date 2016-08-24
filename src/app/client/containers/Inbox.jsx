@@ -20,6 +20,7 @@ class Inbox extends React.Component {
             emails_fetch_status : 0
         }
         this.doPageChange = this.doPageChange.bind(this)
+        this.update = true;
     }
     componentWillMount(){
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
@@ -66,7 +67,10 @@ class Inbox extends React.Component {
             let imap_emails_ids = _.map( this.state.imap_emails, ( email ) => {
                 return email._id
             })
-            this.props.onFetchNewEmails( imap_emails_ids )
+            if(this.update){
+              this.update = false;
+              this.props.onFetchNewEmails( imap_emails_ids )
+            }
         }
     }
     doPageChange( page_num ){

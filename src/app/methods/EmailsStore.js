@@ -17,6 +17,7 @@ Meteor.methods({
 				"last_email_fetch_date" : ""
   			}
   		}
+			console.log(dataToUpdate,"update_status_last_fetch_details");
 		Config.update( mongoid, { $set: dataToUpdate})
 		return true
   	},
@@ -34,7 +35,7 @@ Meteor.methods({
 
   doUpdateEmailsStore: function ( mongoid ) {
   	//mongoid is id of record in config table
-
+console.log(mongoid);
   	var date = new Date()
 	var todaysDate = moment(date).format("YYYY-MM-DD")
 
@@ -111,18 +112,17 @@ Meteor.methods({
 		    	var result = HTTP.call("GET", API_URL );
 
 		    	if( typeof result.content != 'undefined' ){
-
 		    		var json = JSON.parse( result.content )
-					if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
+					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
+					if(json.data.length > 0 ){
 						TYPE = "SUCCESS"
 
-						if( json.data.emails.length > 0 ){
+						if( json.data.length > 0 ){
 							var emails_to_be_fetched = json.data.count
-			    			var emails = json.data.emails
+			    			var emails = json.data
 
 							var last_email_id = ''
 							var last_email_date = ''
-
 							_.forEach( emails, function( email ){
 								if( typeof email.email_id != 'undefined' ){
 									if( last_email_id == ''){
@@ -173,7 +173,6 @@ Meteor.methods({
 
   },
   insertNewEmail : function ( source_email_id, emailData ){
-
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
 
@@ -201,13 +200,17 @@ Meteor.methods({
 	}else{
 		let m_id = EmailsStore.insert( emailData );
 		let tagList = Meteor.call('fetchTag');
+		console.log(emailData);
 		_.forEach(tagList, ( tag ) => {
-			if ( tag.automatic ){
-				if(tag.email == emaildata.sender_mail){
-					Meteor.call('assignTag',m_id, tag._id)
-				}
-			}
-			if(emaildata.subject.indexOf(tag.name) >= 0){
+			console.log("---", tag);
+		//	if ( typeof tag.automatic !== 'undefined' && tag.automatic){
+		//		if(tag.email == emaildata.sender_mail){
+		//			console.log(tag.email);
+					//Meteor.call('assignTag',m_id, tag._id)
+	//			}
+	//		}
+			if(emaildata.subject.search(tag.name) >= 0){
+				console.log("@@", tag);
 				Meteor.call('assignTag',m_id, tag._id)
 			}
 		})
