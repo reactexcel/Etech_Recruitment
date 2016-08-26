@@ -10,6 +10,9 @@ class Home extends React.Component {
         super( props )
     }
     componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
         this.props.onUpdateEmailsStore()
     }
     componentWillReceiveProps( props ){

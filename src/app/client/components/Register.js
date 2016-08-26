@@ -52,7 +52,7 @@ export default class Register extends React.Component {
     Meteor.autorun(function(c) {
       self.autorun = c;
       if (Meteor.userId()) {
-        self.props.router.push('/user')
+        self.props.router.push('/inbox')
         c.stop() //only run this one time
       }  
     });    

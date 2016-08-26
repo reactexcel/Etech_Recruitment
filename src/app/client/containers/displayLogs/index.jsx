@@ -21,6 +21,11 @@ class DisplayContainer extends React.Component{
     this.handleClose = this.handleClose.bind(this);
     this.requestChange = this.requestChange.bind(this);
 	  }
+    componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
+    }
 	  /*getChildContext() {
          return { 
       	    muiTheme: getMuiTheme(baseTheme) 

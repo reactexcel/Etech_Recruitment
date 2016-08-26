@@ -13,7 +13,11 @@ class ConfigurationContainer extends React.Component {
     this.handleClose = this.handleClose.bind(this);
     this.requestChange = this.requestChange.bind(this);
   }
-
+  componentWillMount(){
+      if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
+  }    
   handleToggel(){
     this.setState({open: !this.state.open});
   }
