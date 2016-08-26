@@ -180,7 +180,7 @@ render(){
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {typeof data !== 'object'?
               <LinearProgress mode="indeterminate" style={{"height":"5px", backgroundColor:"lightgray", borderRadius:"20px 20px","marginTop": "10px"}} />:
-              <CandidateHistory email_id={this.props.params.id}/>
+              <CandidateHistory candidateHistory={this.props.candidateHistory}/>
               }
           </div>
         </div>

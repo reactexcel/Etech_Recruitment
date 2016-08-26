@@ -6,7 +6,6 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import * as candidateHistory_action from '../../actions/candidateHistory'
 import _ from 'lodash';
 import {
   Step,
@@ -26,7 +25,6 @@ class CandidateHistory extends React.Component {
     
     }
     componentWillMount(){
-        this.props.onLoadCandidateHistory(this.props.email_id)
     }
     handleNext = () => {
     const stepIndex = this.state.stepIndex;
@@ -127,21 +125,4 @@ class CandidateHistory extends React.Component {
   }
 
 }
-function mapStateToProps(state,props){
-  state = state.toJS()
-
-  return {
-    candidateHistory:state.entities.candidateHistory
-  }
-}
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    onLoadCandidateHistory : (email_id) => {
-            return dispatch( candidateHistory_action.onLoadCandidateHistory(email_id) )
-        }
-  }
-}
-export default withRouter(connect(
-mapStateToProps,
-mapDispatchToProps
-)(CandidateHistory))
+export default CandidateHistory
