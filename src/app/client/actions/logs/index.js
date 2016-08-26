@@ -33,17 +33,18 @@ export function log_error( data ){
 	return createAction( ACTION_ERROR_LOG )( data )
 }
 
-export function getLogData( log_per_page, page_num ){
+export function getLogData(){
 	return ( dispatch, getState ) => {
 		return new Promise( ( resolve, reject ) => {
 
-			Meteor.call('getlogsToDisplay', log_per_page, page_num, (err, data) => {
+			Meteor.call('getlogsToDisplay', (err, data) => {
 				if(err){
 					dispatch ( log_error( err ) )
 				}else{
 					if( data.logs.length == 0 ){
 						dispatch ( empty_log( 'No more logs' ) )
 					}else{
+						console.log(data,"in action")
 						dispatch ( log_found( data  ) ) 
 					}
 				}

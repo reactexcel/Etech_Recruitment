@@ -8,16 +8,19 @@ import * as _ from 'lodash';
 import * as log_action from '../../../actions/logs'
 
 class LogsContainer extends React.Component {
-	constructor(props) {
+  constructor(props) {
       super(props);
       this.state = {
-            log_per_page : 10,
+            log_per_page : 5,
             page_num : 1
         }
         this.pageChange = this.pageChange.bind(this)
     }
     componentWillMount(){
-        this.props.onLogData( this.state.log_per_page, this.state.page_num )
+      if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
+        this.props.onLogData()
     }
     componentWillReceiveProps( props ){
     }
@@ -30,11 +33,6 @@ class LogsContainer extends React.Component {
           }
         }
     }
-    /*getChildContext() {
-         return {
-      	    muiTheme: getMuiTheme(baseTheme)
-         };
-     }*/
     render() {
     return (
       <div>
@@ -58,11 +56,11 @@ function mapStateToProps(state,props){
   }
 }
 const mapDispatchToProps=(dispatch)=>{
-	return{
-    onLogData : ( log_per_page, page_num ) => {
-            return dispatch( log_action.getLogData( log_per_page, page_num ) )
+  return{
+    onLogData : () => {
+            return dispatch( log_action.getLogData() )
         }
-	}
+  }
 }
 export default withRouter(connect(
 mapStateToProps,

@@ -9,6 +9,7 @@ class MyEditor extends React.Component {
     };
     this.onTextChange = this.onTextChange.bind( this )
   }
+  
     componentWillReceiveProps( props ){
     	this.setState({text:props.data})
     }

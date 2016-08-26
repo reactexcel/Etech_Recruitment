@@ -23,6 +23,9 @@ class Inbox extends React.Component {
         this.update = true;
     }
     componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,this.props.inbox.tag)
         this.props.onFetchSettings()
         this.props.onFetchTag()
@@ -96,8 +99,7 @@ function mapStateToProps( state ){
     return {
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
-        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
-        inboxTag:state.entities.inboxTag
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;})
     }
 }
 const mapDispatchToProps = (dispatch) => {

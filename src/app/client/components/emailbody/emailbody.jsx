@@ -35,6 +35,7 @@ class EmailBody extends React.Component {
         rejectTagId:'',
         message:'',
         messageDialog:false,
+        show : true
 
     }
     this.handleClose=this.handleClose.bind(this)
@@ -84,6 +85,7 @@ componentWillReceiveProps(props){
   }
 
 render(){
+  console.log(this.props.params.id,"hhhhhhhhhhhhhhh")
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        let ignoreText="Ignore";
@@ -111,6 +113,7 @@ render(){
 	return(
             <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
     <div className="col-xs-2" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
+
         <Menu desktop={true}>
             <MenuItem primaryText={ <Link to="inbox">Inbox</Link>
             } />
@@ -177,7 +180,7 @@ render(){
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {typeof data !== 'object'?
               <LinearProgress mode="indeterminate" style={{"height":"5px", backgroundColor:"lightgray", borderRadius:"20px 20px","marginTop": "10px"}} />:
-              <CandidateHistory id={this.props.params.id}/>
+              <CandidateHistory candidateHistory={this.props.candidateHistory}/>
               }
           </div>
         </div>

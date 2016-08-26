@@ -1,6 +1,7 @@
 import {check} from 'meteor/check';
 import {Accounts} from 'meteor/accounts-base';
 import Logs from 'app/collections/index';
+//import Users from 'app/collections/users';
 
 Meteor.methods({
   'regUser' : function(email, name, password) {
@@ -29,22 +30,20 @@ Meteor.methods({
     }
     return logDisplay
   },
-  'getlogsToDisplay' : function( log_per_page, page_num ){
-    var next_page = page_num + 1
-
-    var allLogs = Logs.find( {}, {sort: {created_on: -1},limit: log_per_page }).fetch()
-
+  'getlogsToDisplay' : function(){
+    var allLogs = Logs.find( {}, {sort: {created_on: -1}}).fetch()
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){
-        let log_date = log.log_date
-        log.log_date = moment(log_date).format("dddd, Do MMM")
+        let created_on = log.created_on
+        log.created_on = moment(created_on).format("DD/MM/YYYY")
+        let candidateEmail = log.candidateEmail
+        log.candidateEmail=Meteor.users.findOne({"_id": log.user_id})
+        console.log(log.candidateEmail)
         return log
       })
     }
-
     return {
-    logs : allLogs,
-    next_page : next_page
+      logs : allLogs
     }
   }
 

@@ -7,7 +7,7 @@ import { home } from './home'
 import { email } from './email'
 import { emailSetting } from './emailSetting';
 import { inbox } from './inbox';
-import {history} from './candidateHistory'
+import {candidateHistory} from './candidateHistory'
 import { inboxTag } from './inboxTag';
 import { emailTemplates } from './emailTemplates';
 export default combineReducers({
@@ -18,7 +18,7 @@ export default combineReducers({
 	home,
 	emailSetting,
 	inbox,
-	history,
+	candidateHistory,
 	inboxTag,
 	email,
 	emailTemplates,

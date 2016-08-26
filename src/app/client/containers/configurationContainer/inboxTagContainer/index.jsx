@@ -15,7 +15,11 @@ class InboxTagContainer extends React.Component {
     this.toggle;
     this.handleToggle = this.handleToggle.bind(this);
   }
-
+  componentWillMount(){
+      if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
+  }    
   handleToggle () {
     this.toggle.handleOpen();
   }

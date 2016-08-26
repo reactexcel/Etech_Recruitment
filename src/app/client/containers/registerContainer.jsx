@@ -16,6 +16,11 @@ class RegisterContainer extends React.Component {
     super(props);
 
   }
+  componentWillMount(){
+      if (Meteor.userId()) {
+       this.props.router.push('/inbox');
+      }
+  }
   getChildContext() {
       return { muiTheme: getMuiTheme(baseTheme) };
   }
