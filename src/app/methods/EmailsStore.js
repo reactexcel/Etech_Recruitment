@@ -13,7 +13,7 @@ Meteor.methods({
 	update_first_status_last_fetch_details : function( mongoid ){
 		var dataToUpdate = {
   			'status_last_fetch_details' : {
-  				"last_email_id_fetch": 0*1,
+  			"last_email_id_fetch": 0*1,
 				"last_email_fetch_date" : ""
   			}
   		}
@@ -68,27 +68,24 @@ Meteor.methods({
 		}else{
 			var source_mongoid =  settings._id
 			var source_email_id = settings.emailId
-  			var source_email_password = settings.password
-  			var source_host = settings.server
-  			var source_port = settings.port
-  			var source_encryp = settings.encrypt
-
-  			var fetchingEmailsFromId = ''
+  		var source_email_password = settings.password
+  		var source_host = settings.server
+  		var source_port = settings.port
+  		var source_encryp = settings.encrypt
+  		var fetchingEmailsFromId = ''
 			var fetchingEmailsForDate = ''
-
-  			if( typeof settings.status_last_fetch_details != 'undefined' ){
-
+  		if( typeof settings.status_last_fetch_details != 'undefined' ){
   				var status_last_fetch_details = settings.status_last_fetch_details
 					fetchingEmailsFromId = status_last_fetch_details.last_email_id_fetch + 1
 					fetchingEmailsForDate = status_last_fetch_details.last_email_fetch_date
-				if( fetchingEmailsForDate == ''){
-					fetchingEmailsForDate = todaysDate
-				}
-  			}else{
-  				Meteor.call('update_first_status_last_fetch_details', source_mongoid )
+					if( fetchingEmailsForDate == ''){
+						fetchingEmailsForDate = todaysDate
+					}
+  		}else{
+  			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
 				fetchingEmailsFromId = ''
 				fetchingEmailsForDate = todaysDate
-  			}
+  		}
   			//----------------------------------------
 			var BASE_URL = config_ENV.IMAP_API_BASE_URL
 			var PARAMS = ""
@@ -112,7 +109,7 @@ Meteor.methods({
 					if(json.data.length > 0 ){
 						TYPE = "SUCCESS"
 						if( json.data.length > 0 ){
-							var emails_to_be_fetched = json.data.count
+							var emails_to_be_fetched = json.data.length
 			    		var emails = json.data
 							var last_email_id = ''
 							var last_email_date = ''
@@ -142,7 +139,7 @@ Meteor.methods({
 						}
 		    	}else{
 		    		TYPE = "RESPONSE_ERROR"
-		    		MESSAGE = json
+		    		MESSAGE = json.error[0]
 		    	}
 		    }
 				return {
@@ -152,6 +149,7 @@ Meteor.methods({
 						'emails_to_be_fecthed' : emails_to_be_fetched
 		    	}
 		  	} catch (e) {
+					console.log("error -->-->-->", e);
 		    	return e ;
 		  	}
 			}
@@ -173,7 +171,6 @@ try{
 		var senderEmail = emailData.sender_mail
 		var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
 		if( checkExistingSenderEmail.length > 0 ){
-			console.log("user already exists");
 			var existingEmail = checkExistingSenderEmail[0]
 			var existingEmail_mongoid = existingEmail._id
 			var dataToUpdate = {
@@ -260,7 +257,8 @@ try{
 		emails : allEmails,
 		previous_page : previous_page,
 		next_page : next_page,
-		count_unread_emails : count_unread_emails
+		count_unread_emails : count_unread_emails,
+		tag: tag || "",
   	}
   },
 	'addTags': function( tagList, emailData){
@@ -280,5 +278,5 @@ try{
 			}
 		);
 		return emailData;
-	}
+	},
 });

@@ -12,6 +12,7 @@ class ImapAccountsListItem extends React.Component {
 
     constructor( props ){
         super( props );
+        this.count = 0;
     }
     render(){
 
@@ -34,9 +35,24 @@ class ImapAccountsListItem extends React.Component {
 				if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.emails_fetched != 'undefined' ){
 					fetch_response_EMAILS_FETCHED_COUNT = this.props.imapEmail.fetch_email_status.email_fetch_response.emails_fetched
 					if( fetch_response_TYPE == "SUCCESS" ){
-						fetch_response_EMAILS_FETCHED_COUNT = fetch_response_EMAILS_FETCHED_COUNT + ' New Emails'
+            if(fetch_response_EMAILS_FETCHED_COUNT >= 20){
+              console.log("again calling method", this.props.imapEmail);
+              this.count += fetch_response_EMAILS_FETCHED_COUNT;
+              this.props.onFetchNewEmails( [this.props.imapEmail._id] );
+              fetch_response_TYPE = <LinearProgress mode="indeterminate" color="green" />
+              fetch_response_EMAILS_FETCHED_COUNT = this.count + '+ Emails Found ...'
+            }else if( this.count > 0 ){
+              fetch_response_EMAILS_FETCHED_COUNT = this.count + ' New Email(s)'
+            }else{
+						  fetch_response_EMAILS_FETCHED_COUNT = fetch_response_EMAILS_FETCHED_COUNT + ' New Email(s)'
+            }
 					}else if( fetch_response_TYPE == "RESPONSE_ERROR" ){
-						fetch_response_EMAILS_FETCHED_COUNT = fetch_response_MESSAGE
+            if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.type != 'undefined' )
+              if(this.props.imapEmail.fetch_email_status.email_fetch_response.emails_fetched == 0){
+                  fetch_response_TYPE = ''
+                  fetch_response_EMAILS_FETCHED_COUNT = 'No More Mails(s)'
+              }else
+						        fetch_response_EMAILS_FETCHED_COUNT = fetch_response_MESSAGE
 					}
 				}
     		}

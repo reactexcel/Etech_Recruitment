@@ -69,7 +69,7 @@ export default class TagForm extends React.Component {
                   this.setState({"tagName": evt.target.value});
                   if (!evt.target.value.length > 0 ) {
                     this.error.tagName = "Enter tag title";
-                  }else if (!/^[a-zA-Z0-9a!@#$%^&* ]+$/.test(evt.target.value)) {
+                  }else if (!/^[a-zA-Z0-9a!@#$%^&*. ?><|":';'"]+$/.test(evt.target.value)) {
                     this.error.tagName = "Invalid tag title";
                   }else{
                     this.error.tagName = "";
