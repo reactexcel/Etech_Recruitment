@@ -4,7 +4,6 @@ import '../methods/sendMail.js';
 import '../methods/EmailsStore.js'
 import '../methods/emailSetting.js';
 import '../collections/config';
-import '../methods/candidateHistory.js'
 import '../methods/inboxTag'
 import '../methods/email'
 import {config_ENV} from './../config/index.jsx';

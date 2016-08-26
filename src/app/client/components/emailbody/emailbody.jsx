@@ -7,7 +7,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import TextField from 'material-ui/TextField';
 import List from 'material-ui/List'
-import CandidateHistory from './candidateHistory'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -94,6 +93,7 @@ componentWillReceiveProps(props){
   }
 
 render(){
+  console.log(this.props.params.id,"hhhhhhhhhhhhhhh")
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        let ignoreText="Ignore";
@@ -263,7 +263,7 @@ render(){
 
         <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
-        <CandidateHistory email_id={this.props.params.id}/>
+        
         </div>
         </div>
 
