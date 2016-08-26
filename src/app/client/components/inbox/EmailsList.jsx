@@ -155,7 +155,7 @@ class EmailsList extends React.Component {
                         {_.map(this.props.tags, (t) => {
                           let unread_mail = 0;
                           _.forEach(emails, (email) => {
-                            if(_.indexOf(email.tags,t._id) >= 0 && email.unread)
+                            if(_.indexOf(email.tags,t._id) >= 0 && email.m_read_status == 0)
                               ++unread_mail;
                           })
                         return <MenuItem

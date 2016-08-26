@@ -46,10 +46,9 @@ Meteor.methods({
 
 	//check for imap settings
 	var checkSettings = Meteor.call('fetchSettings')
-console.log("----->>>>>>>", checkSettings, mongoid);
+
 	if( checkSettings.length == 0 ){
 		return {
-			'id': mongoid,
 			'type' : 'SETTINGS_NOT_FOUND',
 		}
 	}else{
@@ -83,6 +82,7 @@ console.log("----->>>>>>>", checkSettings, mongoid);
 						fetchingEmailsForDate = todaysDate
 					}
   		}else{
+  			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
 				fetchingEmailsFromId = ''
 				fetchingEmailsForDate = todaysDate
   		}
@@ -138,13 +138,11 @@ console.log("----->>>>>>>", checkSettings, mongoid);
 							//-end-insert status last inserted email id to db
 						}
 		    	}else{
-						if(json.error.length > 0 && json.data.length == 0 )
-		    			TYPE = "RESPONSE_ERROR";
-		    			MESSAGE = json.error[0];
+		    		TYPE = "RESPONSE_ERROR"
+		    		MESSAGE = json.error[0]
 		    	}
 		    }
 				return {
-						'id': mongoid,
 		    		'type' : TYPE,
 		    		'message' : MESSAGE,
 		    		'emails_fetched' : emails_fetched,
