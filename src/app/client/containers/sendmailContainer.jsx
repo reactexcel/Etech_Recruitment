@@ -12,17 +12,12 @@ import SendEmail from './../components/sendmail'
 class SendMails extends React.Component {
     constructor( props ){
         super( props )
-        this.state = {
-        }
     }
     componentWillMount(){
-    }
-    componentWillReceiveProps( props ){
-
-    }
-    componentDidUpdate(){
- 
-    }
+        if (!Meteor.userId()) {
+        this.props.router.push('/login');
+        }       
+    }   
 
     render(){
         return(

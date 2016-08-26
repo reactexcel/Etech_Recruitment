@@ -22,6 +22,9 @@ class Inbox extends React.Component {
         this.doPageChange = this.doPageChange.bind(this)
     }
     componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
         this.props.onFetchSettings()
         this.props.onFetchTag()

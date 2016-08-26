@@ -15,6 +15,9 @@ class EmailbodyContainer extends React.Component {
   componentWillReceiveProps(props){
   }
   componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
     this.props.onEmailDetail(this.props.params.id)
   }
   render() {

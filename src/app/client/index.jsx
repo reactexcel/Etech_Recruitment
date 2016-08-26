@@ -30,7 +30,7 @@ export let isMonitorAction;
 const logger = createLogger();
 injectTapEventPlugin();
 
-Meteor.startup(
+Meteor.startup( 
   () => {
     let store = createStore(reducer,Immutable.Map({}),compose(
       applyMiddleware(thunk, logger),

@@ -9,8 +9,15 @@ export default class MenuDrawer extends React.Component {
     super(props);
     this.state = {"open": false}
     this.handleClose = this.handleClose.bind(this);
+    this.logout = this.logout.bind(this);
   }
-
+  logout(path){
+    Meteor.logout((err)=>{
+      if(!err){
+        this.handleClose(path)
+      }
+    })
+  }
   handleClose(path){
     this.setState({open: false});
     this.props.handleClose();
@@ -37,6 +44,8 @@ export default class MenuDrawer extends React.Component {
         <MenuItem onTouchTap={() => this.handleClose("display/logs")}>User Activity Logs</MenuItem>
         <Divider/>
         <MenuItem onTouchTap={()=>{this.handleClose("/config")}}>Settings</MenuItem>
+        <Divider/>
+        <MenuItem onTouchTap={()=>{this.logout("/login")}}>Logout</MenuItem>
         <Divider/>
       </Drawer>
     );

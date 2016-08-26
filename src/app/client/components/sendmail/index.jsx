@@ -56,6 +56,9 @@ class SendEmail extends React.Component {
         this.editTemplate = this.editTemplate.bind( this )
     }
     componentWillMount(){
+        if (!Meteor.userId()) {
+            this.props.router.push('/login');
+        }
         this.setState({loader:'show'})
         this.props.onfetchTemplate().then( (data) => {
         this.setState({

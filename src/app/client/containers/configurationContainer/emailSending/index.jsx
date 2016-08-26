@@ -9,7 +9,11 @@ class EmailSendingContainer extends React.Component {
   constructor(props) {
     super(props);
   }
-
+  componentWillMount(){
+      if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
+  }    
   render() {
     return (
       <div>

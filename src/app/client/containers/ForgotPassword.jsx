@@ -13,9 +13,14 @@ class ForgotPassword extends React.Component {
     constructor( props ){
         super( props );
     }
-      getChildContext() {
+    componentWillMount(){
+      if (Meteor.userId()) {
+       this.props.router.push('/inbox');
+      }
+    }
+    getChildContext() {
       return { muiTheme: getMuiTheme(baseTheme) };
-  }
+    }
     render(){
         return(
         	<div>

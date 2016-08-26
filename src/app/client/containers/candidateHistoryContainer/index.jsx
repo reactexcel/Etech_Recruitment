@@ -11,9 +11,10 @@ class candidateHistoryContainer extends React.Component{
     super(props);
     console.log(props);
   }
-  componentWillReceiveProps(props){
-  }
   componentWillMount( ){
+    if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
   }
   getChildContext() {
          return {

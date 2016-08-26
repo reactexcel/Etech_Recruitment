@@ -17,7 +17,10 @@ class LogsContainer extends React.Component {
         this.pageChange = this.pageChange.bind(this)
     }
     componentWillMount(){
-        this.props.onLogData( this.state.log_per_page, this.state.page_num )
+      if (!Meteor.userId()) {
+        this.props.router.push('/login');
+      }
+      this.props.onLogData( this.state.log_per_page, this.state.page_num )
     }
     componentWillReceiveProps( props ){
     }
