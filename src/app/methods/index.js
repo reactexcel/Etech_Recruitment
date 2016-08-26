@@ -38,7 +38,6 @@ Meteor.methods({
         log.created_on = moment(created_on).format("DD/MM/YYYY")
         let candidateEmail = log.candidateEmail
         log.candidateEmail=Meteor.users.findOne({"_id": log.user_id})
-        console.log(log.candidateEmail)
         return log
       })
     }
