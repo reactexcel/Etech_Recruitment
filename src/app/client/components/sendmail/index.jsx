@@ -305,4 +305,3 @@ class SendEmail extends React.Component {
 }
 
 export default withRouter(SendEmail)
-

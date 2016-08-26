@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import _ from 'lodash';
-const classNames = require('classnames');
 import {
   Step,
   Stepper,
@@ -17,80 +16,104 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+const classNames = require('classnames');
 
 
 export default class LogTable extends React.Component{
-	/*static contextTypes={
-			muiTheme:React.PropTypes.object.isRequired
-    }*/
     constructor(props){
-		super(props);
+    super(props);
     this.state={
       stepIndex: 0,
       current_email:'',
-      log_per_page_afterFirstPage:this.props.prestent_per_page,
       logList:[],
       emailList:[],
-      emails:[]
+      emails:[],
+      numberOfLogs:5,
+      hidden:false
     }
     this.onSelectingId=this.onSelectingId.bind(this)
-	}
+    this.onSelectingAll=this.onSelectingAll.bind(this)
+  }
 
-	componentWillMount(){
+  componentWillMount(){
     }
     componentWillReceiveProps( props ){
     }
-    onSelectingId(user_id){
+    onSelectingId(username){
       this.setState({
         stepIndex: 0,
-        current_email:user_id,
+        current_email:username,
         logList:[],
         emailList:[],
-        emails:[]
+        emails:[],
+        hidden:true
       })
 
     }
-	render(){
+    onSelectingAll(){
+       this.setState({
+        stepIndex: 0,
+        current_email:'',
+        logList:[],
+        emailList:[],
+        emails:[],
+        hidden:false,
+        numberOfLogs:5,
+      })
+    }
+  render(){
+    console.log(this.props.log)
     let logs=this.props.log.logs
+    if(this.state.emailList.length==0){
+      this.state.emailList.push(<MenuItem primaryText="Show all logs" onTouchTap={()=>this.onSelectingAll()}/>)
+    }
     _.map(logs,(log,i)=>{
-      if(_.includes(this.state.emails,log.user_id)==false){
-        this.state.emails.push(log.user_id)
+      if(_.includes(this.state.emails,log.candidateEmail.username)==false){
+        this.state.emails.push(log.candidateEmail.username)
         this.state.emailList.push(
-             <MenuItem key={i} primaryText={log.user_id} onTouchTap={()=>this.onSelectingId(log.user_id)}/>
+             <MenuItem primaryText={log.candidateEmail.username} onTouchTap={()=>this.onSelectingId(log.candidateEmail.username)}/>
           );
        }
     }) 
 
-    console.log(this.props.log.logs)
     const stepIndex = this.state.stepIndex;
-    _.map(logs,(log,i)=>{
-      if(this.state.current_email==''){
-        console.log(log.user_id,"empty email")
-        this.state.logList.push(
+    const self=this;
+    if(logs.length>0){
+    if(self.state.current_email==''){
+      _.times(this.state.numberOfLogs,function(i){
+        if(typeof logs[i] === 'undefined'){
+           self.setState({
+              numberOfLogs:0,
+              hidden:true
+           })
+      }else{
+        self.state.logList.push(
         <Step key={i}>
-            <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
-              <div>{log.user_id}</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>({log.created_on.toString()})</div>
+            <StepButton onTouchTap={() => self.setState({stepIndex: i})} style={{cursor:'pointer'}}>
+              <div>{logs[i].candidateEmail.username}</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({logs[i].created_on.toString()})</div>
             </StepButton>
             <StepContent style={{marginTop:'5px'}}>
               <div>
               <div style={{fontWeight:'bold'}}>
-              Action:{log.action_type}
+              Action:{logs[i].action_type}
               </div>
               <p>
-                {log.details}
+                {logs[i].details}
               </p>
               </div>
             </StepContent>
           </Step>
         )
-      }else{
-        if(this.state.current_email==log.user_id){
-          console.log(log.user_id,"NONempty email")
+      }
+      })
+    }else{
+      _.map(logs,(log,i)=>{
+        if(self.state.current_email==log.candidateEmail.username){
           this.state.logList.push(
         <Step key={i}>
             <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
-              <div>{log.user_id}</div>&nbsp;&nbsp;&nbsp;
+              <div>{log.candidateEmail.username}</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({log.created_on.toString()})</div>
             </StepButton>
             <StepContent style={{marginTop:'5px'}}>
@@ -105,39 +128,25 @@ export default class LogTable extends React.Component{
             </StepContent>
           </Step>
         )
-
         }
-      }
-      
-    })
-        let next_page_num = this.props.log.next_page
+      })
+    }
+  }
+
         let next_page_link=<RaisedButton label="Load More" secondary={true} onTouchTap={ () =>{
           this.setState({
             stepIndex: 0,
-            log_per_page_afterFirstPage:this.state.log_per_page_afterFirstPage+3,
             logList:[],
             emailList:[],
             emails:[],
             current_email:'',
+            numberOfLogs:this.state.numberOfLogs+5
           });
-          this.props.pageChange(next_page_num,this.state.log_per_page_afterFirstPage)
         }}/>
-        if( next_page_link == '' ){
-            next_page_link=<RaisedButton label="Load More" secondary={true} onTouchTap={ () =>{
-          this.setState({
-            stepIndex: 0,
-            log_per_page_afterFirstPage:this.state.log_per_page_afterFirstPage+3,
-            logList:[],
-            emailList:[],
-            emails:[],
-            current_email:'',
-          });
-          this.props.pageChange(next_page_num,this.state.log_per_page_afterFirstPage)
-        }}/>
-        }
-		return(
-      <div>
-		<div style={{margin: 'auto',backgroundColor:'white',borderRadius:'3px',padding:10}}>
+        
+    return(
+      <div style={{marginBottom:5}}>
+    <div style={{margin: 'auto',backgroundColor:'white',borderRadius:'3px',padding:10}}>
     <div style={{marginLeft:'4px',fontSize:'x-large'}}>
     Candidate Log
       <IconMenu
@@ -159,10 +168,10 @@ export default class LogTable extends React.Component{
           {this.state.logList}
         </Stepper>
       </div>
-      <div style={{textAlign:'center',marginTop:'10px'}}>
+      <div style={{textAlign:'center',marginTop:'10px'}} ref="button" className={classNames({"hidden":this.state.hidden})}>
         {next_page_link}
       </div>
       </div>
-			);
-	}
+      );
+  }
 }
