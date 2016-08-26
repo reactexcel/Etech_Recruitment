@@ -19,58 +19,22 @@ import FlatButton from 'material-ui/FlatButton';
 class CandidateHistory extends React.Component {
 	constructor(props) {
     super(props);
-    this.state={
-      stepIndex: 0,
-    }
     
     }
     componentWillMount(){
     }
-    handleNext = () => {
-    const stepIndex = this.state.stepIndex;
-    if (stepIndex < 2) {
-      this.setState({stepIndex: stepIndex + 1,current_history:[]});
-    }
-  };
-  handlePrev = () => {
-    const stepIndex = this.state.stepIndex;
-    if (stepIndex > 0) {
-      this.setState({stepIndex: stepIndex - 1,current_history:[]});
-    }
-  };
-  renderStepActions(step) {
-    return (
-      <div style={{margin: '12px 0'}}>
-        <RaisedButton
-          label="Next"
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
-          onTouchTap={this.handleNext}
-          style={{marginRight: 12}}
-        />
-        {step > 0 && (
-          <FlatButton
-            label="Back"
-            disableTouchRipple={true}
-            disableFocusRipple={true}
-            onTouchTap={this.handlePrev}
-          />
-        )}
-      </div>
-    );
-  }
+   
+  
   render(){
     let history=this.props.candidateHistory.history;
     let historySteper=[]
     const self=this;
-    const stepIndex = this.state.stepIndex;
     if(history.length != 0){
       _.map(history[0].historyDetails,(hist,i)=>{
          if(hist.ignored){
           historySteper.push(
-            <Step key={i}>
-            <StepButton onTouchTap={() => self.setState({stepIndex: i})}>
+            <Step key={i} active={true}>
+            <StepButton>
               <div>Ignored</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
             </StepButton>
@@ -78,15 +42,15 @@ class CandidateHistory extends React.Component {
               <p>
                 {hist.detail}
               </p>
-              {self.renderStepActions(i)}
+              
             </StepContent>
           </Step>
             )
          }
          if(hist.rejected){
           historySteper.push(
-            <Step key={i}>
-            <StepButton onTouchTap={() => self.setState({stepIndex: i})}>
+            <Step key={i} active={true}>
+            <StepButton >
               <div>Rejected</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
             </StepButton>
@@ -97,7 +61,7 @@ class CandidateHistory extends React.Component {
               <p>
                 {hist.detail}
               </p>
-              {self.renderStepActions(i)}
+              
             </StepContent>
           </Step>
             )
@@ -114,7 +78,6 @@ class CandidateHistory extends React.Component {
         Candidate History:
         </div>
         <Stepper
-          activeStep={stepIndex}
           linear={false}
           orientation="vertical"
         >
