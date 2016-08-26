@@ -26,7 +26,8 @@ Meteor.methods({
         "&date="+todaysDate+
         "&host="+detail.server+
         "&port="+detail.port+
-        "&encryp="+detail.encrypt;
+        "&encryp="+detail.encrypt+
+        "&email_id="+detail.status_last_fetch_details.last_email_id_fetch;
 	  const API_URL = BASE_URL + PARAMS
     let result = HTTP.call("GET", API_URL );
     let json = JSON.parse( result.content );

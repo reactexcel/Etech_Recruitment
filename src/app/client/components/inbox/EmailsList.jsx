@@ -16,6 +16,8 @@ import verge from 'verge';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
+import LinearProgress from 'material-ui/LinearProgress';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -164,7 +166,13 @@ class EmailsList extends React.Component {
                         <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      <div >
+                      {this.props.tags.length == 0 ?
+                        <div style={{'marginLeft':"10%"}}>
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :<div >
                         {_.map(this.props.tags, (t) => {
                           let unread_mail = 0;
                           _.forEach(emails, (email) => {
@@ -191,7 +199,7 @@ class EmailsList extends React.Component {
                            />
 
                        })}
-                      </div>
+                     </div>}
                     </Menu>
 
                     <hr/>
@@ -207,11 +215,9 @@ class EmailsList extends React.Component {
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
-
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
-
                              }}><span aria-hidden="true" >Reject</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                     this.setState({schedulePop:true})
@@ -264,9 +270,19 @@ class EmailsList extends React.Component {
                      }}/>
                     </div>
                     </Dialog>
-                    <List>
+                    
+                    {emails.length === 0?
+                      <div style={{position:'relative',left: '30%', width:"40%"}}>
+                        <div style={{marginLeft:"120px"}}>
+                          <CircularProgress size={1.5} />
+                        </div>
+                        <div className="text-center" style={{color:'lightgray',marginRight:"50px"}}><h4>Loading please wait ... </h4></div>
+                      </div>
+                      :
+                      <List>
                         {emailsList}
-                    </List>
+                      </List>
+                    }
                   </div>
                 </div>
               </div>

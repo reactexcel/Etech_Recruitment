@@ -36,6 +36,7 @@ class ConfigurationContainer extends React.Component {
               <MenuItem  primaryText="Tag Setting" onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}/>
               <MenuItem  primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
               <MenuItem  primaryText="Email Sending" onTouchTap={()=>{this.props.router.push("/config/email-sending");}}/>
+              <MenuItem  primaryText="Email Templates" onTouchTap={()=>{this.props.router.push("/sendmail")}} />
             </Menu>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
