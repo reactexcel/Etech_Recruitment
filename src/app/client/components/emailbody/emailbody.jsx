@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import TextField from 'material-ui/TextField';
 import List from 'material-ui/List'
+import CandidateHistory from './candidateHistory'
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -263,7 +264,7 @@ render(){
 
         <div className="row" style={{marginTop:'5px',marginBottom:'10px',marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
-        
+        <CandidateHistory email_id={this.props.params.id}/>
         </div>
         </div>
 

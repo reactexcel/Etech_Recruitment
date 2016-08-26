@@ -39,7 +39,7 @@ class EmailsList extends React.Component {
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
-        _.map(props.inboxTag,(tag)=>{
+        _.map(props.tags,(tag)=>{
             if(tag.name=="Ignore"){
                this.setState({
                  ignoreTagId:tag._id
