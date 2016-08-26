@@ -23,7 +23,7 @@ class Inbox extends React.Component {
         this.update = true;
     }
     componentWillMount(){
-        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
+        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,this.props.inbox.tag)
         this.props.onFetchSettings()
         this.props.onFetchTag()
     }
@@ -41,7 +41,7 @@ class Inbox extends React.Component {
                 return email
             })
             if( this.state.imap_emails.length == 0 ){
-                this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
+                this.props.onInboxData( this.state.emails_per_page, this.state.page_num, this.props.inbox.tag )
             }
             this.setState({
                 'emails_fetch_status' : 1,
@@ -75,11 +75,10 @@ class Inbox extends React.Component {
     }
     doPageChange( page_num ){
         if( page_num != '' ){
-            this.props.onInboxData( this.state.emails_per_page, page_num )
+            this.props.onInboxData( this.state.emails_per_page, page_num, this.props.inbox.tag )
         }
     }
     render(){
-      console.log(this.props.inbox);
         return(
         	<div>
                 <Header {...this.props} position={1}/>

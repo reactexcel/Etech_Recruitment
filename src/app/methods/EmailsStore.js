@@ -46,9 +46,10 @@ Meteor.methods({
 
 	//check for imap settings
 	var checkSettings = Meteor.call('fetchSettings')
-
+console.log("----->>>>>>>", checkSettings, mongoid);
 	if( checkSettings.length == 0 ){
 		return {
+			'id': mongoid,
 			'type' : 'SETTINGS_NOT_FOUND',
 		}
 	}else{
@@ -82,7 +83,6 @@ Meteor.methods({
 						fetchingEmailsForDate = todaysDate
 					}
   		}else{
-  			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
 				fetchingEmailsFromId = ''
 				fetchingEmailsForDate = todaysDate
   		}
@@ -138,11 +138,13 @@ Meteor.methods({
 							//-end-insert status last inserted email id to db
 						}
 		    	}else{
-		    		TYPE = "RESPONSE_ERROR"
-		    		MESSAGE = json.error[0]
+						if(json.error.length > 0 && json.data.length == 0 )
+		    			TYPE = "RESPONSE_ERROR";
+		    			MESSAGE = json.error[0];
 		    	}
 		    }
 				return {
+						'id': mongoid,
 		    		'type' : TYPE,
 		    		'message' : MESSAGE,
 		    		'emails_fetched' : emails_fetched,
@@ -171,7 +173,6 @@ try{
 		var senderEmail = emailData.sender_mail
 		var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
 		if( checkExistingSenderEmail.length > 0 ){
-			console.log("user already exists");
 			var existingEmail = checkExistingSenderEmail[0]
 			var existingEmail_mongoid = existingEmail._id
 			var dataToUpdate = {

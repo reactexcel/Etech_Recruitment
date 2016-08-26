@@ -15,7 +15,7 @@ class ImapAccountsListItem extends React.Component {
         this.count = 0;
     }
     render(){
-      console.log(this.props);
+
     	let fetch_response_TYPE = <LinearProgress mode="indeterminate" color="green" />
     	let fetch_response_EMAILS_FETCHED_COUNT = ""
     	let fetch_response_MESSAGE = ""
@@ -35,11 +35,14 @@ class ImapAccountsListItem extends React.Component {
 				if( typeof this.props.imapEmail.fetch_email_status.email_fetch_response.emails_fetched != 'undefined' ){
 					fetch_response_EMAILS_FETCHED_COUNT = this.props.imapEmail.fetch_email_status.email_fetch_response.emails_fetched
 					if( fetch_response_TYPE == "SUCCESS" ){
-            if(fetch_response_EMAILS_FETCHED_COUNT >= 100){
+            if(fetch_response_EMAILS_FETCHED_COUNT >= 20){
+              console.log("again calling method", this.props.imapEmail);
               this.count += fetch_response_EMAILS_FETCHED_COUNT;
-              this.props.onFetchNewEmails( [imapEmail] );
+              this.props.onFetchNewEmails( [this.props.imapEmail._id] );
               fetch_response_TYPE = <LinearProgress mode="indeterminate" color="green" />
-              fetch_response_EMAILS_FETCHED_COUNT = fetch_response_EMAILS_FETCHED_COUNT + '+ Emails Found ...'
+              fetch_response_EMAILS_FETCHED_COUNT = this.count + '+ Emails Found ...'
+            }else if( this.count > 0 ){
+              fetch_response_EMAILS_FETCHED_COUNT = this.count + ' New Email(s)'
             }else{
 						  fetch_response_EMAILS_FETCHED_COUNT = fetch_response_EMAILS_FETCHED_COUNT + ' New Email(s)'
             }

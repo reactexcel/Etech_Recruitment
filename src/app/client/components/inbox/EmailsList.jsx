@@ -134,7 +134,7 @@ class EmailsList extends React.Component {
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2 col-sm-2 " style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px",}}>
+                <div className="col-xs-2 col-sm-2 " style={{ "padding":"0px", "backgroundColor":"#fff", "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
 
                     <Menu>
 
@@ -207,6 +207,7 @@ class EmailsList extends React.Component {
                             </ul>
                             {      }
                             <ul className="pagination pull-right">
+                              <li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
