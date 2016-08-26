@@ -23,11 +23,11 @@ class ImapAccountsList extends React.Component {
         let imapEmailsList = this.props.imap_emails.map( (email) => {
             return (
                 <div key={email._id}>
-                    <ImapAccountsListItem imapEmail={email}/>
+                    <ImapAccountsListItem imapEmail={email} {...this.props}/>
                 </div>
             )
         })
-        
+
         return(
             <div>
                 <Subheader>IMAP Emails</Subheader>

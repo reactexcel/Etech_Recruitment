@@ -16,6 +16,7 @@ import verge from 'verge';
 import TextField from 'material-ui/TextField';
 import LinearProgress from 'material-ui/LinearProgress';
 import CircularProgress from 'material-ui/CircularProgress';
+import Subheader from 'material-ui/Subheader'
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -94,7 +95,7 @@ class EmailsList extends React.Component {
             return (
                 <div key={email._id}>
 
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag} route={this.props.route}/>
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag} router={this.props.router}/>
                 </div>
             )
         })
@@ -136,19 +137,21 @@ class EmailsList extends React.Component {
                 <div className="col-xs-2 col-sm-2 " style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px",}}>
 
                     <Menu>
+
+                      {this.props.tags.length === 0 ?
+                        <div style={{'marginLeft':"10%"}}>
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :<div >
                         <MenuItem  primaryText={
                             <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
                         }/>
                         <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      {this.props.tags.length == 0 ?
-                        <div style={{'marginLeft':"10%"}}>
-                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                        </div>
-                        :<div >
+                      <Subheader>Tags</Subheader>
                         {_.map(this.props.tags, (t) => {
                           let unread_mail = 0;
                           _.forEach(emails, (email) => {
@@ -178,8 +181,14 @@ class EmailsList extends React.Component {
                     </Menu>
 
                     <hr/>
-
-                    <ImapAccountsList imap_emails={this.props.imap_emails}/>
+                      {emails.length === 0?
+                        <div style={{'marginLeft':"10%"}}>
+                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :
+                        <ImapAccountsList {...this.props}/>
+                      }
 
 
                 </div>
@@ -223,11 +232,11 @@ class EmailsList extends React.Component {
                      </div>
                     </Dialog>
                     {emails.length === 0?
-                      <div style={{position:'relative',left: '30%', width:"40%"}}>
-                        <div style={{marginLeft:"120px"}}>
+                      <div style={{position:'relative', width:"100%",textAlign:"center"}}>
+                        <div>
                           <CircularProgress size={1.5} />
                         </div>
-                        <div className="text-center" style={{color:'lightgray',marginRight:"50px"}}><h4>Loading please wait ... </h4></div>
+                        <div className="text-center" style={{color:'lightgray',textAlign:"center"}}><h4>Loading please wait ... </h4></div>
                       </div>
                       :
                       <List>
