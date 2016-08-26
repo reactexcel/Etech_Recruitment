@@ -20,6 +20,7 @@ class Inbox extends React.Component {
             emails_fetch_status : 0
         }
         this.doPageChange = this.doPageChange.bind(this)
+        this.update = true;
     }
     componentWillMount(){
         if (!Meteor.userId()) {
@@ -69,7 +70,10 @@ class Inbox extends React.Component {
             let imap_emails_ids = _.map( this.state.imap_emails, ( email ) => {
                 return email._id
             })
-            this.props.onFetchNewEmails( imap_emails_ids )
+            if(this.update){
+              this.update = false;
+              this.props.onFetchNewEmails( imap_emails_ids )
+            }
         }
     }
     doPageChange( page_num ){
@@ -94,8 +98,7 @@ function mapStateToProps( state ){
     return {
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
-        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
-        inboxTag:state.entities.inboxTag
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;})
     }
 }
 const mapDispatchToProps = (dispatch) => {

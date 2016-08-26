@@ -4,6 +4,7 @@ import EmailsStore from './../../collections/EmailsStore'
 import {config_ENV} from './../../config/index.jsx'
 import _ from 'lodash'
 import Logs from 'app/collections/index';
+import CandidateHistory from 'app/collections/candidateHistory'
 
 Meteor.methods({
   "fetchTag": function(){
@@ -54,65 +55,95 @@ Meteor.methods({
   },
   "ignoreMultipleCandidate": function (idList, tagId, userId){
     var mail;
+    var email_id;
+    var currentDate = new Date();
      _.map(idList,(id)=>{
+      email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        if(mail.tags != 'undefined'){
-         if(_.includes(mail.tags,tagId)==false){
-             EmailsStore.update(
+        if(_.includes(mail.tags,tagId)==false){
+          EmailsStore.update(
                { _id: id },
                { $addToSet: { 'tags': tagId} }
              );
-             Logs.insert({
-                action_type:"Candidate is moved to ignore tag",
-                user_id:userId,
-                details:"Action apply on Candidate id : "+id,
-                created_on:new Date()
-             });
-         }
+        }
        }else{
-           EmailsStore.update(
+          EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
            );
-           Logs.insert({
+       }
+       if(_.includes(mail.tags,tagId)==false){
+         Logs.insert({
                 action_type:"Candidate is moved to ignore tag",
                 user_id:userId,
                 details:"Action apply on Candidate id : "+id,
                 created_on:new Date()
              });
-      }
+             if(email_id.length===0){
+                 CandidateHistory.insert({
+                   email_id:id,
+                   historyDetails:[{
+                    "ignored":true,
+                    "date":currentDate,
+                    "detail":"Candidate is Moved to Ignore tag"
+                  }]
+                 });
+             }else{
+                CandidateHistory.update(
+                  { email_id: id },
+                  { $addToSet: {'historyDetails':{"ignored":true,"date":currentDate,"detail":"Candidate is Moved to Ignore tag"}}}
+                );
+             }
+       }
+
      })
      return EmailsStore.find({}).fetch();
   },
   "rejectMultipleCandidate": function (idList, tagId, reason, userId){
-    var mail;
+       var mail;
+       var email_id;
+       var currentDate = new Date();
      _.map(idList,(id)=>{
+      email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        if(mail.tags != 'undefined'){
-         if(_.includes(mail.tags,tagId)==false){
-             EmailsStore.update(
+          if(_.includes(mail.tags,tagId)==false){
+            EmailsStore.update(
                { _id: id },
                { $addToSet: { 'tags': tagId},$set:{'Reason_of_rejection':reason} }
              );
-             Logs.insert({
-                action_type:"Candidate is moved to reject tag",
-                user_id:userId,
-                details:{"Action apply on candidate id" :id,"Reason of rejection":reason},
-                created_on:new Date()
-             });
-         }
+          }
        }else{
-           EmailsStore.update(
+          EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ],'Reason_of_rejection':reason }} ,{upsert:false, multi:true}
            );
-           Logs.insert({
+       }
+       if(_.includes(mail.tags,tagId)==false){
+          Logs.insert({
                 action_type:"Candidate is moved to reject tag",
                 user_id:userId,
-                details:{"Action apply on candidate id" :id,"Reason of rejection":reason},
+                details:"Action apply on candidate id"+id,
                 created_on:new Date()
              });
-      }
+          if(email_id.length===0){
+                 CandidateHistory.insert({
+                   email_id:id,
+                   historyDetails:[{
+                    "rejected":true,
+                    "date":currentDate,
+                    "detail":"Candidate is Moved to Ignore tag",
+                    "reason":reason
+                  }]
+                 });
+             }else{
+                CandidateHistory.update(
+                  { email_id: id },
+                  { $addToSet: { 'historyDetails':{"rejected":true,"date":currentDate,"detail":"Candidate is Moved to Reject tag","reason":reason}}}
+                );
+             }
+       }
      })
      return EmailsStore.find({}).fetch();
   },

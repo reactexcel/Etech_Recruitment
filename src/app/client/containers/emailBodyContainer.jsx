@@ -5,6 +5,7 @@ import {withRouter, Link} from 'react-router';
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
+import * as candidateHistory_action from '../actions/candidateHistory'
 import {onFetchTag} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import Header from '../components/generic/Header'
@@ -18,7 +19,8 @@ class EmailbodyContainer extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
-    this.props.onEmailDetail(this.props.params.id)
+    this.props.onEmailDetail(this.props.params.id);
+    this.props.onLoadCandidateHistory(this.props.params.id)
   }
   render() {
     return (
@@ -34,7 +36,8 @@ function mapStateToProps( state ){
     state = state.toJS()
     return {
         email : state.entities.email,
-        inboxTag: state.entities.inboxTag
+        inboxTag: state.entities.inboxTag,
+        candidateHistory:state.entities.candidateHistory
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -50,6 +53,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       onAddAction: (actiontype, id, details)=>{
         return dispatch(addLogs(actiontype, id, details))
+      },
+      onLoadCandidateHistory : (email_id) => {
+        return dispatch( candidateHistory_action.onLoadCandidateHistory(email_id) )
       }
     }
 }

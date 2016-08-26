@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import { withRouter, Link } from 'react-router';
+import {Router, browserHistory, withRouter, Link } from 'react-router';
 import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -20,8 +20,11 @@ class CandidateHistory extends React.Component {
 	constructor(props) {
     super(props);
     this.state={
-      stepIndex: 0
+      stepIndex: 0,
     }
+    
+    }
+    componentWillMount(){
     }
     handleNext = () => {
     const stepIndex = this.state.stepIndex;
@@ -58,7 +61,53 @@ class CandidateHistory extends React.Component {
     );
   }
   render(){
-  	const stepIndex = this.state.stepIndex;
+    let history=this.props.candidateHistory.history;
+    let historySteper=[]
+    const self=this;
+    const stepIndex = this.state.stepIndex;
+    if(history.length != 0){
+      _.map(history[0].historyDetails,(hist,i)=>{
+         if(hist.ignored){
+          historySteper.push(
+            <Step key={i}>
+            <StepButton onTouchTap={() => self.setState({stepIndex: i})}>
+              <div>Ignored</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
+            </StepButton>
+            <StepContent>
+              <p>
+                {hist.detail}
+              </p>
+              {self.renderStepActions(i)}
+            </StepContent>
+          </Step>
+            )
+         }
+         if(hist.rejected){
+          historySteper.push(
+            <Step key={i}>
+            <StepButton onTouchTap={() => self.setState({stepIndex: i})}>
+              <div>Rejected</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
+            </StepButton>
+            <StepContent>
+              <p>
+                Reason of rejection:{hist.reason}
+              </p>
+              <p>
+                {hist.detail}
+              </p>
+              {self.renderStepActions(i)}
+            </StepContent>
+          </Step>
+            )
+         }
+          
+      })
+    }else{
+      historySteper.push(<div>{this.props.candidateHistory.status_history}</div>)
+    }
+  	
   	return(
   	<div style={{backgroundColor:'white',borderRadius:'3px',padding:10}}>
     <div style={{fontSize:'x-large'}}>
@@ -69,40 +118,7 @@ class CandidateHistory extends React.Component {
           linear={false}
           orientation="vertical"
         >
-          <Step>
-            <StepButton onTouchTap={() => this.setState({stepIndex: 0})}>
-              <div>First Rount Interview</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>('01-11-2016')</div>
-            </StepButton>
-            <StepContent>
-              <p>
-                Details
-              </p>
-              {this.renderStepActions(0)}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepButton onTouchTap={() => this.setState({stepIndex: 1})}>
-              <div>Machine Round</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>('05-11-2016')</div>
-            </StepButton>
-            <StepContent>
-              <p>Details</p>
-              {this.renderStepActions(1)}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepButton onTouchTap={() => this.setState({stepIndex: 2})}>
-              <div>Hr Interview</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>('10-11-2016')</div>
-            </StepButton>
-            <StepContent>
-              <p>
-                Details
-              </p>
-              {this.renderStepActions(2)}
-            </StepContent>
-          </Step>
+        {historySteper}
         </Stepper>
       </div>
       );

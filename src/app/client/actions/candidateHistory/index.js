@@ -5,17 +5,16 @@ export const ACTION_FOUND_HISTORY = "ACTION_FOUND_HISTORY"
 export const ACTION_EMPTY_HISTORY = "ACTION_EMPTY_HISTORY"
 export const ACTION_ERROR_HISTORY = "ACTION_ERROR_HISTORY"
 
-export function getHistoryData(){
+export function onLoadCandidateHistory(email_id){
 	return function ( dispatch, getState ){
 		return new Promise( ( resolve, reject ) => {
 
-			Meteor.call('getCandidateHistory',(err, data) => {
-				console.log(data,"ggggggggggggg");
+			Meteor.call('loadCandidateHistory',email_id,(err, data) => {
 				if(err){
 					dispatch ( history_error( err ) )
 				}else{
-					if( data.history.length == 0 ){
-						dispatch ( empty_history( 'No more candidate history' ) )
+					if( data.length == 0 ){
+						dispatch ( empty_history( 'No candidate history' ) )
 					}else{
 						dispatch ( history_found( data ) ) 
 					}

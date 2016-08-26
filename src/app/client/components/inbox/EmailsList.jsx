@@ -14,6 +14,11 @@ import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
 import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+import LinearProgress from 'material-ui/LinearProgress';
+import CircularProgress from 'material-ui/CircularProgress';
+
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
@@ -22,17 +27,21 @@ class EmailsList extends React.Component {
           ignoreTagId:'',
           rejectTagId:'',
           rejectpop:false,
+          schedulePop:false,
+          scheduledDate:moment().format("DD-MM-YYYY"),
+          scheduledTime:moment().format("hh:mm:ss a"),
           errortxt:'',
         }
         this.onClick = this.onClick.bind(this);
         this.handleClose=this.handleClose.bind(this);
         this.updateEmailIdList= this.updateEmailIdList.bind(this);
         this.submitreason=this.submitreason.bind(this);
+        this.submitMail=this.submitMail.bind(this);
     }
     componentDidMount(){
     }
     componentWillReceiveProps( props ){
-        _.map(props.inboxTag,(tag)=>{
+        _.map(props.tags,(tag)=>{
             if(tag.name=="Ignore"){
                this.setState({
                  ignoreTagId:tag._id
@@ -49,7 +58,7 @@ class EmailsList extends React.Component {
     }
 
     handleClose(){
-      this.setState({rejectpop: false});
+      this.setState({rejectpop: false,schedulePop:false});
     }
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
@@ -62,6 +71,12 @@ class EmailsList extends React.Component {
         })
     }
   }
+    submitMail(idList){
+      if(this.state.scheduledDate==''){
+
+      }
+      this.handleClose()
+    }
     onClick ( obj ) {
       this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
     }
@@ -109,6 +124,18 @@ class EmailsList extends React.Component {
            onTouchTap={()=>{this.submitreason(this.state.emailIdList)}}
           />,
     ];
+        const scheduleAction = [
+          <FlatButton
+           label="Cancel"
+           primary={true}
+           onTouchTap={this.handleClose}
+          />,
+          <FlatButton
+           label="Submit"
+           primary={true}
+           onTouchTap={()=>{this.submitMail(this.state.emailIdList)}}
+          />,
+    ];
 
         let prev_page_num = this.props.inbox.previous_page
         let next_page_num = this.props.inbox.next_page
@@ -139,7 +166,13 @@ class EmailsList extends React.Component {
                         <MenuItem  primaryText={
                             <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
                         }/>
-                      <div >
+                      {this.props.tags.length == 0 ?
+                        <div style={{'marginLeft':"10%"}}>
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :<div >
                         {_.map(this.props.tags, (t) => {
                           let unread_mail = 0;
                           _.forEach(emails, (email) => {
@@ -164,8 +197,9 @@ class EmailsList extends React.Component {
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id}, e)}
                            />
+
                        })}
-                      </div>
+                     </div>}
                     </Menu>
 
                     <hr/>
@@ -185,7 +219,9 @@ class EmailsList extends React.Component {
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
                              }}><span aria-hidden="true" >Reject</span></li>
-                             <li style={{cursor:'pointer'}}><span aria-hidden="true" >Schedule</span></li>
+                             <li style={{cursor:'pointer'}} onClick={ () => {
+                                    this.setState({schedulePop:true})
+                             }}><span aria-hidden="true" >Schedule</span></li>
                             </ul>
                             {      }
                             <ul className="pagination pull-right">
@@ -213,9 +249,40 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <List>
+                    <Dialog
+                     title="Schedule candidate"
+                     actions={scheduleAction}
+                     modal={false}
+                     open={this.state.schedulePop}
+                     onRequestClose={this.handleClose}
+                    >
+                    <div style={{textAlign: 'left',fontSize:'17px'}}>Create Time slot:</div>
+                    <div>
+                     <DatePicker hintText={this.state.scheduledDate} onChange={(evt,date)=>{
+                          this.setState({
+                             scheduledDate:moment(date).format("DD-MM-YYYY")
+                          })
+                     }}/>
+                     <TimePicker hintText={this.state.scheduledTime} onChange={(evt,time)=>{
+                          this.setState({
+                            scheduledTime:moment(time).format("hh:mm:ss a")
+                          })
+                     }}/>
+                    </div>
+                    </Dialog>
+                    
+                    {emails.length === 0?
+                      <div style={{position:'relative',left: '30%', width:"40%"}}>
+                        <div style={{marginLeft:"120px"}}>
+                          <CircularProgress size={1.5} />
+                        </div>
+                        <div className="text-center" style={{color:'lightgray',marginRight:"50px"}}><h4>Loading please wait ... </h4></div>
+                      </div>
+                      :
+                      <List>
                         {emailsList}
-                    </List>
+                      </List>
+                    }
                   </div>
                 </div>
               </div>
