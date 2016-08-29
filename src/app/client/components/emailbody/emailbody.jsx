@@ -75,7 +75,7 @@ componentWillReceiveProps(props){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
         this.props.onReject(id,this.state.rejectTagId,reason)
-        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),{"Action apply on candidate id" :id,"Reason of rejection":reason})
+        this.props.onAddAction("Candidate is Rejected",Meteor.userId(),"Action apply on candidate id :"+id)
         this.handleClose()
     }else{
         this.setState({
