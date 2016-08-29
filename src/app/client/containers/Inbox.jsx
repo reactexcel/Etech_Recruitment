@@ -9,6 +9,7 @@ import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 import {addLogs} from '../actions/logs'
 import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
+import {fetchTemplate} from '../actions/emailTemplates'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -29,6 +30,7 @@ class Inbox extends React.Component {
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
         this.props.onFetchSettings()
         this.props.onFetchTag()
+        this.props.onFetchTamplets()
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
@@ -87,7 +89,7 @@ class Inbox extends React.Component {
                 <Header {...this.props} position={1}/>
                 <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                   onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num} inboxTag={this.props.inboxTag} onIgnoreMultipleCandidate={this.props.onIgnoreMultipleCandidate}
-                  onRejectMultipleCandidate={this.props.onRejectMultipleCandidate} route={this.props.router}
+                  onRejectMultipleCandidate={this.props.onRejectMultipleCandidate} route={this.props.router} emailTemplates={this.props.emailTemplates}
                   />
         	</div>
         )
@@ -98,7 +100,8 @@ function mapStateToProps( state ){
     return {
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
-        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;})
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
+        emailTemplates : state.entities.emailTemplates,
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -123,6 +126,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onRejectMultipleCandidate : (idList,tagId,reason) => {
             return dispatch(onRejectMultipleCandidate(idList,tagId,reason))
+        },
+        onFetchTamplets:()=>{
+            return dispatch(fetchTemplate())
         }
     }
 }

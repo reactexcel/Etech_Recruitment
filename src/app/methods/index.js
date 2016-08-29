@@ -32,12 +32,14 @@ Meteor.methods({
   },
   'getlogsToDisplay' : function(){
     var allLogs = Logs.find( {}, {sort: {created_on: -1}}).fetch()
+    console.log("in method")
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){
         let created_on = log.created_on
         log.created_on = moment(created_on).format("DD/MM/YYYY")
         let candidateEmail = log.candidateEmail
         log.candidateEmail=Meteor.users.findOne({"_id": log.user_id})
+        console.log(log.candidateEmail,"email")
         return log
       })
     }

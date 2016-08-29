@@ -18,6 +18,7 @@ import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import LinearProgress from 'material-ui/LinearProgress';
 import CircularProgress from 'material-ui/CircularProgress';
+import ScheduleCandidate from './ScheduleCandidate'
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -58,7 +59,7 @@ class EmailsList extends React.Component {
     }
 
     handleClose(){
-      this.setState({rejectpop: false,schedulePop:false});
+      this.setState({rejectpop: false});
     }
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
@@ -122,18 +123,6 @@ class EmailsList extends React.Component {
            label="Submit"
            primary={true}
            onTouchTap={()=>{this.submitreason(this.state.emailIdList)}}
-          />,
-    ];
-        const scheduleAction = [
-          <FlatButton
-           label="Cancel"
-           primary={true}
-           onTouchTap={this.handleClose}
-          />,
-          <FlatButton
-           label="Submit"
-           primary={true}
-           onTouchTap={()=>{this.submitMail(this.state.emailIdList)}}
           />,
     ];
 
@@ -249,27 +238,16 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <Dialog
-                     title="Schedule candidate"
-                     actions={scheduleAction}
-                     modal={false}
-                     open={this.state.schedulePop}
-                     onRequestClose={this.handleClose}
-                    >
-                    <div style={{textAlign: 'left',fontSize:'17px'}}>Create Time slot:</div>
-                    <div>
-                     <DatePicker hintText={this.state.scheduledDate} onChange={(evt,date)=>{
-                          this.setState({
-                             scheduledDate:moment(date).format("DD-MM-YYYY")
-                          })
-                     }}/>
-                     <TimePicker hintText={this.state.scheduledTime} onChange={(evt,time)=>{
-                          this.setState({
-                            scheduledTime:moment(time).format("hh:mm:ss a")
-                          })
-                     }}/>
-                    </div>
-                    </Dialog>
+                    <ScheduleCandidate 
+                    showPopUp={this.state.schedulePop}
+                    emailIdList={this.state.emailIdList}
+                    emailTemplates={this.props.emailTemplates}
+                    closeDialog={()=>{
+                      this.setState({
+                            schedulePop : false
+                      })
+                    }}
+                    />
                     
                     {emails.length === 0?
                       <div style={{position:'relative',left: '30%', width:"40%"}}>

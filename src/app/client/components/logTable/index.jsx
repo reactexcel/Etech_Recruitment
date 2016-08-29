@@ -64,6 +64,7 @@ export default class LogTable extends React.Component{
   render(){
     console.log(this.props.log)
     let logs=this.props.log.logs
+    console.log(logs,"hhhhhhhhhhhhhhhhhhhhhhhhhh")
     if(this.state.emailList.length==0){
       this.state.emailList.push(<MenuItem primaryText="Show all logs" onTouchTap={()=>this.onSelectingAll()}/>)
     }
