@@ -4,6 +4,7 @@ export const FETCH_SETTINGS_FROM_DB = "FETCH_SETTINGS_FROM_DB";
 export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
 export const TEST_DETAILS = "TEST_DETAILS";
+export const LOADING = "LOADING";
 
 export const FETCH_SMTP_SETTINGS = "FETCH_SMTP_SETTINGS";
 
@@ -101,6 +102,38 @@ export function fetchSMTPSettings(){
           }else{
             dispatch(actionFetchSMTPSettings(Data));
             resolve();
+          }
+      });
+    });
+  }
+}
+
+
+export function deleteSMTPRow(row_id){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('removeMailServer',row_id,(err, Data) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(fetchSMTPSettings());
+            resolve('Setting deleted');
+          }
+      });
+    });
+  }
+}
+
+
+export function onTestDetailsSMTP (detail) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+        Meteor.call('checkSMTPMailServer',detail,(err,resp) => {
+          if(err){
+            reject(err)
+          }else{
+            dispatch(fetchSMTPSettings());
+            resolve(resp)
           }
       });
     });

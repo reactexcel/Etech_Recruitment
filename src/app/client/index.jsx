@@ -17,6 +17,7 @@ import EmailSettingContainer from './containers/configurationContainer/emailSett
 import EmailSendingContainer from './containers/configurationContainer/emailSending';
 import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
+import ChangePasswordContainer from './containers/changePassword'
 import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
 import DisplayContainer from './containers/displayLogs'
@@ -48,6 +49,7 @@ Meteor.startup(
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={RegisterContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword}> </Route>
+              <Route path="changepassword" component={ChangePasswordContainer}></Route>
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/email-server-setting" component={EmailSettingContainer}></Route>
                 <Route path="/config/tag-setting" component={InboxTagContainer}></Route>

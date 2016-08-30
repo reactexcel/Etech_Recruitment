@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import * as action from '../../../actions/emailSetting'
+import {testrow} from '../../../actions/emailSetting'
 import {addLogs} from '../../../actions/logs'
 import SendEmailSetting from '../../../components/emailSending'
 import {withRouter} from 'react-router'
@@ -27,6 +28,7 @@ EmailSendingContainer.propTypes = {
 };
 
 
+
 const mapStateToProps = (state) =>{
   state = state.toJS();
   return {
@@ -37,18 +39,21 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch) => {
     return {
       onFetchSettings: () =>{
-        dispatch(action.fetchSMTPSettings());
+        return dispatch(action.fetchSMTPSettings());
       },
       onSaveSettings: (detail) =>{
-        dispatch(action.saveSendSettings(detail));
+        return dispatch(action.saveSendSettings(detail));
       },
       onTestDetails: (detail) =>{
-        dispatch(action.onTestDetails(detail));
+        return dispatch(action.onTestDetailsSMTP(detail));
       },
       logging: (action, id , detail) =>{
-        dispatch(addLogs(action, id , detail));
+        return dispatch(addLogs(action, id , detail));
       },
-    }
+      onDeleteRow: (row_id) =>{
+        return dispatch(action.deleteSMTPRow(row_id));
+      }
+}
 }
 
 export default withRouter(connect(

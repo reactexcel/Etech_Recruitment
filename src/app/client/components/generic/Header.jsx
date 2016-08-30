@@ -43,17 +43,6 @@ class Header extends React.Component {
                 :_.map(_.split(_.split(this.props.location.pathname,'/')[this.props.position],'-'), (v)=>(_.upperFirst(v)+" "))
               }
               showMenuIconButton={true}
-              iconElementRight={
-                <IconMenu
-                  iconButtonElement={
-                    <IconButton><MoreVertIcon /></IconButton>
-                  }
-                  targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                  anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-                  >
-                    <MenuItem primaryText="Sign out" />
-                </IconMenu>
-              }
               iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
               zDepth={2}
               />

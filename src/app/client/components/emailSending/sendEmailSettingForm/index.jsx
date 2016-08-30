@@ -4,6 +4,9 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import CircularProgress from 'material-ui/CircularProgress';
+import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
 
 const style={
   "formInput":{
@@ -30,11 +33,19 @@ export default class SendEmailSettingForm extends React.Component {
       "status": this.props.emailSetting.status || 0,
       "label": "Save",
       "edit": 0,
+      disable: false,
+      "open" : false,
+      "title": "",
+      "snackbar":false,
+      "msg":'',
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
     this.update = this.update.bind(this);
     this.clear = this.clear.bind(this);
+    this.callSaveSetting = this.callSaveSetting.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.regExp= {
       "port" : /^[0-9]+$/,
       "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -56,6 +67,7 @@ export default class SendEmailSettingForm extends React.Component {
       "status": row.smtp.status || 0,
       "label": label,
       "edit": 1,
+      disable: true
     })
     this.error = [];
   }
@@ -71,22 +83,25 @@ export default class SendEmailSettingForm extends React.Component {
       "label": "Save",
       "status": this.state.status,
       "edit": 0,
+      disable: false
     })
   }
+    handleOpen (email) {
+    this.setState({
+      "open" : true,
+      "title": "Testing for Email: "+ email,
+    });
+    this.flag++;
+  };
 
-  saveSettings () {
-    if ((this.state.emailId.length && this.state.password.length
-          && this.state.port.length && this.state.server.length
-            && this.state.encrypt.length)){
-      this.props.onSaveSettings({
-        "emailId": this.state.emailId ,
-        "password": this.state.password ,
-        "server": this.state.server ,
-        "port": this.state.port ,
-        "encrypt": this.state.encrypt,
-        "status": 0,
-        "_id": this.state._id || undefined
-      });
+  handleClose () {
+    this.setState({
+      "open" : false,
+      "title": "",
+    });
+  };
+  callSaveSetting(row){
+    this.props.onSaveSettings( row );
       if(this.state.edit == 1){
         this.props.logging("Edit email information",
           Meteor.userId(), "edited information of email id : "+this.state.emailId)
@@ -95,6 +110,43 @@ export default class SendEmailSettingForm extends React.Component {
           Meteor.userId(), "New server email id : "+this.state.emailId)
       }
       this.clear();
+  }
+  saveSettings (event) {
+    event.stopPropagation();
+    if ((this.state.emailId.length && this.state.password.length
+          && this.state.port.length && this.state.server.length
+            && this.state.encrypt.length)){
+       let row={
+        "emailId": this.state.emailId ,
+        "password": this.state.password ,
+        "server": this.state.server ,
+        "port": this.state.port ,
+        "encrypt": this.state.encrypt,
+        "status": this.state.status,
+        "_id": this.state._id || undefined
+      }
+    this.handleOpen(row.emailId);
+    this.props.onTestDetails( {"_id":row._id,"smtp":row} ).then( (response) => {
+      this.handleClose()
+     if(response){
+      this.callSaveSetting(row)
+      this.setState({
+        snackbar:true,
+        msg:'Email server setting saved & tested successfully.',
+      })
+     }else{
+      this.setState({
+        snackbar:true,
+        msg:'Email server setting test failed. Please correct your data',
+      })
+     }
+    }).catch((err)=>{
+      this.handleClose()
+      this.setState({
+        snackbar:true,
+        msg:'Email server setting test failed. Please correct your data',
+      })
+    });
     }
   }
 
@@ -108,6 +160,7 @@ export default class SendEmailSettingForm extends React.Component {
               <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
+                  disabled={this.state.disable}
                   floatingLabelText="Email"
                   hintText="Your email Id"
                   fullWidth={true}
@@ -129,7 +182,7 @@ export default class SendEmailSettingForm extends React.Component {
               </div>
               <div className="form-group" style={style.formInput}>
                 <TextField
-                  type="text"
+                  type="password"
                   floatingLabelText="Password"
                   hintText="Password"
                   fullWidth={true}
@@ -194,7 +247,7 @@ export default class SendEmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
-                <RadioButtonGroup name="encrypt" labelPosition="right"
+                <RadioButtonGroup name="encrypt" defaultSelected={this.state.encrypt} labelPosition="right"
                   style={{maxWidth: 250}}
                     onChange={
                       (evt, value) =>{
@@ -220,11 +273,30 @@ export default class SendEmailSettingForm extends React.Component {
                 <RaisedButton
                   label={this.state.label}
                   primary={true}
-                  onClick={this.saveSettings}
+                  onClick={(e)=>this.saveSettings(e)}
                 />
               </div>
             </form>
           </Paper>
+          <Dialog
+                title={this.state.title}
+                modal={true}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+                children={
+                  <CircularProgress size={1} />
+                }
+                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+                titleClassName = "text-center text-muted"
+                titleStyle={{"color": "#666"}}
+                contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
+                ></Dialog>
+                <Snackbar
+          open={this.state.snackbar}
+          message={this.state.msg}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
         </div>
       </div>
     );

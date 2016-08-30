@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import Config  from '../collections/config';
 import {config_ENV} from './../config/index.jsx'
 import _ from 'lodash';
+import { Email } from 'meteor/email';
 
 Meteor.methods({
   "fetchSettings": function(){
@@ -55,5 +56,35 @@ Meteor.methods({
       id=Config.insert({"smtp":details});
     }
     return id;
+  },
+  'removeMailServer': function ( m_id ) {
+   Config.remove({_id: m_id});
+ },
+ "checkSMTPMailServer":function(detail){
+  let setting = process.env.MAIL_URL
+    process.env.MAIL_URL =  "smtp://"+detail.smtp.emailId+":"+detail.smtp.password+"@"+detail.smtp.server+":"+detail.smtp.port
+
+  try{
+    Email.send({
+        "headers": {
+          'Content-Type': 'text/html; charset=UTF-8'
+        },
+        "to": "atul@excellencetechnologies.in",
+        "from": detail.smtp.emailId,
+        "subject": 'This is test mail',
+        'text':'SMTP mail server testing completed'
+      });
+  }catch(e){
+    if(typeof detail._id !== 'undefined'){
+        Config.update({"_id": detail._id},{$set:{"smtp.status": -1}});
+      }
+      process.env.MAIL_URL = setting;
+      return 0;
   }
+      if(typeof detail._id !== 'undefined'){
+        Config.update({"_id": detail._id},{$set:{"smtp.status": 1}});
+      }
+      return 1;
+  
+ }
 });
