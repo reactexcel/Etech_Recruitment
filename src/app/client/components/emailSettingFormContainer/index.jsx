@@ -43,6 +43,9 @@ export default class EmailSettingFormContainer extends React.Component {
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
               logging = {this.props.logging}
+              onTestDetails={this.props.onTestDetails}
+              testDetails={this.props.testDetails}
+              uiLoading={this.props.uiLoading}
               />
           </div>
         </div>
@@ -52,7 +55,9 @@ export default class EmailSettingFormContainer extends React.Component {
               emailSetting={this.props.emailSetting}
               selectedRow={this.selectedRow}
               onTestDetails={this.props.onTestDetails}
+              onRemoveDetails={this.props.onRemoveDetails}
               clear={this.clear}
+              uiLoading={this.props.uiLoading}
               />
           </div>
         </div>
@@ -65,6 +70,7 @@ EmailSettingFormContainer.propTypes = {
   onFetchSettings: PropTypes.func.isRequired,
   onSaveSettings: PropTypes.func.isRequired,
   onTestDetails: PropTypes.func.isRequired,
+  onRemoveDetails: PropTypes.func.isRequired,
   logging: React.PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
 };

@@ -15,19 +15,25 @@ export function error_inbox( data ){
 	return createAction( ACTION_ERROR_INBOX )( data )
 }
 
+const loading = (bool) => {
+  return createAction('LOADING')(bool);
+}
+
 export function getInboxData( emails_per_page, page_num, tag ){
 	return ( dispatch, getState ) => {
 		return new Promise( ( resolve, reject ) => {
-
+			dispatch(loading(true));
 			Meteor.call('getEmailsForInbox', emails_per_page, page_num, tag, (err, data) => {
 				if(err){
 					dispatch ( error_inbox( err ) )
+					dispatch(loading(false));
 				}else{
-					if( data.emails.length == 0 ){
+					if( data.emails.length == 0 && tag == ''){
 						dispatch ( empty_inbox( 'No more emails' ) )
 					}else{
 						dispatch ( success_inbox( data  ) )
 					}
+					dispatch(loading(false));
 				}
 			})
 
