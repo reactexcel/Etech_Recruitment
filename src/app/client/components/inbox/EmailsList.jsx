@@ -10,6 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
@@ -18,6 +19,7 @@ import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import LinearProgress from 'material-ui/LinearProgress';
 import CircularProgress from 'material-ui/CircularProgress';
+import ScheduleCandidate from './ScheduleCandidate'
 import Subheader from 'material-ui/Subheader'
 import DefaultPage from './defaultPage'
 
@@ -33,6 +35,8 @@ class EmailsList extends React.Component {
           scheduledDate:moment().format("DD-MM-YYYY"),
           scheduledTime:moment().format("hh:mm:ss a"),
           errortxt:'',
+          SnackbarOpen:false,
+          SnackbarMessage:''
         }
         this.onClick = this.onClick.bind(this);
         this.handleClose=this.handleClose.bind(this);
@@ -63,13 +67,22 @@ class EmailsList extends React.Component {
     }
 
     handleClose(){
-      this.setState({rejectpop: false,schedulePop:false});
+      this.setState({rejectpop: false});
     }
+    handleRequestClose = () => {
+    this.setState({
+      SnackbarOpen: false,
+    });
+  };
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
         this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason)
         this.handleClose()
+        this.setState({
+          "SnackbarMessage":"Candidates are rejected",
+             "SnackbarOpen":true
+        })
     }else{
         this.setState({
             errortxt:'Reason required'
@@ -132,18 +145,6 @@ class EmailsList extends React.Component {
            label="Submit"
            primary={true}
            onTouchTap={()=>{this.submitreason(this.state.emailIdList)}}
-          />,
-    ];
-        const scheduleAction = [
-          <FlatButton
-           label="Cancel"
-           primary={true}
-           onTouchTap={this.handleClose}
-          />,
-          <FlatButton
-           label="Submit"
-           primary={true}
-           onTouchTap={()=>{this.submitMail(this.state.emailIdList)}}
           />,
     ];
 
@@ -237,6 +238,10 @@ class EmailsList extends React.Component {
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
+                                   this.setState({
+                                    "SnackbarOpen":true,
+                                    "SnackbarMessage":"Candidates are ignored"
+                                   })
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
@@ -272,27 +277,16 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <Dialog
-                     title="Schedule candidate"
-                     actions={scheduleAction}
-                     modal={false}
-                     open={this.state.schedulePop}
-                     onRequestClose={this.handleClose}
-                    >
-                    <div style={{textAlign: 'left',fontSize:'17px'}}>Create Time slot:</div>
-                    <div>
-                     <DatePicker hintText={this.state.scheduledDate} onChange={(evt,date)=>{
-                          this.setState({
-                             scheduledDate:moment(date).format("DD-MM-YYYY")
-                          })
-                     }}/>
-                     <TimePicker hintText={this.state.scheduledTime} onChange={(evt,time)=>{
-                          this.setState({
-                            scheduledTime:moment(time).format("hh:mm:ss a")
-                          })
-                     }}/>
-                    </div>
-                    </Dialog>
+                    <ScheduleCandidate 
+                    showPopUp={this.state.schedulePop}
+                    emailIdList={this.state.emailIdList}
+                    emailTemplates={this.props.emailTemplates}
+                    closeDialog={()=>{
+                      this.setState({
+                            schedulePop : false
+                      })
+                    }}
+                    />
                     { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>
@@ -310,7 +304,14 @@ class EmailsList extends React.Component {
                       )
                     }
                   </div>
+                  <Snackbar
+                    open={this.state.SnackbarOpen}
+                    message={this.state.SnackbarMessage}
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleRequestClose}
+                  />
                 </div>
+                
               </div>
             </div>
         );

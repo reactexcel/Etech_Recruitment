@@ -9,6 +9,7 @@ import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 import {addLogs} from '../actions/logs'
 import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
+import {fetchTemplate} from '../actions/emailTemplates'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -29,6 +30,7 @@ class Inbox extends React.Component {
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,this.props.inbox.tag)
         this.props.onFetchSettings()
         this.props.onFetchTag()
+        this.props.onFetchTamplets()
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
@@ -100,7 +102,8 @@ function mapStateToProps( state ){
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
-        uiLoading: state.ui.loading,
+        emailTemplates : state.entities.emailTemplates,
+        uiLoading: state.ui.loading
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -125,6 +128,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onRejectMultipleCandidate : (idList,tagId,reason) => {
             return dispatch(onRejectMultipleCandidate(idList,tagId,reason))
+        },
+        onFetchTamplets:()=>{
+            return dispatch(fetchTemplate())
         }
     }
 }

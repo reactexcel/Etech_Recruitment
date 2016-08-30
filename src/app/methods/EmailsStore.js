@@ -132,7 +132,7 @@ Meteor.methods({
 									last_email_date = email.email_date
 								}
 								email.tags = [];
-								//Meteor.call('insertNewEmail', source_email_id, email, tagList )
+								Meteor.call('insertNewEmail', source_email_id, email, tagList )
 								emails_fetched++
 							})
 							//-start-insert status last inserted email id to db

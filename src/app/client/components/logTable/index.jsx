@@ -64,14 +64,15 @@ export default class LogTable extends React.Component{
   render(){
     console.log(this.props.log)
     let logs=this.props.log.logs
+    console.log(logs,"hhhhhhhhhhhhhhhhhhhhhhhhhh")
     if(this.state.emailList.length==0){
       this.state.emailList.push(<MenuItem primaryText="Show all logs" onTouchTap={()=>this.onSelectingAll()}/>)
     }
     _.map(logs,(log,i)=>{
-      if(_.includes(this.state.emails,log.candidateEmail.username)==false){
-        this.state.emails.push(log.candidateEmail.username)
+      if(_.includes(this.state.emails,log.username)==false){
+        this.state.emails.push(log.username)
         this.state.emailList.push(
-             <MenuItem primaryText={log.candidateEmail.username} onTouchTap={()=>this.onSelectingId(log.candidateEmail.username)}/>
+             <MenuItem primaryText={log.username} onTouchTap={()=>this.onSelectingId(log.username)}/>
           );
        }
     }) 
@@ -90,7 +91,7 @@ export default class LogTable extends React.Component{
         self.state.logList.push(
         <Step key={i}>
             <StepButton onTouchTap={() => self.setState({stepIndex: i})} style={{cursor:'pointer'}}>
-              <div>{logs[i].candidateEmail.username}</div>&nbsp;&nbsp;&nbsp;
+              <div>{logs[i].username}</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({logs[i].created_on.toString()})</div>
             </StepButton>
             <StepContent style={{marginTop:'5px'}}>
@@ -109,11 +110,11 @@ export default class LogTable extends React.Component{
       })
     }else{
       _.map(logs,(log,i)=>{
-        if(self.state.current_email==log.candidateEmail.username){
+        if(self.state.current_email==log.username){
           this.state.logList.push(
         <Step key={i}>
             <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
-              <div>{log.candidateEmail.username}</div>&nbsp;&nbsp;&nbsp;
+              <div>{log.username}</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({log.created_on.toString()})</div>
             </StepButton>
             <StepContent style={{marginTop:'5px'}}>

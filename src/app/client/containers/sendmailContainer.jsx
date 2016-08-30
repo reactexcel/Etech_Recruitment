@@ -22,6 +22,7 @@ class SendMails extends React.Component {
     render(){
         return(
         	<div>
+                <Header {...this.props} position={0} altr={"Email Templates"}/>
                 <SendEmail {...this.props} />
         	</div>
         )

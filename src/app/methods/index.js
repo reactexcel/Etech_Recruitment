@@ -16,29 +16,30 @@ Meteor.methods({
     })
   },
   'log.insert':function(action_type,user_id,details){
+    let username=Meteor.users.findOne({"_id": user_id})
     let logId = Logs.insert({
       action_type:action_type,
       user_id:user_id,
       details:details,
+      username:username.username,
       created_on:new Date()
     });
     let logDisplay={
       logId:logId,
       user_id:user_id,
       action_type:action_type,
-      details:details
+      details:details,
+      username:username.username
     }
     return logDisplay
   },
   'getlogsToDisplay' : function(){
     var allLogs = Logs.find( {}, {sort: {created_on: -1}}).fetch()
+    console.log("in method")
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){
         let created_on = log.created_on
         log.created_on = moment(created_on).format("DD/MM/YYYY")
-        let candidateEmail = log.candidateEmail
-        log.candidateEmail=Meteor.users.findOne({"_id": log.user_id})
-        console.log(log.candidateEmail)
         return log
       })
     }
