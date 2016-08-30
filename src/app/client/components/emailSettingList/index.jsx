@@ -42,7 +42,6 @@ export default class EmailSettingList extends React.Component {
       "open" : true,
       "title": "Testing for Email: "+ email,
     });
-    this.flag++;
   };
 
   handleClose () {
@@ -70,14 +69,12 @@ export default class EmailSettingList extends React.Component {
     }
   }
   render() {
-    console.log(this.props);
-    this.flag++;
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
-                    if(typeof row.smtp == 'undefined'){
-                     rowdata.push(row)
-                    }
-                    })
+        if(typeof row.smtp == 'undefined'){
+          rowdata.push(row)
+        }
+      })
     return (
       <div>
         <div className="row">

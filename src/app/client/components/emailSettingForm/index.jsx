@@ -7,6 +7,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import _ from 'lodash';
 import CircularProgress from 'material-ui/CircularProgress';
 import Snackbar from 'material-ui/Snackbar';
+import Dialog from 'material-ui/Dialog';
 
 const style={
   "formInput":{
@@ -34,7 +35,9 @@ export default class EmailSettingForm extends React.Component {
       "label": "Save",
       "edit": 0,
       "disable":false,
-      show: true
+      "open" : false,
+      "title": "",
+      show:false,
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -49,7 +52,19 @@ export default class EmailSettingForm extends React.Component {
     }
     this.testDetails = this.testDetails.bind(this);
   }
+  handleOpen (email) {
+    this.setState({
+      "open" : true,
+      "title": "Testing for Email: "+ email,
+    });
+  };
 
+  handleClose () {
+    this.setState({
+      "open" : false,
+      "title": "",
+    });
+  };
   update(row, label) {
     this.setState({
       "emailId": row.emailId || "",
@@ -98,10 +113,17 @@ export default class EmailSettingForm extends React.Component {
     }
   }
 
+  componentWillUpdate () {
+    if(this.props.uiLoading && this.state.open){
+      this.handleClose () ;
+    }
+  }
+
   testDetails () {
     if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
             && this.state.encrypt.length)){
+     this.handleOpen(this.state.emailId);
      this.props.onTestDetails({
       "emailId": this.state.emailId ,
       "password": this.state.password ,
@@ -110,7 +132,7 @@ export default class EmailSettingForm extends React.Component {
       "encrypt": this.state.encrypt,
       "status": 0,
       status_last_fetch_details: '',
-      '_id': 0,
+        "_id": this.state._id || undefined
       }).then((data)=> {
       if(data == -1){
         this.setState({testDetails: false})
@@ -282,10 +304,25 @@ export default class EmailSettingForm extends React.Component {
           </Paper>
           <Snackbar
             open={this.state.testDetails}
-            message={"Checking credentials"}
-            autoHideDuration={4000}
+            message={!this.props.uiLoading ?"": "Done!"}
+            autoHideDuration={2000}
             onRequestClose = { () =>{ this.setState({testDetails:false})}}
             />
+        </div>
+        <div>
+          <Dialog
+            title={this.state.title}
+            modal={true}
+            open={this.state.open}
+            onRequestClose={this.handleClose}
+            children={
+              <CircularProgress size={1} />
+            }
+            bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+            titleClassName = "text-center text-muted"
+            titleStyle={{"color": "#666"}}
+            contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
+            ></Dialog>
         </div>
       </div>
     );

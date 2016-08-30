@@ -11,7 +11,6 @@ let initialState = {
 }
 
 export function inbox( state = Immutable.Map(initialState), action ){
-	console.log(action.payload);
     if( action.type == 'ACTION_SUCCESS_INBOX' ){
 		return state.set('emails', action.payload.emails )
         .set('previous_page', action.payload.previous_page )
