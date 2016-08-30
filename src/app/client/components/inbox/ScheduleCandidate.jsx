@@ -62,13 +62,11 @@ class ScheduleCandidate extends React.Component {
            if(template._id == templateId){
             let newContent=_.replace(template.content, "defaultDate", this.state.scheduledDate);
                 newContent=_.replace(newContent, "defaultTime", this.state.scheduledTime);
-            console.log(newContent,"changedddddddddddddddddd")
             this.setState({
                 currentTemplatName:template.name,
                 currentSubject:template.subject,
                 currentContent:newContent
             })
-            console.log(template.name,template.content,"hhhhhhhhhhhhhhhhhhhhhh")
                this.state.pickedTemplate.push(
                 <div className="row">
                 <div className='col-xs-12' key={key}>

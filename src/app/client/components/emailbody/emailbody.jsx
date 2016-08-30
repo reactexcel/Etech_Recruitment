@@ -17,6 +17,8 @@ import _ from 'lodash';
 import MyCard from './MyCard';
 
 import LinearProgress from 'material-ui/LinearProgress';
+import IconButton from 'material-ui/IconButton';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 const styles = {
   errorStyle: {
     textAlign:'left',
@@ -86,7 +88,6 @@ componentWillReceiveProps(props){
   }
 
 render(){
-  console.log(this.props.params.id,"hhhhhhhhhhhhhhh")
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
@@ -110,17 +111,9 @@ render(){
       />,
     ];
 	return(
-            <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
-    <div className="col-xs-2" style={{ "padding": "0px", "backgroundColor": "#fff", "height": "100%", "position": "absolute"}}>
-
-        <Menu desktop={true}>
-            <MenuItem primaryText={ <Link to="inbox">Inbox</Link>
-            } />
-            <MenuItem primaryText="Trash" />
-        </Menu>
-    </div>
-    <div className="col-xs-10" style={{ "float": "right"}}>
-        <div style={{ "marginBottom": "50px", "marginTop": "-15px"}}>
+  <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
+    <div className="col-xs-12 col-sm-12" style={{ "float": "right"}}>
+        <div style={{ "marginBottom": "50px", "marginTop": "-15px", paddingRight:'18px'}}>
             <nav aria-label="Page navigation">
                 <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
                     <li  onClick={ () => {
@@ -141,6 +134,14 @@ render(){
                       }
                     }} style={{cursor:'pointer'}}><span aria-hidden="true">{this.rejectText}</span></li>
                     <li  onClick={ () => this.props.schedule(data._id)} style={{cursor:'pointer'}}><span aria-hidden="true">Schedule</span></li>
+                </ul>
+                <ul className="pagination pull-left" style={{ "marginBottom": "6px"}}>
+                  <li>
+                    <IconButton tooltip='Back To Inbox' tooltipPosition="center" iconStyle={{color:"lightgray"}}
+                      onClick={() => {this.props.router.push('/inbox')}}
+                      >
+                      <NavigationArrowBack />
+                    </IconButton></li>
                 </ul>
             </nav>
         </div>

@@ -13,7 +13,7 @@ class EmailSettingContainer extends React.Component {
       if (!Meteor.userId()) {
         this.props.router.push('/login');
       }
-  }    
+  }
   render() {
     return (
       <div>
@@ -26,6 +26,7 @@ EmailSettingContainer.propTypes = {
   onFetchSettings: React.PropTypes.func.isRequired,
   onSaveSettings: React.PropTypes.func.isRequired,
   onTestDetails: React.PropTypes.func.isRequired,
+  onRemoveDetails: React.PropTypes.func.isRequired,
   logging: React.PropTypes.func.isRequired,
   emailSetting: React.PropTypes.any.isRequired,
 };
@@ -34,7 +35,9 @@ EmailSettingContainer.propTypes = {
 const mapStateToProps = (state) =>{
   state = state.toJS();
   return {
-    emailSetting : state.entities.emailSetting
+    emailSetting : state.entities.emailSetting,
+    testDetails : state.entities.testDetails,
+    uiLoading: state.ui.loading
   }
 }
 
@@ -47,7 +50,10 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(action.onSaveSettingsToDB(detail));
       },
       onTestDetails: (detail) =>{
-        dispatch(action.onTestDetails(detail));
+        return dispatch(action.onTestDetails(detail));
+      },
+      onRemoveDetails: (m_id) =>{
+        dispatch(action.onRemoveDetails(m_id));
       },
       logging: (action, id , detail) =>{
         dispatch(addLogs(action, id , detail));

@@ -16,8 +16,8 @@ class SendMails extends React.Component {
     componentWillMount(){
         if (!Meteor.userId()) {
         this.props.router.push('/login');
-        }       
-    }   
+        }
+    }
 
     render(){
         return(

@@ -17,6 +17,7 @@ import EmailSettingContainer from './containers/configurationContainer/emailSett
 import EmailSendingContainer from './containers/configurationContainer/emailSending';
 import AppContainer from './containers';
 import Page_ForgotPassword from './containers/ForgotPassword'
+import ChangePasswordContainer from './containers/changePassword'
 import Page_Home from './containers/Home'
 import Page_Inbox from './containers/Inbox'
 import DisplayContainer from './containers/displayLogs'
@@ -30,7 +31,7 @@ export let isMonitorAction;
 const logger = createLogger();
 injectTapEventPlugin();
 
-Meteor.startup( 
+Meteor.startup(
   () => {
     let store = createStore(reducer,Immutable.Map({}),compose(
       applyMiddleware(thunk, logger),
@@ -48,13 +49,14 @@ Meteor.startup(
               <Route path="login" component={LoginContainer}></Route>
               <Route path="register" component={RegisterContainer}></Route>
               <Route path="forgotpassword" component={Page_ForgotPassword}> </Route>
+              <Route path="changepassword" component={ChangePasswordContainer}></Route>
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/email-server-setting" component={EmailSettingContainer}></Route>
                 <Route path="/config/tag-setting" component={InboxTagContainer}></Route>
                 <Route path="/config/email-sending" component={EmailSendingContainer}></Route>
+                <Route path="/config/email-templates" component={SendMails}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
-              <Route path="sendmail" component={SendMails}></Route>
               <Route path="/display" component={DisplayContainer}>
                  <Route path="/display/logs" component={LogsContainer}></Route>
               </Route>

@@ -7,6 +7,7 @@ import EmailsStore from 'app/collections/EmailsStore'
 
 Meteor.methods({
   getEmail : function(email_id){
+    EmailsStore.update({_id: email_id},{$set :{m_read_status: 1}});
     var emailData = EmailsStore.find({_id : email_id}).fetch()
     if( emailData.length > 0 ){
       emailData = _.map( emailData, function( email ){
@@ -46,4 +47,3 @@ Meteor.methods({
     }
   },
 });
-

@@ -9,6 +9,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 const classNames = require('classnames');
 import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = {
   propContainer: {
@@ -27,14 +28,35 @@ export default class SendEmailSettingList extends React.Component {
     this.state ={
       "open" : false,
       "title": "",
+      "snackbar":false,
+      "msg":'',
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.delete = this.delete.bind(this);
     this.flag = 0;
   }
-
+    componentWillUpdate () {
+    if (this.flag % 4 == 0) {
+      this.handleClose();
+      this.flag = 0 ;
+    }
+  }
+  delete(row_id){
+    this.props.onDeleteRow(row_id).then((responce)=>{
+      this.setState({
+        snackbar:true,
+        msg:responce.toString(),
+      })
+    }).catch((err)=>{
+      this.setState({
+        snackbar:true,
+        msg:err.toString(),
+      })
+    })
+  }
   handleOpen (email) {
     this.setState({
       "open" : true,
@@ -53,17 +75,32 @@ export default class SendEmailSettingList extends React.Component {
   select(row, checked){
     this.props.selectedRow(row, checked);
   }
-  checkMailServer( row, event ){
+checkMailServer( row, event ){
     event.stopPropagation();
-    this.handleOpen(row.emailId)
-    this.props.onTestDetails( row );
+    this.handleOpen(row.smtp.emailId);
+    this.props.onTestDetails( row ).then( (response) => {
+      this.handleClose()
+      if(response){
+      this.setState({
+        snackbar:true,
+        msg:'Email server test completed successfully',
+      })
+      }else{
+       this.setState({
+        snackbar:true,
+        msg:'Email server test failed',
+      }) 
+      }
+    }).catch((err)=>{
+      this.handleClose()
+      this.setState({
+      snackbar:true,
+      msg:'Email server setting test failed. Please correct your data',
+      })
+    });
   }
-  componentWillUpdate () {
-    if (this.flag % 4 == 0) {
-      this.handleClose();
-      this.flag = 0 ;
-    }
-  }
+
+
   render() {
     this.flag++;
     let rowdata = [];
@@ -103,6 +140,7 @@ export default class SendEmailSettingList extends React.Component {
                     <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold"}}>Encrypt</TableRowColumn>
                     <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
                     <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test </TableRowColumn>
+                    <TableRowColumn tooltip="Delete" style={{"fontWeight": "bold"}}>Delete </TableRowColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -125,6 +163,7 @@ export default class SendEmailSettingList extends React.Component {
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id)}/></TableRowColumn> 
                     </TableRow>
                     ))}
                 </TableBody>
@@ -144,6 +183,12 @@ export default class SendEmailSettingList extends React.Component {
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
                 ></Dialog>
+                <Snackbar
+          open={this.state.snackbar}
+          message={this.state.msg}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
             </div>
           </div>
         </div>

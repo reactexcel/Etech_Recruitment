@@ -64,7 +64,7 @@ class ConfigurationContainer extends React.Component {
       if (!Meteor.userId()) {
         this.props.router.push('/login');
       }
-  }    
+  }
   handleToggel(){
     this.setState({open: !this.state.open});
   }
@@ -78,7 +78,7 @@ class ConfigurationContainer extends React.Component {
   }
 
   render() {
-    return (
+    return ( 
         <div>
           <Header {...this.props} position={2} altr="Settings" />
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>

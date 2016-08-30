@@ -18,7 +18,7 @@ export default class SendEmailSetting extends React.Component {
   }
 
   componentWillMount(){
-    this.props.onFetchSettings();
+    this.props.onFetchSettings()
   }
   selectedRow(row, checked){
     if(checked)
@@ -27,7 +27,6 @@ export default class SendEmailSetting extends React.Component {
       this.refs.form.update([], "Save")
     }
   }
-
   clear(){
     this.refs.form.clear();
   }
@@ -41,17 +40,14 @@ export default class SendEmailSetting extends React.Component {
               ref="form"
               onSaveSettings={this.props.onSaveSettings}
               emailSetting = {[]}
+              onTestDetails = {this.props.onTestDetails}
               logging = {this.props.logging}
               />
           </div>
         </div>
         <div className="row">
           <div className="col-sm-12 col-lg-12 col-md-12">
-            <SendEmailSettingList
-              emailSetting={this.props.emailSetting}
-              selectedRow={this.selectedRow}
-              onTestDetails={this.props.onTestDetails}
-              clear={this.clear}
+            <SendEmailSettingList selectedRow={this.selectedRow} {...this.props}
               />
           </div>
         </div>

@@ -21,6 +21,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import CircularProgress from 'material-ui/CircularProgress';
 import ScheduleCandidate from './ScheduleCandidate'
 import Subheader from 'material-ui/Subheader'
+import DefaultPage from './defaultPage'
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -42,6 +43,9 @@ class EmailsList extends React.Component {
         this.updateEmailIdList= this.updateEmailIdList.bind(this);
         this.submitreason=this.submitreason.bind(this);
         this.submitMail=this.submitMail.bind(this);
+        this.tagName = '';
+        this.tagColor = '';
+        this.selectedTag = '';
     }
     componentDidMount(){
     }
@@ -92,6 +96,9 @@ class EmailsList extends React.Component {
       this.handleClose()
     }
     onClick ( obj ) {
+      this.tagName = obj.t_name;
+      this.tagColor = obj.t_color;
+      this.selectedTag = obj.t_id;
       this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
     }
     updateEmailIdList(emailId,check){
@@ -120,7 +127,9 @@ class EmailsList extends React.Component {
             return (
                 <div key={email._id}>
 
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag} router={this.props.router}/>
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
+                      router={this.props.router}
+                      uiLoading={this.props.uiLoading}/>
                 </div>
             )
         })
@@ -174,7 +183,10 @@ class EmailsList extends React.Component {
                             <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
                         }/>
                         <MenuItem  primaryText={
-                            <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
+                              <FlatButton
+                                label={'Inbox ' + count_unread_emails}
+                                onTouchTap= { () => this.onClick( {t_id : ''}) }
+                                ></FlatButton>
                         }/>
                       <Subheader>Tags</Subheader>
                         {_.map(this.props.tags, (t) => {
@@ -187,6 +199,7 @@ class EmailsList extends React.Component {
                             key={t._id}
                             primaryText={
                                 <FlatButton
+                                  style={{textDecoration: this.selectedTag == t._id?'underline':'none'}}
                                   icon={
                                     <Avatar
                                       backgroundColor={t.color}
@@ -199,7 +212,7 @@ class EmailsList extends React.Component {
                                   label={t.name + " ("+ unread_mail+")"}
                                   ></FlatButton>
                             }
-                            onTouchTap={(e) => this.onClick({"t_id": t._id}, e)}
+                            onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                            />
 
                        })}
@@ -207,7 +220,7 @@ class EmailsList extends React.Component {
                     </Menu>
 
                     <hr/>
-                      {emails.length === 0?
+                      {this.props.tags.length === 0?
                         <div style={{'marginLeft':"10%"}}>
                             <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
                             <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
@@ -239,7 +252,7 @@ class EmailsList extends React.Component {
                             </ul>
                             {      }
                             <ul className="pagination pull-right">
-                              <li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>
+                              {next_page_num !== '' && emailsList.length !== 0?<li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>:''}
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
@@ -274,8 +287,7 @@ class EmailsList extends React.Component {
                       })
                     }}
                     />
-                    
-                    {emails.length === 0?
+                    { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>
                           <CircularProgress size={1.5} />
@@ -283,9 +295,13 @@ class EmailsList extends React.Component {
                         <div className="text-center" style={{color:'lightgray',textAlign:"center"}}><h4>Loading please wait ... </h4></div>
                       </div>
                       :
-                      <List>
-                        {emailsList}
-                      </List>
+                      (
+                        emailsList.length == 0?
+                          <DefaultPage name={this.tagName} color={this.tagColor}/>:
+                          <List>
+                            {emailsList}
+                          </List>
+                      )
                     }
                   </div>
                   <Snackbar

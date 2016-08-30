@@ -4,6 +4,8 @@ export const FETCH_SETTINGS_FROM_DB = "FETCH_SETTINGS_FROM_DB";
 export const SAVE_SETTINGS_TO_DB = "SAVE_SETTINGS_TO_DB";
 export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
 export const TEST_DETAILS = "TEST_DETAILS";
+export const LOADING = "LOADING";
+export const REMOVE_DETAILS = "REMOVE_DETAILS";
 
 export const FETCH_SMTP_SETTINGS = "FETCH_SMTP_SETTINGS";
 
@@ -21,6 +23,14 @@ const updateSettingsToDB = (details) => {
 
 const testDetails = (_id, status) => {
   return createAction(TEST_DETAILS)({_id, status});
+}
+
+const removeDetails = (_id, status) => {
+  return createAction(REMOVE_DETAILS)();
+}
+
+const loading = (bool) => {
+  return createAction('LOADING')(bool);
 }
 
 export function onFetchSettingsFromDB(){
@@ -60,11 +70,29 @@ export function onSaveSettingsToDB (detail) {
 export function onTestDetails (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
+        dispatch(loading(true));
       Meteor.call('checkMailServer',detail,(err,status) => {
           if(err){
             reject(err);
           }else{
             dispatch(testDetails(detail._id,status))
+            dispatch(loading(true));
+            resolve(status);
+          }
+      });
+    });
+  }
+}
+
+export function onRemoveDetails (m_id) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('removeMailServer',m_id,(err,status) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(removeDetails());
+            dispatch(onFetchSettingsFromDB());
             resolve();
           }
       });
@@ -101,6 +129,38 @@ export function fetchSMTPSettings(){
           }else{
             dispatch(actionFetchSMTPSettings(Data));
             resolve();
+          }
+      });
+    });
+  }
+}
+
+
+export function deleteSMTPRow(row_id){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('removeMailServer',row_id,(err, Data) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(fetchSMTPSettings());
+            resolve('Setting deleted');
+          }
+      });
+    });
+  }
+}
+
+
+export function onTestDetailsSMTP (detail) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+        Meteor.call('checkSMTPMailServer',detail,(err,resp) => {
+          if(err){
+            reject(err)
+          }else{
+            dispatch(fetchSMTPSettings());
+            resolve(resp)
           }
       });
     });

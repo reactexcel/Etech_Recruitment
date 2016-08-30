@@ -47,8 +47,8 @@ export default class MyCard extends React.Component {
               expandable={i==0?false:true}
               children={
                   <div className="row">
-                      <div className={typeof email.attachments == 'undefined'?"col-sm-12":"col-sm-8"} dangerouslySetInnerHTML={{__html: email.body }}></div>
-                      <div className={typeof email.attachments == 'undefined'?"hidden":"col-sm-4"} style={{height: '100vh'}}>
+                      <div className={typeof email.attachments == 'undefined'?"col-sm-12":"col-sm-5"} dangerouslySetInnerHTML={{__html: email.body }}></div>
+                      <div className={typeof email.attachments == 'undefined'?"hidden":"col-sm-7"} style={{height: '100vh'}}>
                         {this.state.show?<LinearProgress mode="indeterminate" />:""}
                           <iframe
                             src={typeof email.attachments == 'undefined'?'':email.attachments[0].link}
