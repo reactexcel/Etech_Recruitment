@@ -30,3 +30,4 @@ http@1.2.9
 momentjs:moment
 shell-server
 zuuk:stale-session
+percolate:synced-cron

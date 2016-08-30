@@ -169,140 +169,97 @@ class SendEmail extends React.Component {
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>
                     Email Body : </span>
                     <span style={{display:'block',width:'95%',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}} dangerouslySetInnerHTML={{__html:data.content }}></span></div>
-                    
+
                     <div style={{textAlign:'right'}}>
                     <FlatButton
                     style={{margin:'0px'}}
                     label='Edit'
                     onClick={()=>{this.editTemplate(data)}}
-                    primary={true} 
+                    primary={true}
                     ></FlatButton>
                     <FlatButton
                     style={{margin:'0px'}}
                     label='Delete'
                     onClick={()=>{this.deleteTemplate(data._id)}}
-                    primary={true} 
+                    primary={true}
                     ></FlatButton>
                     </div>
                     </div>
                 </div>)
         })
         return(
-            <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
-                    <Menu>
-                        <MenuItem  primaryText={
-                            <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
-                        }/>
-                        <MenuItem  primaryText={
-                            <Link to="/inbox" style={{"padding":"0px 0px"}}>Inbox {count_unread_emails}</Link>
-                        }/>
-                        <div >
-                        {_.map(this.props.tags, (t) => (
-                            <MenuItem
-                            key={t._id}
-                            primaryText={
-                                <FlatButton
-                                  icon={
-                                    <Avatar
-                                      backgroundColor={t.color}
-                                      style={{color:"#fff"}}
-                                      size={20}
-                                      children={
-                                        _.upperCase(t.name[0])
-                                      }></Avatar>
-                                  }
-                                  label={t.name}
-                                  ></FlatButton>
-                            }
-                            onTouchTap={() => this.onClick({"t_id": t._id})}
-                           />
-                        ))}
-                      </div>
-                    </Menu>
-                    <hr/>
-                </div>
-                <div className="col-xs-10" style={{ "float":"right"}}>
+                <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
                     <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>
                     <div className="col-xs-12">
-            <div className='row' style={{background: '#fff'}}>
-                <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="col-xs-12">
-                       <b><i>Create New Template</i></b> <br /> 
+                      <div className='row' style={{background: '#fff'}}>
+                        <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
+                          <div className="col-xs-12">
+                            <b><i>Create New Template</i></b> <br />
+                          </div>
+                        </div>
+                        <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
+                          <TextField
+                            ref='Name'
+                            floatingLabelText="Template Name"
+                            fullWidth={true}
+                            errorText={this.state.errName}
+                            floatingLabelFixed={true}
+                            />
+                          <TextField
+                            ref='subject'
+                            floatingLabelText="Subject"
+                            fullWidth={true}
+                            errorText={this.state.errSub}
+                            floatingLabelFixed={true}
+                            />
+                          <br />
+                        </div>
+
+                        <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
+                          <MyEditor data={this.state.content} content={(mail)=>{
+                              this.setState({content:mail})
+                            }}/>
+                        </div>
+                        <RaisedButton
+                          style={{float:'right',margin:'20px'}}
+                          label='Back'
+                          onClick={this.gotoTmppage.bind(this)}
+                          primary={true}
+                          ></RaisedButton>
+                        <RaisedButton
+                          style={{float:'right',margin:'20px'}}
+                          label='save'
+                          onClick={this.saveTemplate}
+                          primary={true}
+                          ></RaisedButton>
+                      </div>
                     </div>
-                </div>
-                <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
-                    <TextField
-                    ref='Name'
-                    floatingLabelText="Template Name"
-                    fullWidth={true}
-                    errorText={this.state.errName}
-                    floatingLabelFixed={true}
-                    />
-                    <TextField
-                    ref='subject'
-                    floatingLabelText="Subject"
-                    fullWidth={true}
-                    errorText={this.state.errSub}
-                    floatingLabelFixed={true}
-                    />
-                    <br />  
-                </div>
-
-                <div className="col-xs-12" style={{marginBottom: '15px',borderBottom: '1px solid gainsboro'}}>
-                <MyEditor data={this.state.content} content={(mail)=>{
-                    this.setState({content:mail})
-                }}/>
-                </div>
-                  <RaisedButton
-                    style={{float:'right',margin:'20px'}}
-                    label='Back'
-                    onClick={this.gotoTmppage.bind(this)}
-                    primary={true} 
-                    ></RaisedButton>
-                 <RaisedButton
-                    style={{float:'right',margin:'20px'}}
-                    label='save'
-                    onClick={this.saveTemplate}
-                    primary={true} 
-                    ></RaisedButton>
-            </div>
-
-        </div>
-        </div>
-        <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
+                  </div>
+                  <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
-            <div className='row'>
-            <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'28px'}}>
-            <RaisedButton
-                    style={{float:'right',margin:'0px'}}
-                    label='Add New Template'
-                    onClick={this.openCreatetemplate}
-                    primary={true} 
-                    ></RaisedButton>
-            </div>
-            <div className={this.state.loader} style={style.container}>
-                <RefreshIndicator
-      size={70}
-      left={10}
-      top={0}
-      status="loading"
-      style={style.refresh}
-    />
-    </div>
-                {templates}
-            </div>
-          </div>
-        </div>
-         <Snackbar
-                      open={this.state.snackbarOpen}
-                      message={this.state.snackbarmsg}
-                      autoHideDuration={3000}
-                      onRequestClose={this.handleRequestClose}
+                      <div className='row'>
+                        <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'28px'}}>
+                          <RaisedButton
+                            style={{float:'right',margin:'0px'}}
+                            label='Add New Template'
+                            onClick={this.openCreatetemplate}
+                            primary={true}
+                            ></RaisedButton>
+                        </div>
+                        <div className={this.state.loader} style={style.container}>
+                          <CircularProgress size={1.5} />
+                        </div>
+                        {templates}
+                      </div>
+                    </div>
+                  </div>
+                  <Snackbar
+                    open={this.state.snackbarOpen}
+                    message={this.state.snackbarmsg}
+                    autoHideDuration={3000}
+                    onRequestClose={this.handleRequestClose}
                   />
                 </div>
-            </div>
-        
         );
     }
 }

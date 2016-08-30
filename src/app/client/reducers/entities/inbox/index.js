@@ -6,7 +6,8 @@ let initialState = {
 	previous_page : '',
 	next_page : '',
     emails_fetch_status : [],
-    count_unread_emails : ""
+    count_unread_emails : "",
+		tag:""
 }
 
 export function inbox( state = Immutable.Map(initialState), action ){
@@ -15,6 +16,7 @@ export function inbox( state = Immutable.Map(initialState), action ){
         .set('previous_page', action.payload.previous_page )
         .set('next_page', action.payload.next_page )
         .set('count_unread_emails', action.payload.count_unread_emails )
+        .set('tag', action.payload.tag )
 
     }else if( action.type == 'ACTION_EMPTY_INBOX' ){
 

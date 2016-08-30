@@ -18,7 +18,7 @@ import Checkbox from 'material-ui/Checkbox';
 import TagMenu from '../../components/tagMenu';
 import _ from 'lodash';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
-import ActionFavorite from 'material-ui/svg-icons/action/favorite';
+import ActionDone from 'material-ui/svg-icons/action/done';
 class EmailListItem extends React.Component {
 
     constructor( props ){
@@ -60,8 +60,7 @@ class EmailListItem extends React.Component {
           if(t._id == this.props.email.tags[0] )
             mail_left_border_color = t.color;
       })
-      let avatar1 = <Avatar backgroundColor={mail_left_border_color} color={darkBlack} style={{ "marginTop":"50%", "marginLeft":"30%"}} >{f_char}</Avatar>
-      let avatar = <div style={{ "borderLeft":`5px solid ${mail_left_border_color}`,'height' : '100%', 'left' : '0px',"top":"0px"}}>{avatar1}</div>
+      let avatar1 = <Avatar backgroundColor={mail_left_border_color} color={darkBlack} style={{"position":'absolute', marginTop:"-30%", marginLeft:"-40%"}} >{f_char}</Avatar>
 
       //----
       let primaryText = m_subject + ' - <i>' + email_date +'</i>'
@@ -92,10 +91,9 @@ class EmailListItem extends React.Component {
 
       return(
 
-          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`, "marginBottom":"0px"}} >
+          <div key={this.props.email._id}  style={{ "marginBottom":"0px"}} >
               <ListItem
-                style={{"marginBottom":"0px"}}
-                leftAvatar={avatar}
+                style={{"marginBottom":"0px","marginBottom":"4px", borderLeft:"5px solid "+mail_left_border_color , paddingBottom:"0px",  "backgroundColor": `${mail_bg_color}`}}
                 rightIcon={hasAttachment}
                 rightIconButton={
                   <div style={{left:"95%","top":"2%"}}>
@@ -104,6 +102,9 @@ class EmailListItem extends React.Component {
                 }
                 leftCheckbox={
                   <Checkbox
+                    style={{"marginTop":'1%'}}
+                    uncheckedIcon={avatar1}
+                    checkedIcon={<Avatar backgroundColor={mail_left_border_color} color={darkBlack} children={<ActionDone />} style={{"position":'absolute', marginTop:"-30%", marginLeft:"-40%"}} />}
                     onCheck={(e, check)=>{
                       if(check==true){
                         this.props.addEmailId()
@@ -130,10 +131,8 @@ class EmailListItem extends React.Component {
                   </p>
                 }
                 secondaryTextLines={2}
-                onClick={() => this.props.route.push(m_link)}
+                onClick={() => this.props.router.push(m_link)}
               />
-
-            <Divider inset={true} />
           </div>
 
       );

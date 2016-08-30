@@ -13,7 +13,7 @@ Meteor.methods({
 	update_first_status_last_fetch_details : function( mongoid ){
 		var dataToUpdate = {
   			'status_last_fetch_details' : {
-  				"last_email_id_fetch": 0*1,
+  			"last_email_id_fetch": 0*1,
 				"last_email_fetch_date" : ""
   			}
   		}
@@ -33,12 +33,14 @@ Meteor.methods({
 
 
   doUpdateEmailsStore: function ( mongoid ) {
+		console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
 	var todaysDate = moment(date).format("YYYY-MM-DD")
 
   	//check fog logged user
 	if( Meteor.user() == null ){
+		console.log("<<-->>", 'invalid user');
 		return {
 			'type' : 'INVALID_LOGIN',
 		}
@@ -48,6 +50,7 @@ Meteor.methods({
 	var checkSettings = Meteor.call('fetchSettings')
 
 	if( checkSettings.length == 0 ){
+			console.log("<<-->>", 'setting not found');
 		return {
 			'type' : 'SETTINGS_NOT_FOUND',
 		}
@@ -68,27 +71,24 @@ Meteor.methods({
 		}else{
 			var source_mongoid =  settings._id
 			var source_email_id = settings.emailId
-  			var source_email_password = settings.password
-  			var source_host = settings.server
-  			var source_port = settings.port
-  			var source_encryp = settings.encrypt
-
-  			var fetchingEmailsFromId = ''
+  		var source_email_password = settings.password
+  		var source_host = settings.server
+  		var source_port = settings.port
+  		var source_encryp = settings.encrypt
+  		var fetchingEmailsFromId = ''
 			var fetchingEmailsForDate = ''
-
-  			if( typeof settings.status_last_fetch_details != 'undefined' ){
-
+  		if( typeof settings.status_last_fetch_details != 'undefined' ){
   				var status_last_fetch_details = settings.status_last_fetch_details
 					fetchingEmailsFromId = status_last_fetch_details.last_email_id_fetch + 1
 					fetchingEmailsForDate = status_last_fetch_details.last_email_fetch_date
-				if( fetchingEmailsForDate == ''){
-					fetchingEmailsForDate = todaysDate
-				}
-  			}else{
-  				Meteor.call('update_first_status_last_fetch_details', source_mongoid )
+					if( fetchingEmailsForDate == ''){
+						fetchingEmailsForDate = todaysDate
+					}
+  		}else{
+  			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
 				fetchingEmailsFromId = ''
 				fetchingEmailsForDate = todaysDate
-  			}
+  		}
   			//----------------------------------------
 			var BASE_URL = config_ENV.IMAP_API_BASE_URL
 			var PARAMS = ""
@@ -105,14 +105,15 @@ Meteor.methods({
 			try {
 				var emails_fetched = 0
 				var emails_to_be_fetched = 0
-		    var result = HTTP.call("GET", API_URL );
+		    //var result = HTTP.call("GET", API_URL );
 				if( typeof result.content != 'undefined' ){
-		    	var json = JSON.parse( result.content )
+		    	var json = JSON.parse( '{ error: [], data: [] }' )
 					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
+					console.log("<<-->>", json);
 					if(json.data.length > 0 ){
 						TYPE = "SUCCESS"
 						if( json.data.length > 0 ){
-							var emails_to_be_fetched = json.data.count
+							var emails_to_be_fetched = json.data.length
 			    		var emails = json.data
 							var last_email_id = ''
 							var last_email_date = ''
@@ -142,7 +143,7 @@ Meteor.methods({
 						}
 		    	}else{
 		    		TYPE = "RESPONSE_ERROR"
-		    		MESSAGE = json
+		    		MESSAGE = json.error[0]
 		    	}
 		    }
 				return {
@@ -152,6 +153,7 @@ Meteor.methods({
 						'emails_to_be_fecthed' : emails_to_be_fetched
 		    	}
 		  	} catch (e) {
+					console.log("error -->-->-->", e);
 		    	return e ;
 		  	}
 			}
@@ -173,7 +175,6 @@ try{
 		var senderEmail = emailData.sender_mail
 		var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
 		if( checkExistingSenderEmail.length > 0 ){
-			console.log("user already exists");
 			var existingEmail = checkExistingSenderEmail[0]
 			var existingEmail_mongoid = existingEmail._id
 			var dataToUpdate = {
@@ -260,7 +261,8 @@ try{
 		emails : allEmails,
 		previous_page : previous_page,
 		next_page : next_page,
-		count_unread_emails : count_unread_emails
+		count_unread_emails : count_unread_emails,
+		tag: tag || "",
   	}
   },
 	'addTags': function( tagList, emailData){
@@ -280,5 +282,5 @@ try{
 			}
 		);
 		return emailData;
-	}
+	},
 });

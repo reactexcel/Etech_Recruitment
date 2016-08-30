@@ -49,9 +49,10 @@ export default class InboxTag extends React.Component {
      <div>
        <Dialog
          title="Add New TAG"
-         modal={true}
+         modal={false}
          open={this.state.open}
          onRequestClose={this.handleClose}
+         autoScrollBodyContent={true}
          children={
            <div>
             <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose}/>
@@ -104,7 +105,7 @@ export default class InboxTag extends React.Component {
              </div>
          }
          contentStyle={{padding:"0px" ,width: "40%"}}
-         bodyStyle={{padding:"0px opx"}}
+         bodyStyle={{padding:"0px opx"}}     
          />
      </div>
    );

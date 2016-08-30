@@ -17,7 +17,7 @@ class ConfigurationContainer extends React.Component {
       if (!Meteor.userId()) {
         this.props.router.push('/login');
       }
-  }    
+  }
   handleToggel(){
     this.setState({open: !this.state.open});
   }
@@ -38,9 +38,8 @@ class ConfigurationContainer extends React.Component {
             <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
               <MenuItem  primaryText="IMAP server setting" style={{}} onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}/>
               <MenuItem  primaryText="Tag Setting" onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}/>
-              <MenuItem  primaryText="Database setting" value="config/emailSetting" onTouchTap={this.redirect}/>
               <MenuItem  primaryText="Email Sending" onTouchTap={()=>{this.props.router.push("/config/email-sending");}}/>
-              <MenuItem  primaryText="Email Templates" onTouchTap={()=>{this.props.router.push("/sendmail")}} />
+              <MenuItem  primaryText="Email Templates" onTouchTap={()=>{this.props.router.push("/config/email-templates")}} />
             </Menu>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
