@@ -43,6 +43,8 @@ export default class MenuDrawer extends React.Component {
         <Divider/>
         <MenuItem onTouchTap={()=>{this.handleClose("/config")}}>Settings</MenuItem>
         <Divider/>
+        <MenuItem onTouchTap={()=>{this.handleClose("/changepassword")}}>Change Password</MenuItem>
+        <Divider/>
         <MenuItem onTouchTap={()=>{this.logout("/login")}}>Logout</MenuItem>
         <Divider/>
       </Drawer>

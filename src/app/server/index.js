@@ -19,6 +19,7 @@ Meteor.startup(function () {
   // Configure MAIL_URL
   // config_ENV.emailServer._url() generate MAIL_URL as per the given information in config file under emailServer .
   process.env.MAIL_URL = config_ENV.emailServer._url();
+
   /*var i = 0;
   SyncedCron.add({
     name: 'inbox_mail',

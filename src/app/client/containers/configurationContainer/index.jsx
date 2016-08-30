@@ -31,12 +31,12 @@ class ConfigurationContainer extends React.Component {
   }
 
   render() {
-    return (
+    return ( 
         <div>
           <Header {...this.props} position={2} altr="Settings" />
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
             <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
-              <MenuItem  primaryText="IMAP server setting" onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}/>
+              <MenuItem  primaryText="IMAP server setting" style={{}} onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}/>
               <MenuItem  primaryText="Tag Setting" onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}/>
               <MenuItem  primaryText="Email Sending" onTouchTap={()=>{this.props.router.push("/config/email-sending");}}/>
               <MenuItem  primaryText="Email Templates" onTouchTap={()=>{this.props.router.push("/config/email-templates")}} />
