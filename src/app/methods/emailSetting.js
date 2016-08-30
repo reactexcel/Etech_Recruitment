@@ -69,7 +69,7 @@ Meteor.methods({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
-        "to": "atul@excellencetechnologies.in",
+        "to": detail.smtp.emailId,
         "from": detail.smtp.emailId,
         "subject": 'This is test mail',
         'text':'SMTP mail server testing completed'

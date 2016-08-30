@@ -36,8 +36,7 @@ export default class SendEmailSettingForm extends React.Component {
       disable: false,
       "open" : false,
       "title": "",
-      "snackbar":false,
-      "msg":'',
+      
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -91,7 +90,6 @@ export default class SendEmailSettingForm extends React.Component {
       "open" : true,
       "title": "Testing for Email: "+ email,
     });
-    this.flag++;
   };
 
   handleClose () {
@@ -130,22 +128,13 @@ export default class SendEmailSettingForm extends React.Component {
       this.handleClose()
      if(response){
       this.callSaveSetting(row)
-      this.setState({
-        snackbar:true,
-        msg:'Email server setting saved & tested successfully.',
-      })
+      alert('Email server setting saved & tested successfully. \n Test email sent to your mail id ')
      }else{
-      this.setState({
-        snackbar:true,
-        msg:'Email server setting test failed. Please correct your data',
-      })
+      alert('Email server setting test failed. Please correct your data')
      }
     }).catch((err)=>{
       this.handleClose()
-      this.setState({
-        snackbar:true,
-        msg:'Email server setting test failed. Please correct your data',
-      })
+      alert('Email server setting test failed. Please correct your data')
     });
     }
   }
@@ -291,12 +280,7 @@ export default class SendEmailSettingForm extends React.Component {
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
                 ></Dialog>
-                <Snackbar
-          open={this.state.snackbar}
-          message={this.state.msg}
-          autoHideDuration={4000}
-          onRequestClose={this.handleRequestClose}
-        />
+                
         </div>
       </div>
     );
