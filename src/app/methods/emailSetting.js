@@ -33,17 +33,23 @@ Meteor.methods({
         "&encryp="+detail.encrypt+
         "&email_id="+ (detail.status_last_fetch_details.last_email_id_fetch || 1);
 	  const API_URL = BASE_URL + PARAMS
-    let result = HTTP.call("GET", API_URL );
-    let json = JSON.parse( result.content );
-    if( typeof json.data == "undefined"){
+    try{
+      let result = HTTP.call("GET", API_URL );
+      let json = JSON.parse( result.content );
+      if( typeof json.data == "undefined"){
+        Config.update({"_id": detail._id},{$set:{"status": -1}});
+        return(-1);
+      }
+      else if( typeof json.data != 'undefined' && json.data.length > 0 ){
+        Config.update({"_id": detail._id},{$set:{"status": 1}});
+        return 1;
+      }
+    } catch (exception){
+      console.log(exception);
       Config.update({"_id": detail._id},{$set:{"status": -1}});
-      return(-1);
+      return -1;
     }
-    else if( typeof json.data != 'undefined' && json.data.length > 0 ){
-      Config.update({"_id": detail._id},{$set:{"status": 1}});
-      return 1;
-    }
-    return 0;
+    return -1;
   },
   "sendEmailSettings":function(details){
     const settings = Config.find({}).fetch();
@@ -59,5 +65,8 @@ Meteor.methods({
       id=Config.insert({"smtp":details});
     }
     return id;
+  },
+  'removeMailServer': function ( m_id ) {
+    Config.remove({_id: m_id});
   }
 });

@@ -24,7 +24,7 @@ export default class TagForm extends React.Component {
     this.state = {
       tagName: "",
       color: this.props.color,
-      type: "manual",
+      type: "automatic",
     }
     this.error=[];
     this.add = this.add.bind(this);
@@ -45,6 +45,7 @@ export default class TagForm extends React.Component {
         from: this.state.from,
         to: this.state.to,
         email: this.state.email,
+        subject: this.state.subject,
         automatic: true
       });
       this.props.handleToggle();
@@ -124,6 +125,28 @@ export default class TagForm extends React.Component {
                 }
                 errorText={this.error.email}
                 value={this.state.email}
+                />
+            </div>
+            <div className="form-group" style={style.formInput}>
+              <TextField
+                type="text"
+                floatingLabelText="Filter subject"
+                hintText="Enter Subject "
+                fullWidth={true}
+                onChange={
+                  (evt) =>{
+                    this.setState({"subject": evt.target.value});
+                    if (!evt.target.value.length > 0 ) {
+                      this.error.subject = "Enter subject";
+                    }else if (/^[a-zA-Z0-9 !@#$%^&*()_+=-`~}:"|<>?';,. ]$/.test(evt.target.value)) {
+                      this.error.subject = "Invalid subject";
+                    }else{
+                      this.error.subject = "";
+                    }
+                  }
+                }
+                errorText={this.error.subject}
+                value={this.state.subject}
                 />
             </div>
             <div className="form-group" style={style.formInput}>

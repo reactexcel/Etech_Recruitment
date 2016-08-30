@@ -27,9 +27,11 @@ export default class EmailSettingList extends React.Component {
     this.state ={
       "open" : false,
       "title": "",
+      show:false,
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
+    this.removeMailServer = this.removeMailServer.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.flag = 0;
@@ -58,13 +60,17 @@ export default class EmailSettingList extends React.Component {
     this.handleOpen(row.emailId)
     this.props.onTestDetails( row );
   }
+  removeMailServer( row, event ){
+    event.stopPropagation();
+    this.props.onRemoveDetails( row._id );
+  }
   componentWillUpdate () {
-    if (this.flag % 4 == 0) {
-      this.handleClose();
-      this.flag = 0 ;
+    if(this.props.uiLoading && this.state.open){
+      this.handleClose () ;
     }
   }
   render() {
+    console.log(this.props);
     this.flag++;
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
@@ -102,7 +108,8 @@ export default class EmailSettingList extends React.Component {
                     <TableRowColumn tooltip="Port" style={{"fontWeight": "bold"}}>Port</TableRowColumn>
                     <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold"}}>Encrypt</TableRowColumn>
                     <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
-                    <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test </TableRowColumn>
+                    <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test</TableRowColumn>
+                    <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold"}}>Remove</TableRowColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -125,6 +132,7 @@ export default class EmailSettingList extends React.Component {
                                      )
                        } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
                 </TableBody>

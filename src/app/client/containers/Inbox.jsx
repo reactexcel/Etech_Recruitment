@@ -99,7 +99,8 @@ function mapStateToProps( state ){
     return {
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
-        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;})
+        tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
+        uiLoading: state.ui.loading,
     }
 }
 const mapDispatchToProps = (dispatch) => {

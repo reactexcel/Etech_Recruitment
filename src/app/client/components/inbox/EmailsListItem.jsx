@@ -91,9 +91,9 @@ class EmailListItem extends React.Component {
 
       return(
 
-          <div key={this.props.email._id}  style={{ "backgroundColor": `${mail_bg_color}`, "marginBottom":"0px"}} >
+          <div key={this.props.email._id}  style={{ "marginBottom":"0px"}} >
               <ListItem
-                style={{"marginBottom":"0px","marginBottom":"4px", borderLeft:"5px solid "+mail_left_border_color , paddingBottom:"0px"}}
+                style={{"marginBottom":"0px","marginBottom":"4px", borderLeft:"5px solid "+mail_left_border_color , paddingBottom:"0px",  "backgroundColor": `${mail_bg_color}`}}
                 rightIcon={hasAttachment}
                 rightIconButton={
                   <div style={{left:"95%","top":"2%"}}>
@@ -133,8 +133,6 @@ class EmailListItem extends React.Component {
                 secondaryTextLines={2}
                 onClick={() => this.props.router.push(m_link)}
               />
-
-            <Divider inset={true} />
           </div>
 
       );

@@ -6,6 +6,7 @@ import {logs} from './logs'
 import { home } from './home'
 import { email } from './email'
 import { emailSetting } from './emailSetting';
+import { testDetails } from './emailSetting';
 import { inbox } from './inbox';
 import {candidateHistory} from './candidateHistory'
 import { inboxTag } from './inboxTag';
@@ -22,4 +23,5 @@ export default combineReducers({
 	inboxTag,
 	email,
 	emailTemplates,
+	testDetails,
 })

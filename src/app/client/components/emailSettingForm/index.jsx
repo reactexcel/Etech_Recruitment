@@ -4,6 +4,9 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import _ from 'lodash';
+import CircularProgress from 'material-ui/CircularProgress';
+import Snackbar from 'material-ui/Snackbar';
 
 const style={
   "formInput":{
@@ -30,6 +33,8 @@ export default class EmailSettingForm extends React.Component {
       "status": this.props.emailSetting.status || 0,
       "label": "Save",
       "edit": 0,
+      "disable":false,
+      show: true
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -42,6 +47,7 @@ export default class EmailSettingForm extends React.Component {
       "server": /^[a-z]+[.][a-z]+[.][a-z]+$/,
       "encrypt": /^[a-z]+$/
     }
+    this.testDetails = this.testDetails.bind(this);
   }
 
   update(row, label) {
@@ -55,6 +61,8 @@ export default class EmailSettingForm extends React.Component {
       "status": row.status || 0,
       "label": label,
       "edit": 1,
+      "disable":true,
+      testStatus: false
     })
     this.error = [];
   }
@@ -70,22 +78,16 @@ export default class EmailSettingForm extends React.Component {
       "label": "Save",
       "status": this.state.status,
       "edit": 0,
+      "disable":false,
     })
   }
 
   saveSettings () {
+    this.setState({testDetails: true})
     if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
             && this.state.encrypt.length)){
-      this.props.onSaveSettings({
-        "emailId": this.state.emailId ,
-        "password": this.state.password ,
-        "server": this.state.server ,
-        "port": this.state.port ,
-        "encrypt": this.state.encrypt,
-        "status": 0,
-        "_id": this.state._id || undefined
-      });
+        this.testDetails();
       if(this.state.edit == 1){
         this.props.logging("Edit email information",
           Meteor.userId(), "edited information of email id : "+this.state.emailId)
@@ -93,7 +95,53 @@ export default class EmailSettingForm extends React.Component {
         this.props.logging("New eamil server added",
           Meteor.userId(), "New server email id : "+this.state.emailId)
       }
-      this.clear();
+    }
+  }
+
+  testDetails () {
+    if ((this.state.emailId.length && this.state.password.length
+          && this.state.port.length && this.state.server.length
+            && this.state.encrypt.length)){
+     this.props.onTestDetails({
+      "emailId": this.state.emailId ,
+      "password": this.state.password ,
+      "server": this.state.server ,
+      "port": this.state.port ,
+      "encrypt": this.state.encrypt,
+      "status": 0,
+      status_last_fetch_details: '',
+      '_id': 0,
+      }).then((data)=> {
+      if(data == -1){
+        this.setState({testDetails: false})
+        if(window.confirm(" Given information is incorrect do you stil want to save ?"))
+          this.props.onSaveSettings({
+            "emailId": this.state.emailId ,
+            "password": this.state.password ,
+            "server": this.state.server ,
+            "port": this.state.port ,
+            "encrypt": this.state.encrypt,
+            "status": 0,
+            "_id": this.state._id || undefined
+          });
+          this.setState({status: data, testDetails: true})
+        }else {
+          this.setState({testDetails: true})
+          this.props.onSaveSettings({
+            "emailId": this.state.emailId ,
+            "password": this.state.password ,
+            "server": this.state.server ,
+            "port": this.state.port ,
+            "encrypt": this.state.encrypt,
+            "status": 0,
+            "_id": this.state._id || undefined
+          })
+          this.setState({status: data, testDetails: true})
+        }
+        this.clear();
+      })
+    }else{
+      console.log("enter all cresentials");
     }
   }
 
@@ -124,6 +172,7 @@ export default class EmailSettingForm extends React.Component {
                   }
                   errorText={this.error.emailId}
                   value={this.state.emailId}
+                  disabled={this.state.disable}
                 />
               </div>
               <div className="form-group" style={style.formInput}>
@@ -151,8 +200,8 @@ export default class EmailSettingForm extends React.Component {
               <div className="form-group" style={style.formInput}>
                 <TextField
                   type="text"
-                  floatingLabelText="SMTP Server"
-                  hintText="e.g. smtp.host.com"
+                  floatingLabelText="IMAP Server"
+                  hintText="e.g. imap.host.com"
                   fullWidth={true}
                   onChange={
                     (evt) =>{
@@ -197,7 +246,6 @@ export default class EmailSettingForm extends React.Component {
                   style={{maxWidth: 250}}
                     onChange={
                       (evt, value) =>{
-                        console.log(value);
                         this.setState({"encrypt": value});
                         if ( typeof value == "undefined" ) {
                           this.error.encrypt = "encrypt is required";
@@ -223,8 +271,21 @@ export default class EmailSettingForm extends React.Component {
                   onClick={this.saveSettings}
                 />
               </div>
+              <div className="form-group" style={style.formButton}>
+                <RaisedButton
+                  label={'Test'}
+                  primary={true}
+                  onClick={this.testDetails}
+                />
+              </div>
             </form>
           </Paper>
+          <Snackbar
+            open={this.state.testDetails}
+            message={"Checking credentials"}
+            autoHideDuration={4000}
+            onRequestClose = { () =>{ this.setState({testDetails:false})}}
+            />
         </div>
       </div>
     );

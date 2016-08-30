@@ -37,8 +37,6 @@ export default class MenuDrawer extends React.Component {
       >
       <div style={{"backgroundColor":"#2e3e4e","textAlign": "center", padding:"30px"}}><img src={LogoImg}/></div>
         <Divider/>
-        <MenuItem onTouchTap={()=>{this.handleClose("/inbox")}}>Home</MenuItem>
-        <Divider/>
         <MenuItem onTouchTap={() => this.handleClose("/inbox")}>Inbox</MenuItem>
         <Divider/>
         <MenuItem onTouchTap={() => this.handleClose("display/logs")}>User Activity Logs</MenuItem>

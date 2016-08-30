@@ -49,3 +49,12 @@ export function emailSetting (state = initialState, action ){
   }
   return state;
 }
+
+export function testDetails (state = initialState, action ){
+  if (action.type === ACTION.TEST_DETAILS) {
+    if(action.payload._id == 0){
+      return Immutable.List([Immutable.Map(action.payload)])
+    }
+  }
+  return state;
+}
