@@ -49,7 +49,6 @@ class ChangePassword extends React.Component {
         let oldpass = this.refs.oldP.input.value.trim();
         let newpass = this.refs.newP.input.value.trim();
         let Cnewpass = this.refs.cnewP.input.value.trim();
-        console.log(typeof(oldpass))
         let flag = true
         if(oldpass == ''){
             this.setState({errOldPass:'Required'})
@@ -71,6 +70,7 @@ class ChangePassword extends React.Component {
         }
         if(oldpass !== '' && flag){
             this.props.onChangePassword(oldpass,newpass).then((data)=>{
+                this.reset()
                 this.setState({
                     snackbarOpen:true,
                     snackbarmsg:data.toString(),

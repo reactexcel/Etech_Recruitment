@@ -114,7 +114,7 @@ export default class SendEmailSettingForm extends React.Component {
     if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
             && this.state.encrypt.length)){
-       let row={
+      let row={
         "emailId": this.state.emailId ,
         "password": this.state.password ,
         "server": this.state.server ,
@@ -128,7 +128,7 @@ export default class SendEmailSettingForm extends React.Component {
       this.handleClose()
      if(response){
       this.callSaveSetting(row)
-      alert('Email server setting saved & tested successfully. \n Test email sent to your mail id ')
+      alert('Email server setting saved & tested successfully. \n Test mail sent to your email id ')
      }else{
       alert('Email server setting test failed. Please correct your data')
      }
