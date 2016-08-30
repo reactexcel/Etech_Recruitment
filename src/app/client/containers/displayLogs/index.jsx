@@ -26,11 +26,6 @@ class DisplayContainer extends React.Component{
             this.props.router.push('/login');
         }
     }
-	  /*getChildContext() {
-         return { 
-      	    muiTheme: getMuiTheme(baseTheme) 
-         };
-     }*/
      handleToggel(){
         this.setState({open: !this.state.open});
      }
@@ -46,7 +41,7 @@ class DisplayContainer extends React.Component{
 		return(
 			<div>
       <AppBar
-      title="Logs" 
+      title="User Activity Logs" 
       showMenuIconButton={true}
       iconElementRight={
               <IconMenu

@@ -130,13 +130,13 @@ Meteor.methods({
 								if(  typeof email.email_date != 'undefined' && email.email_date != '' ){
 									last_email_date = email.email_date
 								}
-								email.tags = [];
+								//email.tags = [];
 								Meteor.call('insertNewEmail', source_email_id, email, tagList )
 								emails_fetched++
 							})
 							//-start-insert status last inserted email id to db
 							if( last_email_id != '' && last_email_date != '' ){
-								Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date )
+								//Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date )
 							}
 							//-end-insert status last inserted email id to db
 						}

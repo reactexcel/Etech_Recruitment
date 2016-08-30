@@ -10,6 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 import Avatar from 'material-ui/Avatar';
 import _ from 'lodash'
 import verge from 'verge';
@@ -32,6 +33,8 @@ class EmailsList extends React.Component {
           scheduledDate:moment().format("DD-MM-YYYY"),
           scheduledTime:moment().format("hh:mm:ss a"),
           errortxt:'',
+          SnackbarOpen:false,
+          SnackbarMessage:''
         }
         this.onClick = this.onClick.bind(this);
         this.handleClose=this.handleClose.bind(this);
@@ -61,11 +64,20 @@ class EmailsList extends React.Component {
     handleClose(){
       this.setState({rejectpop: false});
     }
+    handleRequestClose = () => {
+    this.setState({
+      SnackbarOpen: false,
+    });
+  };
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
         this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason)
         this.handleClose()
+        this.setState({
+          "SnackbarMessage":"Candidates are rejected",
+             "SnackbarOpen":true
+        })
     }else{
         this.setState({
             errortxt:'Reason required'
@@ -204,6 +216,10 @@ class EmailsList extends React.Component {
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
+                                   this.setState({
+                                    "SnackbarOpen":true,
+                                    "SnackbarMessage":"Candidates are ignored"
+                                   })
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
@@ -262,7 +278,14 @@ class EmailsList extends React.Component {
                       </List>
                     }
                   </div>
+                  <Snackbar
+          open={this.state.SnackbarOpen}
+          message={this.state.SnackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
                 </div>
+                
               </div>
             </div>
         );

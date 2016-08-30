@@ -6,7 +6,7 @@ import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import * as candidateHistory_action from '../actions/candidateHistory'
-import {onFetchTag} from '../actions/tags'
+import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
@@ -46,10 +46,12 @@ const mapDispatchToProps = (dispatch) => {
         return dispatch(getEmailData( email_id ))
       },
       onIgnore : (id, tagId) => {
-        return dispatch(tagUpdateArchive( id,tagId))
+        //return dispatch(tagUpdateArchive( id,tagId))
+        return dispatch(onIgnoreMultipleCandidate( id,tagId))
       },
       onReject : (id,tagId,reason) => {
-        return dispatch(updateReject(id,tagId,reason))
+        //return dispatch(updateReject(id,tagId,reason))
+        return dispatch(onRejectMultipleCandidate(id,tagId,reason))
       },
       onAddAction: (actiontype, id, details)=>{
         return dispatch(addLogs(actiontype, id, details))

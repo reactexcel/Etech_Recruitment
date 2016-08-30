@@ -36,13 +36,17 @@ class CandidateHistory extends React.Component {
             <Step key={i} active={true}>
             <StepButton>
               <div>Ignored</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY HH:mm:ss")})</div>
             </StepButton>
             <StepContent>
+              <div>
+              <div style={{fontWeight:'bold'}}>
+              Action performed by:{hist.actionPerformedBy}
+              </div>
               <p>
                 {hist.detail}
               </p>
-              
+              </div>
             </StepContent>
           </Step>
             )
@@ -52,16 +56,20 @@ class CandidateHistory extends React.Component {
             <Step key={i} active={true}>
             <StepButton >
               <div>Rejected</div>&nbsp;&nbsp;&nbsp;
-              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY")})</div>
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY HH:mm:ss")})</div>
             </StepButton>
             <StepContent>
+            <div>
+              <div style={{fontWeight:'bold'}}>
+                Action performed by:{hist.actionPerformedBy}
+              </div>
               <p>
                 Reason of rejection:{hist.reason}
               </p>
               <p>
                 {hist.detail}
               </p>
-              
+              </div>
             </StepContent>
           </Step>
             )
