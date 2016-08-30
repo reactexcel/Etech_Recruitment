@@ -27,7 +27,7 @@ class Inbox extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
-        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,"")
+        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,this.props.inbox.tag)
         this.props.onFetchSettings()
         this.props.onFetchTag()
         this.props.onFetchTamplets()
@@ -36,7 +36,7 @@ class Inbox extends React.Component {
         if( props.inbox.emails_fetch_status.length > 0 ){
             //this will run after fetching new emails
             let imap_email_with_fetch_response = _.map( props.emailSetting,( email )=>{
-                let check_id = email._id._str
+                let check_id = email._id
                 let checkFetchStatus = _.find( props.inbox.emails_fetch_status, {'imap_email_monogid': check_id } )
                 if( typeof checkFetchStatus == 'undefined' ){
                     email.fetch_email_status = {}
@@ -46,7 +46,7 @@ class Inbox extends React.Component {
                 return email
             })
             if( this.state.imap_emails.length == 0 ){
-                this.props.onInboxData( this.state.emails_per_page, this.state.page_num )
+                this.props.onInboxData( this.state.emails_per_page, this.state.page_num, this.props.inbox.tag )
             }
             this.setState({
                 'emails_fetch_status' : 1,
@@ -80,17 +80,18 @@ class Inbox extends React.Component {
     }
     doPageChange( page_num ){
         if( page_num != '' ){
-            this.props.onInboxData( this.state.emails_per_page, page_num )
+            this.props.onInboxData( this.state.emails_per_page, page_num, this.props.inbox.tag )
         }
     }
     render(){
         return(
         	<div>
                 <Header {...this.props} position={1}/>
-                <EmailsList inbox={this.props.inbox} doPageChange={this.doPageChange} imap_emails={this.state.imap_emails} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
-                  onInboxData={this.props.onInboxData} emails_per_page={this.state.emails_per_page} page_num={this.state.page_num} inboxTag={this.props.inboxTag} onIgnoreMultipleCandidate={this.props.onIgnoreMultipleCandidate}
-                  onRejectMultipleCandidate={this.props.onRejectMultipleCandidate} route={this.props.router} emailTemplates={this.props.emailTemplates}
-                  />
+                <EmailsList  doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}
+                 emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
+                 route={this.props.router}
+                 {...this.props}
+                />
         	</div>
         )
     }
