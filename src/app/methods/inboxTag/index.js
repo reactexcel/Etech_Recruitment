@@ -62,6 +62,7 @@ Meteor.methods({
       email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        if(mail[0].tags != 'undefined'){
+        console.log(idList, tagId, userId,"not undefine---------------")
         if(_.includes(mail[0].tags,tagId)==false){
           EmailsStore.update(
                { _id: id },
@@ -69,6 +70,7 @@ Meteor.methods({
              );
         }
        }else{
+        console.log(idList, tagId, userId,"undefine---------------")
           EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
@@ -101,6 +103,7 @@ Meteor.methods({
        }
 
      })
+     //return {emailIdList:idList,tagId:tagId}
      return EmailsStore.find({}).fetch();
   },
   "rejectMultipleCandidate": function (idList, tagId, reason, userId){
@@ -151,6 +154,7 @@ Meteor.methods({
              }
        }
      })
+     //return {emailIdList:idList,tagId:tagId}
      return EmailsStore.find({}).fetch();
   },
 });
