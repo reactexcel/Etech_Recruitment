@@ -36,6 +36,7 @@ Meteor.methods({
   },
   "removeTag": function(_id){
     Tags.remove({"_id": _id});
+    EmailsStore.update({},{$pull:{'tags':_id}})
     return ({_id: _id});
   },
   "assignTag": function (m_id, t_id){

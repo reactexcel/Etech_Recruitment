@@ -100,11 +100,9 @@ render(){
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
-                console.log(this.ignoreTagId,"ignored")
                 this.ignoreText="Ignored"
         }
         if(_.includes(data.tags,this.rejectTagId)==true){
-          console.log(this.rejectTagId,"rejected")
                 this.rejectText="Rejected"
         }
            const actions = [
@@ -122,9 +120,9 @@ render(){
 	return(
     <div>
   <div>
-    <AppBar
+ <AppBar
     title="Email"
-    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox')}}><NavigationArrowBack /></IconButton>}
+    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/body')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={
       <IconMenu
         iconButtonElement={
@@ -137,7 +135,7 @@ render(){
                       if(_.includes(data.tags,this.ignoreTagId)==false){
                             this.ignoreText="Ignored";
                             this.props.onIgnore([data._id],this.ignoreTagId)
-                            this.props.router.push('/inbox');
+                            this.props.router.push('/inbox/body');
                       }else{
                         this.setState({
                           "SnackbarOpen":true,

@@ -164,7 +164,7 @@ export default class EmailSettingForm extends React.Component {
         this.clear();
       })
     }else{
-      console.log("enter all cresentials");
+      //console.log("enter all cresentials");
     }
   }
 
@@ -272,7 +272,7 @@ export default class EmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
-                <RadioButtonGroup name="encrypt" labelPosition="right"
+                <RadioButtonGroup name="encrypt" valueSelected={this.state.encrypt} labelPosition="right"
                   style={{maxWidth: 250}}
                     onChange={
                       (evt, value) =>{

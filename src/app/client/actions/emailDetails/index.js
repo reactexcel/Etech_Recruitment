@@ -8,6 +8,9 @@ export const ACTION_ERROR_EMAIL_DATA = "ACTION_ERROR_EMAIL_DATA"
 export function success_email( data ){
     return createAction( ACTION_SUCCESS_EMAIL_DATA )( data )
 }
+export function update_email( data ){
+    return createAction( 'ACTION_UPDATE_EMAIL_DATA' )( data )
+}
 export function error_email( data ){
     return createAction( ACTION_ERROR_EMAIL_DATA )( data )
 }
@@ -20,6 +23,7 @@ export function getEmailData( email_id ){
                     dispatch ( error_email( err ) )
                 }else{
                     dispatch ( success_email( data  ) )
+                    dispatch ( update_email( data  ) )
                 }
             })
 
@@ -29,7 +33,7 @@ export function getEmailData( email_id ){
 
 
 
-//-----
+//------
 
 
 export function tagUpdateArchive( id, tagId){

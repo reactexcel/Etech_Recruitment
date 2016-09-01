@@ -86,7 +86,6 @@ function update_emails_store( imapEmails, responseToReturn, callback ){
 			let email_fetch_response = ""
 			if( err ){
 				email_fetch_response = err
-				console.log(err);
 			}else{
 				email_fetch_response = data
 			}
@@ -115,7 +114,7 @@ export function fetchNewEmails( imapEmails ){
 				dispatch ( success_emails_fetch_status( allEmailsFetchStatus  ) )
 			})
 		}else{
-			console.log( 'all are done')
+			//console.log( 'all are done')
 		}
 	}
 }

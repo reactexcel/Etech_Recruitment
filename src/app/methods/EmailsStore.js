@@ -34,14 +34,14 @@ Meteor.methods({
 
 
   doUpdateEmailsStore: function ( mongoid ) {
-		console.log("<<-->>", mongoid);
+		//console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
 	var todaysDate = moment(date).format("YYYY-MM-DD")
 
   	//check fog logged user
 	if( Meteor.user() == null ){
-		console.log("<<-->>", 'invalid user');
+		//console.log("<<-->>", 'invalid user');
 		return {
 			'type' : 'INVALID_LOGIN',
 		}
@@ -51,7 +51,7 @@ Meteor.methods({
 	var checkSettings = Meteor.call('fetchSettings')
 
 	if( checkSettings.length == 0 ){
-			console.log("<<-->>", 'setting not found');
+			//console.log("<<-->>", 'setting not found');
 		return {
 			'type' : 'SETTINGS_NOT_FOUND',
 		}
@@ -106,11 +106,11 @@ Meteor.methods({
 			try {
 				var emails_fetched = 0
 				var emails_to_be_fetched = 0
-		    //var result = HTTP.call("GET", API_URL );
+		    var result = HTTP.call("GET", API_URL );
 				if( typeof result.content != 'undefined' ){
-		    	var json = JSON.parse( '{ error: [], data: [] }' )
+		    	var json = JSON.parse( result.content )
 					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
-					console.log("<<-->>", json);
+					//console.log("<<-->>", json);
 					if(json.data.length > 0 ){
 						TYPE = "SUCCESS"
 						if( json.data.length > 0 ){
@@ -154,7 +154,6 @@ Meteor.methods({
 						'emails_to_be_fecthed' : emails_to_be_fetched
 		    	}
 		  	} catch (e) {
-					console.log("error -->-->-->", e);
 		    	return e ;
 		  	}
 			}
@@ -220,7 +219,7 @@ try{
 		  EmailsStore.insert( emailData );
 		}
 	} catch (exception){
-		console.log("Error ==>>",exception);
+		//console.log("Error ==>>",exception);
 	}
   },
   getEmailsForInbox : function( emails_per_page, page_num ,tag){
@@ -246,7 +245,7 @@ try{
 	}
 	var allEmails;
 	if(tag == "")
-	  allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+	  allEmails = EmailsStore.find( {tags:{$size:0}}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 	else
 	  allEmails = EmailsStore.find({ tags:{$in: [tag] }}, {$skip : skip},{$limit: emails_per_page }).fetch();
 
