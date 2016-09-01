@@ -7,7 +7,7 @@ export default class DefaultPage extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+   // console.log(this.props);
     let bolt = [];
     let left = 35;
     _.times(3 , (i) => {
@@ -31,29 +31,30 @@ export default class DefaultPage extends React.Component {
         className=" col-sm-12 col-xs-12"
         style={
           {
+            marginTop:'-60px',
             color:"lightgray",
-            height: '90vh',}}
+            height: '100vh',
+            backgroundColor:'#DCDCDC'
+          }}
       >
       <div style={
         { width: '50%',
           height: '80%',
-          border: '1px solid gray',
+          color:'#808080',
+          //border: '1px solid gray',
           borderRadius: '50% 50% 50% 50%',
-          backgroundColor: this.props.color,
+         // backgroundColor: this.props.color,
           marginLeft: '25%',
           marginTop: '5%'
         }
       }>
       <div style={{marginTop: "10%",width: '100%',}}>
         <div style={{ fontSize:'40',textAlign: 'center'}}>
-          <i className="fa fa-cloud fa-5x" aria-hidden="true"></i>
-        </div>
-        <div style={{marginTop: '-3.5%'}}>
-          {bolt}
+          <i className="fa fa-ban fa-5x" aria-hidden="true"></i>
         </div>
       </div>
       <div style={{ fontSize:'20',textAlign: 'center',marginTop: "8%"}}>
-        There is no Email in Tag: <u>{_.upperFirst(this.props.name)} </u>
+        No Candidates Found
       </div>
       </div>
     </div>);

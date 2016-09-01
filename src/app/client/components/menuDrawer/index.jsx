@@ -12,9 +12,11 @@ export default class MenuDrawer extends React.Component {
     this.logout = this.logout.bind(this);
   }
   logout(path){
-    Meteor.logout((err)=>{
+
+    Accounts.logout((err)=>{
       if(!err){
         this.handleClose(path)
+
       }
     })
   }

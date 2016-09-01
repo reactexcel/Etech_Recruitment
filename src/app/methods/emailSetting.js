@@ -9,6 +9,7 @@ Meteor.methods({
     return Config.find({}).fetch();
   },
   "saveSettings": function(details){
+    console.log(details)
     const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
       details.status_last_fetch_details = {
@@ -79,7 +80,7 @@ Meteor.methods({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
-        "to": detail.smtp.emailId,
+        "to": 'atul@excellencetechnologies.in',
         "from": detail.smtp.emailId,
         "subject": 'This is test mail',
         'text':'SMTP mail server testing completed'

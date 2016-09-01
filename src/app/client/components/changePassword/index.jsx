@@ -1,9 +1,11 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import {Menu, MenuItem} from 'material-ui/Menu'
 import RaisedButton from 'material-ui/RaisedButton';
@@ -23,8 +25,22 @@ const style = {
     position: 'relative',
   },
 };
-
+const styles = {
+  errorStyle: {
+    textAlign:'left',
+  },
+  container: {
+    position: 'relative',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+}
 class ChangePassword extends React.Component {
+      static contextTypes = {
+        muiTheme: React.PropTypes.object.isRequired
+  }
     constructor( props ){
         super( props );
         this.state={
@@ -87,68 +103,67 @@ class ChangePassword extends React.Component {
         this.setState({
             snackbarOpen: false,
         });
-    };
+    };  
     render(){
         return(
-            <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2" style={{ "padding":"0px", "backgroundColor":"#fff", "height":verge.viewportH()+200+"px", "position":"absolute",}}>
-                    <Menu desktop={true} style={{ hight:"100%", "float":"left"}}>
-                        <MenuItem  primaryText="Change Password" onTouchTap={()=>{this.props.router.push("/changepassword")}}/>
-                    </Menu>
-                    <hr/>
-                </div>
-                <div className="col-xs-10" style={{ "float":"right"}}>
-                    <div className='row' style={{margin:'40px 4px 0px'}}>
-                    <div className="col-xs-12">
-            <div className='row' style={{background: '#fff'}}>
-                <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
-                    <div className="col-xs-12">
-                       <b><i>Change Password</i></b> <br /> 
-                    </div>
-                </div>
-                <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
-                    <TextField
+                    <MuiThemeProvider>
+          <div>
+            <div style={{textAlign: 'center' }}>
+                <div style={{width: 340, margin: '0px auto',padding:'20px 0px'}}>
+                
+                <div style={{width: 320,margin:'1rem', paddingTop: 20,backgroundColor: this.context.muiTheme.palette.canvasColor,padding:'30px',borderRadius:'5px'}}>
+                    <div style={{fontSize:'16px',marginBottom:'1rem',textAlign:'left'}}>Change Password</div>
+                    <div>
+                      <TextField
                     type='password'
                     ref='oldP'
                     floatingLabelText="Old Password"
                     fullWidth={true}
+                    errorStyle={styles.errorStyle}
                     errorText={this.state.errOldPass}
                     floatingLabelFixed={true}
                     />
-                    <TextField
+                    </div>
+                    <div>
+                      <TextField
                     type='password'
                     ref='newP'
                     floatingLabelText="New Password"
                     fullWidth={true}
+                    errorStyle={styles.errorStyle}
                     errorText={this.state.errNewPass}
                     floatingLabelFixed={true}
                     />
-                    <TextField
+                    </div>
+                    <div>
+                      <TextField
                     type='password'
                     ref='cnewP'
                     floatingLabelText="Confirm New Password"
                     fullWidth={true}
+                    errorStyle={styles.errorStyle}
                     errorText={this.state.errCNewPass}
                     floatingLabelFixed={true}
                     />
-                    <br />  
-                </div>
-                  <RaisedButton
-                    style={{float:'right',margin:'20px'}}
-                    label='reset'
-                    onClick={this.reset}
-                    primary={true} 
-                    ></RaisedButton>
-                 <RaisedButton
-                    style={{float:'right',margin:'20px'}}
+                    </div>
+                   
+                    <br />
+                    <div style={{textAlign: 'center'}}>
+                    <RaisedButton
+                    style={{margin:'20px'}}
                     label='Submit'
                     onClick={this.changePassword}
                     primary={true} 
                     ></RaisedButton>
-            </div>
-        </div>
-        </div>
-         <Snackbar
+                      <RaisedButton
+                    style={{margin:'20px'}}
+                    label='reset'
+                    onClick={this.reset}
+                    primary={true} 
+                    ></RaisedButton>
+                    </div>
+                </div>
+                  <Snackbar
                       open={this.state.snackbarOpen}
                       message={this.state.snackbarmsg}
                       autoHideDuration={3000}
@@ -156,7 +171,8 @@ class ChangePassword extends React.Component {
                   />
                 </div>
             </div>
-        
+          </div>
+        </MuiThemeProvider>
         );
     }
 }

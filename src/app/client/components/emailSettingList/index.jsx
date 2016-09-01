@@ -128,7 +128,7 @@ export default class EmailSettingList extends React.Component {
                                       {"fa-minus": (row.status == 0)},
                                      )
                        } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}

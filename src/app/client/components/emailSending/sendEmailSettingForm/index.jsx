@@ -127,6 +127,7 @@ export default class SendEmailSettingForm extends React.Component {
     this.props.onTestDetails( {"_id":row._id,"smtp":row} ).then( (response) => {
       this.handleClose()
      if(response){
+      row.status=1
       this.callSaveSetting(row)
       alert('Email server setting saved & tested successfully. \n Test mail sent to your email id ')
      }else{
@@ -236,7 +237,7 @@ export default class SendEmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
-                <RadioButtonGroup name="encrypt" defaultSelected={this.state.encrypt} labelPosition="right"
+                <RadioButtonGroup name="encrypt" valueSelected={this.state.encrypt} labelPosition="right"
                   style={{maxWidth: 250}}
                     onChange={
                       (evt, value) =>{

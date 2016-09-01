@@ -27,10 +27,12 @@ class Inbox extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
-        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,this.props.inbox.tag)
+        if(typeof this.props.params.nav == 'undefined'){
+        this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,'')
         this.props.onFetchSettings()
         this.props.onFetchTag()
         this.props.onFetchTamplets()
+        }
     }
     componentWillReceiveProps( props ){
         if( props.inbox.emails_fetch_status.length > 0 ){
@@ -46,7 +48,13 @@ class Inbox extends React.Component {
                 return email
             })
             if( this.state.imap_emails.length == 0 ){
-                this.props.onInboxData( this.state.emails_per_page, this.state.page_num, this.props.inbox.tag )
+                let tag;
+                if(typeof props.params.nav == 'undefined'){
+                    tag = ''
+                }else{
+                    tag=this.props.inbox.tag
+                }
+                this.props.onInboxData( this.state.emails_per_page, this.state.page_num, tag )
             }
             this.setState({
                 'emails_fetch_status' : 1,
@@ -85,7 +93,7 @@ class Inbox extends React.Component {
     }
     render(){
         return(
-        	<div>
+        	<div className='show'>
                 <Header {...this.props} position={1}/>
                 <EmailsList  doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}
                  emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}

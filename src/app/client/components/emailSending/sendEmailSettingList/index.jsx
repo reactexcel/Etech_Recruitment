@@ -44,7 +44,8 @@ export default class SendEmailSettingList extends React.Component {
       this.flag = 0 ;
     }
   }
-  delete(row_id){
+  delete(row_id, event){
+    event.stopPropagation();
     this.props.onDeleteRow(row_id).then((responce)=>{
       this.setState({
         snackbar:true,
@@ -162,8 +163,8 @@ checkMailServer( row, event ){
                                       {"fa-minus": (row.smtp.status == 0)},
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id)}/></TableRowColumn> 
+                     <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn> 
                     </TableRow>
                     ))}
                 </TableBody>
@@ -175,7 +176,7 @@ checkMailServer( row, event ){
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
-                children={
+                children={ 
                   <CircularProgress size={1} />
                 }
                 bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
