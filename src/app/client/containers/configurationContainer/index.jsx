@@ -64,6 +64,7 @@ class ConfigurationContainer extends React.Component {
       if (!Meteor.userId()) {
         this.props.router.push('/login');
       }
+      this.props.router.push("/config/email-server-setting")
   }
   handleToggel(){
     this.setState({open: !this.state.open});
@@ -80,9 +81,9 @@ class ConfigurationContainer extends React.Component {
   render() {
     return ( 
         <div>
-          <Header {...this.props} position={2} altr="Settings" />
+        <Header {...this.props} position={2} altr="Settings" />
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
-          <SelectableList desktop={true} style={style.menu}>
+          <SelectableList desktop={true} style={style.menu} defaultValue={1}>
           <ListItem
            value={1}
            primaryText="IMAP server setting"
@@ -90,17 +91,18 @@ class ConfigurationContainer extends React.Component {
           />
           <ListItem
             value={2}
-            primaryText="Tag Setting"
-            onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}
+            primaryText="SMTP server setting"
+            onTouchTap={()=>{this.props.router.push("/config/email-sending");}}
           />
           <ListItem
             value={3}
-            primaryText="Database setting"
+            primaryText="Email Templates"
+            onTouchTap={()=>{this.props.router.push("/config/email-templates");}}
           />
           <ListItem
             value={4}
-            primaryText="Email Sending"
-            onTouchTap={()=>{this.props.router.push("/config/email-sending");}}
+            primaryText="Tag Setting"
+            onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}
           />
           </SelectableList>
           </div>

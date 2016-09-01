@@ -32,7 +32,6 @@ export default class MyCard extends React.Component {
                 </div>:
                 <div style={{"width":"100%"}}>
                   Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
-                  {typeof email.attachments == 'undefined'?"":<span className="pull-right" style={{"height":"10px",marginLeft:"20px"}}><i className="fa fa-paperclip fa-2x"></i></span>}
                 </div>
                 } </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
@@ -40,6 +39,7 @@ export default class MyCard extends React.Component {
               showExpandableButton={i==0?false:true}
               titleStyle={{'fontSize':"12px"}}
               subtitleStyle={{'fontSize':"11px"}}
+              children={<div  style={{float:'right',display:'inline-block',position:'relative'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>}
               />
           }
            />

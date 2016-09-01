@@ -51,9 +51,12 @@ class ScheduleCandidate extends React.Component {
       })
     }
     submitMail(idList){
-      let name=this.refs.Name.input.value.trim()
-      let subject=this.refs.subject.input.value.trim()
-      let content=this.state.content
+      //let name=this.refs.Name.input.value.trim()
+      let name=this.state.currentTemplatName.trim()
+      //let subject=this.refs.subject.input.value.trim()
+      let subject=this.state.currentSubject.trim()
+      //let content=this.state.content
+      let content=this.state.currentContent
       console.log(idList,name,subject,content,"content")
       this.handleCloseTemplateDialog()
     }
@@ -98,7 +101,7 @@ class ScheduleCandidate extends React.Component {
            onTouchTap={this.handleCloseTemplateDialog}
           />,
           <FlatButton
-           label="Submit"
+           label="Send"
            primary={true}
            onTouchTap={()=>{this.submitMail(this.props.emailIdList)}}
           />,

@@ -9,6 +9,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 const classNames = require('classnames');
 import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   propContainer: {
@@ -75,6 +76,13 @@ export default class EmailSettingList extends React.Component {
           rowdata.push(row)
         }
       })
+    const actions = [
+      <RaisedButton
+        label="Stop"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />
+    ];
     return (
       <div>
         <div className="row">
@@ -138,6 +146,7 @@ export default class EmailSettingList extends React.Component {
             <div>
               <Dialog
                 title={this.state.title}
+                actions={actions}
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
