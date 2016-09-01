@@ -67,6 +67,7 @@ class Inbox extends React.Component {
         }
 
     }
+    /*
     componentDidUpdate(){
         if( this.state.imap_emails.length > 0 &&   this.state.emails_fetch_status == 0 ){
             let imap_emails_ids = _.map( this.state.imap_emails, ( email ) => {
@@ -78,6 +79,7 @@ class Inbox extends React.Component {
             }
         }
     }
+    */
     doPageChange( page_num ){
         if( page_num != '' ){
             this.props.onInboxData( this.state.emails_per_page, page_num, this.props.inbox.tag )

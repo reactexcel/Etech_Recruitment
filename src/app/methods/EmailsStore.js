@@ -10,41 +10,49 @@ import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
 import Config from 'app/collections/config'
 
 Meteor.methods({
-	update_first_status_last_fetch_details : function( mongoid ){
+	'update_first_status_last_fetch_details' : function( mongoid ){
 		var dataToUpdate = {
   			'status_last_fetch_details' : {
   			"last_email_id_fetch": 0*1,
-				"last_email_fetch_date" : ""
+				"last_email_fetch_date" : "",
+				"totalEmailFetched": 0,
+				"time": moment(new Date().getTime() * 1000).format('HH:mm:ss'),
+				'newMailFound': 0,
   			}
   		}
 		Config.update( mongoid, { $set: dataToUpdate})
 		return true
-  	},
-  	update_status_last_fetch_details : function( mongoid, last_email_id_fetch, last_email_fetch_date ){
+  },
+  'update_status_last_fetch_details' : function( mongoid, last_email_id_fetch, last_email_fetch_date, totalEmailFetched, newMailFound ){
 		var dataToUpdate = {
   			'status_last_fetch_details' : {
   				"last_email_id_fetch": last_email_id_fetch*1,
-				"last_email_fetch_date" : last_email_fetch_date
+					"last_email_fetch_date" : last_email_fetch_date,
+					"totalEmailFetched": parseInt(totalEmailFetched),
+					"time": moment(new Date().getTime()).format('HH:mm:ss'),
+					'newMailFound': parseInt(newMailFound),
   			}
   		}
+			console.log(dataToUpdate);
 		Config.update( mongoid, { $set: dataToUpdate})
 		return true
-  	},
+  },
 
 
-  doUpdateEmailsStore: function ( mongoid ) {
+  'doUpdateEmailsStore': function ( mongoid ) {
+
 		console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
-	var todaysDate = moment(date).format("YYYY-MM-DD")
+		var todaysDate = moment(date).format("YYYY-MM-DD")
 
   	//check fog logged user
-	if( Meteor.user() == null ){
-		console.log("<<-->>", 'invalid user');
-		return {
-			'type' : 'INVALID_LOGIN',
-		}
-	}
+	//if( Meteor.user() == null ){
+	//	console.log("<<-->>", 'invalid user');
+	//	return {
+		//	'type' : 'INVALID_LOGIN',
+	//	}
+	//}
 
 	//check for imap settings
 	var checkSettings = Meteor.call('fetchSettings')
@@ -77,17 +85,22 @@ Meteor.methods({
   		var source_encryp = settings.encrypt
   		var fetchingEmailsFromId = ''
 			var fetchingEmailsForDate = ''
+			var totalEmailFetched = 0
+			var newMailFound = 0
   		if( typeof settings.status_last_fetch_details != 'undefined' ){
-  				var status_last_fetch_details = settings.status_last_fetch_details
-					fetchingEmailsFromId = status_last_fetch_details.last_email_id_fetch + 1
-					fetchingEmailsForDate = status_last_fetch_details.last_email_fetch_date
+  				var status_last_fetch_details = settings.status_last_fetch_details;
+					fetchingEmailsFromId = status_last_fetch_details.last_email_id_fetch + 1;
+					fetchingEmailsForDate = status_last_fetch_details.last_email_fetch_date;
+					totalEmailFetched = parseInt(status_last_fetch_details.totalEmailFetched);
+					newMailFound = parseInt(status_last_fetch_details.newMailFound);
 					if( fetchingEmailsForDate == ''){
-						fetchingEmailsForDate = todaysDate
+						fetchingEmailsForDate = todaysDate;
 					}
   		}else{
   			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
-				fetchingEmailsFromId = ''
-				fetchingEmailsForDate = todaysDate
+				fetchingEmailsFromId = '';
+				fetchingEmailsForDate = todaysDate;
+				totalEmailFetched = 0;
   		}
   			//----------------------------------------
 			var BASE_URL = config_ENV.IMAP_API_BASE_URL
@@ -101,15 +114,14 @@ Meteor.methods({
 
 			var TYPE = ""
 			var MESSAGE = ""
-
 			try {
 				var emails_fetched = 0
 				var emails_to_be_fetched = 0
-		    //var result = HTTP.call("GET", API_URL );
+		    var result = HTTP.call("GET", API_URL );
 				if( typeof result.content != 'undefined' ){
-		    	var json = JSON.parse( '{ error: [], data: [] }' )
+		    	var json = JSON.parse( result.content )
 					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
-					console.log("<<-->>", json);
+					console.log("<<-->>", json.data.length);
 					if(json.data.length > 0 ){
 						TYPE = "SUCCESS"
 						if( json.data.length > 0 ){
@@ -118,7 +130,7 @@ Meteor.methods({
 							var last_email_id = ''
 							var last_email_date = ''
 							var tagList = Meteor.call('fetchTag');
-							_.forEach( emails, function( email ){
+							_.forEach( emails, function( email, i ){
 								if( typeof email.email_id != 'undefined' ){
 									if( last_email_id == ''){
 										last_email_id = email.email_id
@@ -137,7 +149,12 @@ Meteor.methods({
 							})
 							//-start-insert status last inserted email id to db
 							if( last_email_id != '' && last_email_date != '' ){
-								//Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date )
+								if(fetchingEmailsForDate == last_email_date){
+									newMailFound +=  emails.length ;
+								}else{
+									newMailFound = emails.length;
+								}
+								Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date, ( totalEmailFetched + emails.length ), newMailFound )
 							}
 							//-end-insert status last inserted email id to db
 						}
@@ -223,13 +240,13 @@ try{
 	}
   },
   getEmailsForInbox : function( emails_per_page, page_num ,tag){
+		var imapEmail = Config.find( {'_id': tag}).fetch();
   	var skip = emails_per_page * ( page_num - 1 )
 		var next_page = page_num + 1
   	var previous_page = page_num - 1
   	if( previous_page == 0 ){
   		previous_page = ''
   	}
-
   	//----
   	var totalPages = 0
   	var allEmailsCount = EmailsStore.find().count()
@@ -238,18 +255,21 @@ try{
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
-	var count_unread_emails = EmailsStore.find({ 'm_read_status' : 0 * 1}).count()
+		var count_unread_emails = EmailsStore.find({ 'm_read_status' : 0 * 1}).count()
 	//----
-	if( totalPages > 0 && next_page > totalPages){
+		if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
-	}
-	var allEmails;
-	if(tag == "")
-	  allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
-	else
-	  allEmails = EmailsStore.find({ tags:{$in: [tag] }}, {$skip : skip},{$limit: emails_per_page }).fetch();
+		}
+		var allEmails;
 
-  	if( allEmails.length > 0 ){
+		if(tag == ""){
+	  	allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+		}else if(imapEmail.length > 0 && tag == imapEmail[0]._id){
+			allEmails = EmailsStore.find({ "m_source_email_id": imapEmail[0].emailId},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+		}else{
+	  	allEmails = EmailsStore.find({ tags:{$in: [tag] }},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page } ).fetch();
+		}
+  	if( imapEmail.length > 0 ){
   		allEmails = _.map( allEmails, function( email ){
   			let email_date = email.email_date
   			email.email_date = moment(email_date).format("dddd, Do MMM")
