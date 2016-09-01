@@ -162,7 +162,7 @@ checkMailServer( row, event ){
                                       {"fa-minus": (row.smtp.status == 0)},
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id)}/></TableRowColumn> 
                     </TableRow>
                     ))}

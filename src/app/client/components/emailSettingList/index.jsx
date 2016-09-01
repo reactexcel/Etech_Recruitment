@@ -9,6 +9,7 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 const classNames = require('classnames');
 import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
   propContainer: {
@@ -75,6 +76,13 @@ export default class EmailSettingList extends React.Component {
           rowdata.push(row)
         }
       })
+    const actions = [
+      <RaisedButton
+        label="Stop"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />
+    ];
     return (
       <div>
         <div className="row">
@@ -128,7 +136,7 @@ export default class EmailSettingList extends React.Component {
                                       {"fa-minus": (row.status == 0)},
                                      )
                        } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
@@ -138,6 +146,7 @@ export default class EmailSettingList extends React.Component {
             <div>
               <Dialog
                 title={this.state.title}
+                actions={actions}
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}

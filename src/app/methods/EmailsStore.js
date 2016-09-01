@@ -7,6 +7,7 @@ import * as _ from 'lodash'
 
 import EmailsStore from 'app/collections/EmailsStore'
 import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
+import Tags  from 'app/collections/inboxTag';
 import Config from 'app/collections/config'
 
 Meteor.methods({
@@ -132,7 +133,7 @@ Meteor.methods({
 									last_email_date = email.email_date
 								}
 								email.tags = [];
-								Meteor.call('insertNewEmail', source_email_id, email, tagList )
+								//Meteor.call('insertNewEmail', source_email_id, email, tagList )
 								emails_fetched++
 							})
 							//-start-insert status last inserted email id to db
@@ -256,6 +257,17 @@ try{
   			return email
   		})
   	}
+  	var tags;
+  	var tagList=[];
+  	tags = Tags.find({}).fetch();
+  	_.map(tags, (t) => {
+  		let tagId=t._id;
+  		let count=EmailsStore.find({tags:[t._id], 'm_read_status' : 0 * 1}).count();
+  		tagList.push({"tagId":tagId,"count":count})
+      })
+  	console.log("-----------------------------------------")
+  	console.log(tagList)
+  	console.log("-----------------------------------------")
 
   	return {
 		emails : allEmails,
@@ -263,6 +275,7 @@ try{
 		next_page : next_page,
 		count_unread_emails : count_unread_emails,
 		tag: tag || "",
+		tagList:tagList
   	}
   },
 	'addTags': function( tagList, emailData){

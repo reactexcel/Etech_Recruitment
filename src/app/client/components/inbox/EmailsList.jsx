@@ -180,22 +180,22 @@ class EmailsList extends React.Component {
                         </div>
                         :<div >
                         <MenuItem  primaryText={
-                            <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
-                        }/>
-                        <MenuItem  primaryText={
                               <FlatButton
                                 label={'Inbox ' + count_unread_emails}
                                 onTouchTap= { () => this.onClick( {t_id : ''}) }
                                 ></FlatButton>
                         }/>
-                      <Subheader>Tags</Subheader>
-                        {_.map(this.props.tags, (t) => {
+                        
+                     
+                       {
+                        _.map(this.props.tags, (t) => {
                           let unread_mail = 0;
-                          _.forEach(emails, (email) => {
-                            if(_.indexOf(email.tags,t._id) >= 0 && email.m_read_status == 0)
-                              ++unread_mail;
+                          _.forEach(this.props.inbox.tagList, (list) => {
+                            if(list.tagId == t._id){
+                               unread_mail=list.count
+                            }
                           })
-                        return <MenuItem
+                          return <MenuItem
                             key={t._id}
                             primaryText={
                                 <FlatButton
@@ -214,8 +214,8 @@ class EmailsList extends React.Component {
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                            />
-
-                       })}
+                        })
+                       }
                      </div>}
                     </Menu>
 

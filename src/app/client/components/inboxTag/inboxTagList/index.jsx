@@ -98,6 +98,19 @@ export default class InboxTagList extends React.Component {
     this.setState({color: color.hex});
   }
   render() {
+    const actions = [
+      <FlatButton
+              label="Close"
+              primary={true}
+              onTouchTap={this.handleClose}
+              style={{marginRight:5}}
+            />,
+            <RaisedButton
+              label="Save"
+              primary={true}
+              onClick={this.edit}
+            />,
+    ];
     return (
       <div>
         <div className="row">
@@ -200,13 +213,7 @@ export default class InboxTagList extends React.Component {
         </div>
         <Dialog
           title="Edit Tag"
-          actions={
-            <RaisedButton
-              label="Save"
-              primary={true}
-              onClick={this.edit}
-            />
-          }
+          actions={actions}
           open={this.state.open}
           onRequestClose={this.handleClose}
           modal={true}
