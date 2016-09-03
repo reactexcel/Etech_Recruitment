@@ -4,6 +4,10 @@ import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+import AppBar from 'material-ui/AppBar';
+import IconMenu from 'material-ui/IconMenu';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import TextField from 'material-ui/TextField';
 import List from 'material-ui/List'
@@ -33,9 +37,8 @@ class EmailBody extends React.Component {
         rejectpop:false,
         reason:'',
         errortxt:'',
-        message:'',
-        messageDialog:false,
-        show : true
+        SnackbarOpen:false,
+        SnackbarMessage:''
 
     }
     this.handleClose=this.handleClose.bind(this)
@@ -71,12 +74,18 @@ componentWillReceiveProps(props){
 
 
   handleClose(){
-    this.setState({rejectpop: false,messageDialog:false});
+    this.setState({rejectpop: false});
   }
+   handleRequestClose = () => {
+    this.setState({
+      SnackbarOpen: false,
+      SnackbarMessage:''
+    });
+  };
   submitreason(id){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject([id],this.state.rejectTagId,reason)
+        this.props.onReject([id],this.rejectTagId,reason)
         this.rejectText="Rejected"
         this.handleClose()
         this.props.router.push('/inbox');
@@ -91,11 +100,9 @@ render(){
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
-                console.log(this.ignoreTagId,"ignored")
                 this.ignoreText="Ignored"
         }
         if(_.includes(data.tags,this.rejectTagId)==true){
-          console.log(this.rejectTagId,"rejected")
                 this.rejectText="Rejected"
         }
            const actions = [
@@ -111,47 +118,50 @@ render(){
       />,
     ];
 	return(
-  <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
-    <div className="col-xs-12 col-sm-12" style={{ "float": "right"}}>
-        <div style={{ "marginBottom": "50px", "marginTop": "-15px", paddingRight:'18px'}}>
-            <nav aria-label="Page navigation">
-                <ul className="pagination pull-right" style={{ "marginBottom": "6px"}}>
-                    <li  onClick={ () => {
+    <div>
+  <div>
+ <AppBar
+    title="Email"
+    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/body')}}><NavigationArrowBack /></IconButton>}
+    iconElementRight={
+      <IconMenu
+        iconButtonElement={
+          <IconButton><MoreVertIcon /></IconButton>
+        }
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
                       if(_.includes(data.tags,this.ignoreTagId)==false){
                             this.ignoreText="Ignored";
                             this.props.onIgnore([data._id],this.ignoreTagId)
-                            this.props.router.push('/inbox');
+                            this.props.router.push('/inbox/body');
                       }else{
-                        this.setState({message:"Already Ignored",messageDialog:true})
+                        this.setState({
+                          "SnackbarOpen":true,
+                          "SnackbarMessage":"Candidates is already ignored"
+                        })
                       }
-                    }} style={{cursor:'pointer'}}><span aria-hidden="true" >{this.ignoreText}</span></li>
-                    <li  onClick={ () => {
-                      if(_.includes(data.tags,this.rejectTagId)==false){
-                            this.setState({rejectpop:true})
+                    }}/>
+        <MenuItem primaryText={this.rejectText} onTouchTap={()=>{
+                     if(_.includes(data.tags,this.rejectTagId)==false){
+                        this.setState({rejectpop:true})
 
                       }else{
-                        this.setState({message:"Already rejected",messageDialog:true})
+                        this.setState({
+                          "SnackbarOpen":true,
+                          "SnackbarMessage":"Candidates is already rejected"
+                        })
                       }
-                    }} style={{cursor:'pointer'}}><span aria-hidden="true">{this.rejectText}</span></li>
-                    <li  onClick={ () => this.props.schedule(data._id)} style={{cursor:'pointer'}}><span aria-hidden="true">Schedule</span></li>
-                </ul>
-                <ul className="pagination pull-left" style={{ "marginBottom": "6px"}}>
-                  <li>
-                    <IconButton tooltip='Back To Inbox' tooltipPosition="center" iconStyle={{color:"lightgray"}}
-                      onClick={() => {this.props.router.push('/inbox')}}
-                      >
-                      <NavigationArrowBack />
-                    </IconButton></li>
-                </ul>
-            </nav>
-        </div>
-        <Dialog
-          title={this.state.message}
-          modal={false}
-          open={this.state.messageDialog}
-          onRequestClose={this.handleClose}
-        >
-        </Dialog>
+        }}/>
+        <MenuItem primaryText="Schedule" onTouchTap={()=>this.props.schedule(data._id)}/>
+      </IconMenu>
+    }
+  />
+  </div>
+  <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
+    <div className="col-xs-12 col-sm-12" style={{ "float": "right"}}>
+       
         <Dialog
           title="Give the reason of rejection"
           actions={actions}
@@ -185,8 +195,14 @@ render(){
               }
           </div>
         </div>
-
+        <Snackbar
+          open={this.state.SnackbarOpen}
+          message={this.state.SnackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
     </div>
+</div>
 </div>
     )
 }

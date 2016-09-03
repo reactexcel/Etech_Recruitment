@@ -180,26 +180,27 @@ class EmailsList extends React.Component {
                         </div>
                         :<div >
                         <MenuItem  primaryText={
-                            <Link to="sendmail" style={{"padding":"0px 0px"}}>Send mail</Link>
-                        }/>
-                        <MenuItem  primaryText={
                               <FlatButton
+                                style={{ backgroundColor: 'transparent'}}
                                 label={'Inbox ' + count_unread_emails}
                                 onTouchTap= { () => this.onClick( {t_id : ''}) }
                                 ></FlatButton>
                         }/>
-                      <Subheader>Tags</Subheader>
-                        {_.map(this.props.tags, (t) => {
+                        
+                     
+                       {
+                        _.map(this.props.tags, (t) => {
                           let unread_mail = 0;
-                          _.forEach(emails, (email) => {
-                            if(_.indexOf(email.tags,t._id) >= 0 && email.m_read_status == 0)
-                              ++unread_mail;
+                          _.forEach(this.props.inbox.tagList, (list) => {
+                            if(list.tagId == t._id){
+                               unread_mail=list.count
+                            }
                           })
-                        return <MenuItem
+                          return <MenuItem
                             key={t._id}
                             primaryText={
                                 <FlatButton
-                                  style={{textDecoration: this.selectedTag == t._id?'underline':'none'}}
+                                  style={{textDecoration: this.selectedTag == t._id?'underline':'none',backgroundColor: 'transparent'}}
                                   icon={
                                     <Avatar
                                       backgroundColor={t.color}
@@ -214,8 +215,8 @@ class EmailsList extends React.Component {
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                            />
-
-                       })}
+                        })
+                       }
                      </div>}
                     </Menu>
 
@@ -231,7 +232,7 @@ class EmailsList extends React.Component {
 
 
                 </div>
-                <div className="col-xs-10 col-sm-10">
+                <div className="col-xs-10 col-sm-10" >
                   <div className="row">
                     <div className="col-xs-12" >
                         <nav aria-label="Page navigation">

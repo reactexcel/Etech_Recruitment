@@ -47,8 +47,7 @@ export default class SendEmailSetting extends React.Component {
         </div>
         <div className="row">
           <div className="col-sm-12 col-lg-12 col-md-12">
-            <SendEmailSettingList selectedRow={this.selectedRow} {...this.props}
-              />
+            <SendEmailSettingList selectedRow={this.selectedRow} {...this.props} />
           </div>
         </div>
       </div>

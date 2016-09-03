@@ -57,10 +57,12 @@ Meteor.startup(
                 <Route path="/config/email-templates" component={SendMails}></Route>
               </Route>
               <Route path="inbox" component={Page_Inbox}></Route>
+                <Route path="inbox/:nav" component={Page_Inbox}></Route>
+              
               <Route path="/display" component={DisplayContainer}>
                  <Route path="/display/logs" component={LogsContainer}></Route>
               </Route>
-              <Route path="emailbody/:id" component={EmailbodyContainer}></Route>
+            <Route path="emailbody/:id" component={EmailbodyContainer}></Route>
             </Route>
           </Router>
         </Provider>

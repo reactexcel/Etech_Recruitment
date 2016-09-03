@@ -39,7 +39,7 @@ Meteor.methods({
     if( allLogs.length > 0 ){
       allLogs = _.map( allLogs, function( log ){
         let created_on = log.created_on
-        log.created_on = moment(created_on).format("DD/MM/YYYY")
+        log.created_on = moment(created_on).format("DD/MM/YYYY HH:mm:ss")
         return log
       })
     }

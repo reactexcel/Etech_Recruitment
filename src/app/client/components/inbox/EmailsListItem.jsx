@@ -24,6 +24,9 @@ class EmailListItem extends React.Component {
     constructor( props ){
         super( props );
     }
+    componentWillMount( props ){
+      
+    }
     render(){
       let m_id = this.props.email._id
       let m_link = '/emailbody/' + m_id
@@ -47,9 +50,11 @@ class EmailListItem extends React.Component {
       let m_read_status = this.props.email.m_read_status
       let mail_bg_color = "#fff"
       let mail_left_border_color = "#C6F7C6"
+      let unread_color = '#000000'
       if( typeof m_read_status == 'undefined' || m_read_status == 1 ){
-        mail_bg_color = "rgb(229, 226, 226)"
-        mail_left_border_color = "#F3C6C6"
+        //mail_bg_color = "rgb(229, 226, 226)"
+        //mail_left_border_color = "#F3C6C6"
+        unread_color = '#808080'
       }
 
       let m_body = this.props.email.body
@@ -116,7 +121,7 @@ class EmailListItem extends React.Component {
                   />
                 }
                 primaryText={
-                  <p>
+                  <p style={{color:unread_color}}>
                     <b>
                       {m_subject}
                     </b>

@@ -8,7 +8,7 @@ import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDe
 import * as candidateHistory_action from '../actions/candidateHistory'
 import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
-import Header from '../components/generic/Header'
+//import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,6 @@ class EmailbodyContainer extends React.Component {
   render() {
     return (
         <div>
-          <Header {...this.props} position={0} altr="Email" />
           <EmailBody {...this.props}/>
         </div>
     );

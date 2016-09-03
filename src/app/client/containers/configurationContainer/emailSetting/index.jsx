@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
       onFetchSettings: () =>{
         dispatch(action.onFetchSettingsFromDB());
       },
-      onSaveSettings: (detail) =>{
+      onSaveSettings: (detail) =>{ 
         dispatch(action.onSaveSettingsToDB(detail));
       },
       onTestDetails: (detail) =>{
