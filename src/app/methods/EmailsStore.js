@@ -17,7 +17,7 @@ Meteor.methods({
   			"last_email_id_fetch": 0*1,
 				"last_email_fetch_date" : "",
 				"totalEmailFetched": 0,
-				"time": moment(new Date().getTime() * 1000).format('HH:mm:ss'),
+				"time": moment(new Date().getTime()).format('HH:mm:ss'),
 				'newMailFound': 0,
   			}
   		}

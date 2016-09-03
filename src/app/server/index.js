@@ -31,8 +31,10 @@ Meteor.startup(function () {
         var imapEmails = Meteor.call('fetchSettings');
         _.forEach(imapEmails, (imap) =>{
           try{
-            if(typeof imap.smtp  == 'undefined' && imap.active)
+            if(typeof imap.smtp  !== 'object' && imap.active){
+              console.log(imap.emailId);
               Meteor.call('doUpdateEmailsStore', imap._id);
+            }
           }catch(ex){
             console.log('EmailfetchingCronJob ->>exceptipn->>', ex);
           }
@@ -40,7 +42,7 @@ Meteor.startup(function () {
         console.log('running', ++i );
       }
     });
-  //  SyncedCron.start();
+    SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }

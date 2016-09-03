@@ -22,7 +22,7 @@ class ImapAccountsListItem extends React.Component {
         disabled={!this.props.imapEmail.active}
         children={
           <div >
-            <b>
+            <b style={{textDecoration: this.props.inbox.tag == this.props.imapEmail._id? 'underline':''}}>
               {this.props.imapEmail.emailId}
             </b>
             {this.props.imapEmail.active?

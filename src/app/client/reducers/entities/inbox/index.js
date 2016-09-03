@@ -41,16 +41,14 @@ export function inbox( state = Immutable.Map(initialState), action ){
             _.forEach(data.emailIdList,(id)=>{
                 if(email._id === id){
                         email.tags.push(data.tagId)
+                        _.map(tagList,(list)=>{
+                          if(list.tagId === data.tagId && email.m_read_status === 0){
+                                 list.count = list.count + 1;
+                           }
+                        })
                 }
             })
-          })
 
-          _.map(tagList,(list)=>{
-            _.forEach(data.emailIdList,(id)=>{
-                if(list.tagId === data.tagId){
-                   list.count = list.count + 1;
-                }
-            })
           })
           return state.set("emails",emails)
                       .set('tagList', tagList )
