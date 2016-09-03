@@ -6,6 +6,7 @@ import List from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 
 import ImapAccountsListItem from './ImapAccountsListItem'
+import Menu from 'material-ui/Menu';
 
 class ImapAccountsList extends React.Component {
     constructor( props ){
@@ -21,6 +22,7 @@ class ImapAccountsList extends React.Component {
     render(){
 
         let imapEmailsList = this.props.imap_emails.map( (email) => {
+          if(typeof email.smtp == 'undefined' && email.emailId != '')
             return (
                 <div key={email._id}>
                     <ImapAccountsListItem imapEmail={email} {...this.props}/>
@@ -31,7 +33,9 @@ class ImapAccountsList extends React.Component {
         return(
             <div>
                 <Subheader>IMAP Emails</Subheader>
+              <Menu>
                 {imapEmailsList}
+              </Menu>
             </div>
 
         );

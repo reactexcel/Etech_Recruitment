@@ -46,6 +46,17 @@ export function emailSetting (state = initialState, action ){
       }
     });
     return Immutable.List(smtpList);
+  }else if (action.type === 'ACTIVE_OR_DEACTIVE_IMAP_EMAIL' ) {
+    return  state.map(
+        ( value ) => {
+          if(value.get("_id") === action.payload._id) {
+            return value.set("active", action.payload.mode)
+
+          }else{
+            return value;
+          }
+        }
+      );
   }
   return state;
 }

@@ -60,7 +60,6 @@ export function inbox( state = Immutable.Map(initialState), action ){
           return state.set("emails",_.clone(emails))
                       .set("tagList",_.clone(tagList))
                       .set("count_unread_emails",_.clone(count_unread_emails))
-                      
 	}else if( action.type == 'ACTION_UPDATE_EMAIL_DATA' ){
         let data = action.payload
         let emails = state.get('emails')

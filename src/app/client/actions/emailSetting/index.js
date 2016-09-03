@@ -29,6 +29,10 @@ const removeDetails = (_id, status) => {
   return createAction(REMOVE_DETAILS)();
 }
 
+const activeIMAPEmail = (data) => {
+  return createAction('ACTIVE_OR_DEACTIVE_IMAP_EMAIL')(data);
+}
+
 const loading = (bool) => {
   return createAction('LOADING')(bool);
 }
@@ -70,13 +74,13 @@ export function onSaveSettingsToDB (detail) {
 export function onTestDetails (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => { 
-      //  dispatch(loading(true));
+        dispatch(loading(true));
       Meteor.call('checkMailServer',detail,(err,status) => {
           if(err){
             reject(err);
           }else{
             dispatch(testDetails(detail._id,status))
-         //   dispatch(loading(true));
+            dispatch(loading(true));
             resolve(status);
           }
       });
@@ -161,6 +165,21 @@ export function onTestDetailsSMTP (detail) {
           }else{
             dispatch(fetchSMTPSettings());
             resolve(resp)
+          }
+      });
+    });
+  }
+}
+
+export function onActiveIMAPEmail (id) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+        Meteor.call('activeIMAPEmail', id ,( err, data) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(activeIMAPEmail(data));
+            resolve(data);
           }
       });
     });

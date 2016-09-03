@@ -27,7 +27,7 @@ const style = {
   container: {
     position: 'relative',
     textAlign:'center',
-    paddingTop:'100px'
+    paddingTop:'200px'
   },
   refresh: {
     verticalAlign:'middle',

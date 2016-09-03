@@ -9,6 +9,8 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 const classNames = require('classnames');
 import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
+import ActionDone from 'material-ui/svg-icons/action/done';
+import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 
 const styles = {
@@ -72,7 +74,7 @@ export default class EmailSettingList extends React.Component {
   render() {
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
-        if(typeof row.smtp == 'undefined'){
+        if(typeof row.smtp == 'undefined' &&  row.emailId != ''){
           rowdata.push(row)
         }
       })
@@ -113,6 +115,7 @@ export default class EmailSettingList extends React.Component {
                     <TableRowColumn tooltip="Port" style={{"fontWeight": "bold"}}>Port</TableRowColumn>
                     <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold"}}>Encrypt</TableRowColumn>
                     <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
+                    <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Active</TableRowColumn>
                     <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test</TableRowColumn>
                     <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold"}}>Remove</TableRowColumn>
                   </TableRow>
@@ -136,7 +139,20 @@ export default class EmailSettingList extends React.Component {
                                       {"fa-minus": (row.status == 0)},
                                      )
                        } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><IconButton
+                        iconClassName={
+                          classNames("fa" ,"fa-2x","fa-power-off")
+                          }
+                          iconStyle={{"color":(row.active?"#8BC34A":"#B71C1C")}}
+                        onClick= {
+                         (evt) => {
+                           evt.stopPropagation();
+                           this.props.onActiveIMAPEmail(row._id);
+                         }
+                       }
+                       />
+                     </TableRowColumn>
+                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
