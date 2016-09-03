@@ -70,13 +70,13 @@ export function onSaveSettingsToDB (detail) {
 export function onTestDetails (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => { 
-      //  dispatch(loading(true));
+        dispatch(loading(true));
       Meteor.call('checkMailServer',detail,(err,status) => {
           if(err){
             reject(err);
           }else{
             dispatch(testDetails(detail._id,status))
-         //   dispatch(loading(true));
+            dispatch(loading(true));
             resolve(status);
           }
       });
