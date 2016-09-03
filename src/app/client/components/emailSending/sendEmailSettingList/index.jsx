@@ -4,6 +4,7 @@ import Toggle from 'material-ui/Toggle';
 import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
 const classNames = require('classnames');
@@ -110,6 +111,13 @@ checkMailServer( row, event ){
                      rowdata.push(row)
                     }
                     })
+    const actions = [
+      <RaisedButton
+        label="Stop"
+        onTouchTap={this.handleClose}
+        style={{marginRight:10}}
+      />
+    ];
     return (
       <div>
         <div className="row">
@@ -173,6 +181,7 @@ checkMailServer( row, event ){
             <div>
               <Dialog
                 title={this.state.title}
+                actions={actions}
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
