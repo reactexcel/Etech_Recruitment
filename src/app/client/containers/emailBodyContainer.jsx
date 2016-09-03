@@ -6,8 +6,9 @@ import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import * as candidateHistory_action from '../actions/candidateHistory'
-import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
+import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
+import {fetchTemplate} from '../actions/emailTemplates'
 //import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class EmailbodyContainer extends React.Component {
         }
     this.props.onEmailDetail(this.props.params.id);
     this.props.onLoadCandidateHistory(this.props.params.id)
+    this.props.onFetchTamplets()
   }
   render() {
     return (
@@ -36,7 +38,8 @@ function mapStateToProps( state ){
     return {
         email : state.entities.email,
         inboxTag: state.entities.inboxTag,
-        candidateHistory:state.entities.candidateHistory
+        candidateHistory:state.entities.candidateHistory,
+        emailTemplates : state.entities.emailTemplates
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -57,6 +60,12 @@ const mapDispatchToProps = (dispatch) => {
       },
       onLoadCandidateHistory : (email_id) => {
         return dispatch( candidateHistory_action.onLoadCandidateHistory(email_id) )
+      },
+      onFetchTamplets:()=>{
+            return dispatch(fetchTemplate())
+      },
+      onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
+            return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
       }
     }
 }

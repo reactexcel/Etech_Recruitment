@@ -133,3 +133,18 @@ export function onRejectMultipleCandidate (idList, tagId, reason){
     });
   }
 }
+
+export function sendMailToCandidate(candidateIdList,name,sub,body,tagId){
+  return (dispatch,getState)=>{
+    return new Promise((resolve,reject)=>{
+      Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,tagId,Meteor.userId(),(err,mails)=>{
+        if(err){
+          reject(err)
+        }else{
+          dispatch(assignTag(mails));
+          resolve();
+        }
+      })
+    })
+  }
+}

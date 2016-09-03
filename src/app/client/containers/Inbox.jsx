@@ -8,7 +8,7 @@ import * as actions_emailSetting from './../actions/emailSetting'
 import Header from './../components/generic/Header'
 import EmailsList from './../components/inbox/EmailsList'
 import {addLogs} from '../actions/logs'
-import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate} from '../actions/tags'
+import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
 import {fetchTemplate} from '../actions/emailTemplates'
 
 class Inbox extends React.Component {
@@ -139,6 +139,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onFetchTamplets:()=>{
             return dispatch(fetchTemplate())
+        },
+        onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
+            return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
         }
     }
 }
