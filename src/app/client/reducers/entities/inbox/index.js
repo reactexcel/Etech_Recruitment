@@ -36,24 +36,31 @@ export function inbox( state = Immutable.Map(initialState), action ){
     }else if(action.type == 'ASSIGN_TAG'){
           let emails = state.get("emails")
           let tagList = state.get("tagList")
-          let data = action.payload
-          _.map(emails,(email)=>{
-            _.forEach(data.emailIdList,(id)=>{
-                if(email._id === id){
-                        email.tags.push(data.tagId)
+          let count_unread_emails = state.get("count_unread_emails")
+          let data = action.payload.email
+          let tagUnreadCount = false
+            _.map(data,(assign)=>{
+              _.map(emails,(email)=>{
+                if(_.isEmpty(email.tags)){
+                  tagUnreadCount = true
                 }
-            })
-          })
-
-          _.map(tagList,(list)=>{
-            _.forEach(data.emailIdList,(id)=>{
-                if(list.tagId === data.tagId){
-                   list.count = list.count + 1;
+                if(assign._id === email._id){
+                     email.tags = assign.tags;
                 }
+              })
+              _.map(tagList,(tag)=>{
+                if(tag.tagId === action.payload.tagId && assign.m_read_status !== 1 ){
+                  tag.count++
+                  if(tagUnreadCount){
+                    count_unread_emails--
+                  }
+                }
+              })
             })
-          })
-          return state.set("emails",emails)
-                      .set('tagList', tagList )
+          return state.set("emails",_.clone(emails))
+                      .set("tagList",_.clone(tagList))
+                      .set("count_unread_emails",_.clone(count_unread_emails))
+                      
 	}else if( action.type == 'ACTION_UPDATE_EMAIL_DATA' ){
         let data = action.payload
         let emails = state.get('emails')
@@ -62,7 +69,7 @@ export function inbox( state = Immutable.Map(initialState), action ){
                 email.m_read_status = data[0].m_read_status
             }
         })
-      return state.set('emails', emails)
+      return state.set('emails', _.clone(emails))
     }
     return state
 }

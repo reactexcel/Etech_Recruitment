@@ -238,7 +238,7 @@ try{
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
-	var count_unread_emails = EmailsStore.find({ 'm_read_status' : 0 * 1}).count()
+	var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'm_read_status' : 0}).count()
 	//----
 	if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
@@ -261,10 +261,9 @@ try{
   	tags = Tags.find({}).fetch();
   	_.map(tags, (t) => {
   		let tagId=t._id;
-  		let count=EmailsStore.find({tags:[t._id], 'm_read_status' : 0 * 1}).count();
+  		let count=EmailsStore.find({tags:{$in:[tagId]}, m_read_status : 0 }).count();
   		tagList.push({"tagId":tagId,"count":count})
       })
-
   	return {
 		emails : allEmails,
 		previous_page : previous_page,
