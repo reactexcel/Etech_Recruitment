@@ -264,9 +264,6 @@ try{
   		let count=EmailsStore.find({tags:[t._id], 'm_read_status' : 0 * 1}).count();
   		tagList.push({"tagId":tagId,"count":count})
       })
-  	console.log("-----------------------------------------")
-  	console.log(tagList)
-  	console.log("-----------------------------------------")
 
   	return {
 		emails : allEmails,

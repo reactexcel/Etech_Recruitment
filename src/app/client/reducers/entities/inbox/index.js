@@ -37,9 +37,6 @@ export function inbox( state = Immutable.Map(initialState), action ){
           let emails = state.get("emails")
           let tagList = state.get("tagList")
           let data = action.payload
-          console.log(data,"data--------------")
-          console.log(emails,'emails before-------------')
-          console.log(tagList,'tagList before-------------')
           _.map(emails,(email)=>{
             _.forEach(data.emailIdList,(id)=>{
                 if(email._id === id){
@@ -55,8 +52,6 @@ export function inbox( state = Immutable.Map(initialState), action ){
                 }
             })
           })
-          console.log(emails,'email after------------')
-          console.log(tagList,'tagList after-------------')
           return state.set("emails",emails)
                       .set('tagList', tagList )
 	}else if( action.type == 'ACTION_UPDATE_EMAIL_DATA' ){
