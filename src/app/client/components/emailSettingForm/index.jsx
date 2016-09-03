@@ -38,10 +38,11 @@ export default class EmailSettingForm extends React.Component {
       "open" : false,
       "title": "",
       show:false,
-      openSnakbar:false,
-      message:'',
     }
     this.error = [];
+    this.saveSettings = this.saveSettings.bind(this);
+    this.update = this.update.bind(this);
+    this.clear = this.clear.bind(this);
     this.regExp= {
       "port" : /^[0-9]+$/,
       "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -49,12 +50,8 @@ export default class EmailSettingForm extends React.Component {
       "server": /^[a-z]+[.][a-z]+[.][a-z]+$/,
       "encrypt": /^[a-z]+$/
     }
-    this.update = this.update.bind(this);
-    this.clear = this.clear.bind(this);    
-    this.saveSettings = this.saveSettings.bind(this);
+    this.testDetails = this.testDetails.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.addLog = this.addLog.bind(this);
-    this.testSetting = this.testSetting.bind( this )
   }
   handleOpen (email) {
     this.setState({
@@ -101,7 +98,12 @@ export default class EmailSettingForm extends React.Component {
     })
   }
 
-    addLog () {
+  saveSettings () {
+    this.setState({testDetails: true})
+    if ((this.state.emailId.length && this.state.password.length
+          && this.state.port.length && this.state.server.length
+            && this.state.encrypt.length)){
+        this.testDetails();
       if(this.state.edit == 1){
         this.props.logging("Edit email information",
           Meteor.userId(), "edited information of email id : "+this.state.emailId)
@@ -110,44 +112,15 @@ export default class EmailSettingForm extends React.Component {
           Meteor.userId(), "New server email id : "+this.state.emailId)
       }
     }
-
-  componentWillUpdate () {
-    //if(this.props.uiLoading && this.state.open){
-    //  this.handleClose () ;
-    //}
   }
 
-    testSetting () {
-      if ((this.state.emailId.length && this.state.password.length
-          && this.state.port.length && this.state.server.length
-            && this.state.encrypt.length)){
-     this.handleOpen(this.state.emailId);
-     this.props.onTestDetails({
-      "emailId": this.state.emailId ,
-      "password": this.state.password ,
-      "server": this.state.server ,
-      "port": this.state.port ,
-      "encrypt": this.state.encrypt,
-      "status": 0,
-      status_last_fetch_details: '',
-        "_id": this.state._id || undefined
-      }).then((data)=> {
-      if(data == -1){
-          this.handleClose()
-          this.setState({openSnakbar: true,message:'Testing failed'})
-        }else {
-          this.handleClose()
-          this.setState({openSnakbar: true,message:'Testing passed'})
-        }
-      }).catch((err)=>{
-        this.handleClose()
-        this.setState({openSnakbar: true,message:err.toString()})
-      })
-      }else{
-        this.setState({openSnakbar: true,message:"Enter all credentials"})
-      }
+  componentWillUpdate () {
+    if(this.props.uiLoading && this.state.open){
+      this.handleClose () ;
     }
-    saveSettings () {
+  }
+
+  testDetails () {
     if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
             && this.state.encrypt.length)){
@@ -163,47 +136,35 @@ export default class EmailSettingForm extends React.Component {
         "_id": this.state._id || undefined
       }).then((data)=> {
       if(data == -1){
-        this.handleClose()
-        if(window.confirm(" Given information is incorrect do you stil want to save ?")){
-        this.handleOpen(this.state.emailId);
+        this.setState({testDetails: false})
+        if(window.confirm(" Given information is incorrect do you stil want to save ?"))
           this.props.onSaveSettings({
             "emailId": this.state.emailId ,
             "password": this.state.password ,
             "server": this.state.server ,
             "port": this.state.port ,
             "encrypt": this.state.encrypt,
-            "status": -1,
+            "status": 0,
             "_id": this.state._id || undefined
           });
-          this.addLog ()
-          this.clear()
-          this.handleClose()
-          this.setState({openSnakbar: true,message:'Setting Saved'})
-        }else{
-          this.handleClose()
-          this.setState({openSnakbar: true,message:'Setting failed to Saved'})
-        }
+          this.setState({status: data, testDetails: true})
         }else {
+          this.setState({testDetails: true})
           this.props.onSaveSettings({
             "emailId": this.state.emailId ,
             "password": this.state.password ,
             "server": this.state.server ,
             "port": this.state.port ,
             "encrypt": this.state.encrypt,
-            "status": 1,
+            "status": 0,
             "_id": this.state._id || undefined
           })
-          this.addLog ()
-          this.clear();
-          this.handleClose()
-          this.setState({openSnakbar: true,message:'Setting Saved'})
+          this.setState({status: data, testDetails: true})
         }
-      }).catch((err)=>{
-        this.handleClose()
-        this.setState({openSnakbar: true,message:err.toString()})
+        this.clear();
       })
     }else{
-      this.setState({openSnakbar: true,message:"Enter all credentials"})
+      //console.log("enter all cresentials");
     }
   }
 
@@ -344,16 +305,16 @@ export default class EmailSettingForm extends React.Component {
                 <RaisedButton
                   label={'Test'}
                   secondary={true}
-                  onClick={this.testSetting}
+                  onClick={this.testDetails}
                 />
               </div>
             </form>
           </Paper>
           <Snackbar
-            open={this.state.openSnakbar}
-            message={this.state.message}
+            open={this.state.testDetails}
+            message={!this.props.uiLoading ?"": "Done!"}
             autoHideDuration={2000}
-            onRequestClose = { () =>{ this.setState({openSnakbar:false})}}
+            onRequestClose = { () =>{ this.setState({testDetails:false})}}
             />
         </div>
         <div>
