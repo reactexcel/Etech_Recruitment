@@ -59,6 +59,7 @@ Meteor.methods({
     var mail;
     var email_id;
     var currentDate = new Date();
+    var newIdList = [];
      _.map(idList,(id)=>{
       email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
@@ -69,6 +70,7 @@ Meteor.methods({
                { _id: id },
                { $addToSet: { 'tags': tagId} }
              );
+          newIdList.push(id)
         }
        }else{
         console.log(idList, tagId, userId,"undefine---------------")
@@ -76,6 +78,7 @@ Meteor.methods({
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
            );
+          newIdList.push(id)
        }
        if(_.includes(mail[0].tags,tagId)==false){
          Logs.insert({
@@ -104,14 +107,15 @@ Meteor.methods({
        }
 
      })
-     //return {emailIdList:idList,tagId:tagId}
-     return EmailsStore.find({}).fetch();
+     return {emailIdList:newIdList,tagId:tagId}
+     //return EmailsStore.find({}).fetch();
   },
   "rejectMultipleCandidate": function (idList, tagId, reason, userId){
     let username=Meteor.users.findOne({"_id": userId})
        var mail;
        var email_id;
        var currentDate = new Date();
+       var newIdList = [];
      _.map(idList,(id)=>{
       email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
@@ -121,12 +125,14 @@ Meteor.methods({
                { _id: id },
                { $addToSet: { 'tags': tagId} }
              );
+            newIdList.push(id)
           }
        }else{
           EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
            );
+          newIdList.push(id)
        }
        if(_.includes(mail[0].tags,tagId)==false){
           Logs.insert({
@@ -155,7 +161,7 @@ Meteor.methods({
              }
        }
      })
-     //return {emailIdList:idList,tagId:tagId}
-     return EmailsStore.find({}).fetch();
+     return {emailIdList:newIdList,tagId:tagId}
+     //return EmailsStore.find({}).fetch();
   },
 });
