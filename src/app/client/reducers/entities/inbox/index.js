@@ -34,7 +34,26 @@ export function inbox( state = Immutable.Map(initialState), action ){
         return state.set('emails_fetch_status', action.payload)
 
     }else if(action.type == 'ASSIGN_TAG'){
+          let emails = state.get("emails")
+          let tagList = state.get("tagList")
+          let data = action.payload
+          _.map(emails,(email)=>{
+            _.forEach(data.emailIdList,(id)=>{
+                if(email._id === id){
+                        email.tags.push(data.tagId)
+                }
+            })
+          })
 
+          _.map(tagList,(list)=>{
+            _.forEach(data.emailIdList,(id)=>{
+                if(list.tagId === data.tagId){
+                   list.count = list.count + 1;
+                }
+            })
+          })
+          return state.set("emails",emails)
+                      .set('tagList', tagList )
 	}else if( action.type == 'ACTION_UPDATE_EMAIL_DATA' ){
         let data = action.payload
         let emails = state.get('emails')
