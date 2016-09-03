@@ -141,6 +141,13 @@ export default class SendEmailSettingForm extends React.Component {
   }
 
   render() {
+    const actions = [
+      <RaisedButton
+        label="Stop"
+        onTouchTap={this.handleClose}
+        style={{marginRight:10}}
+      />
+    ];
     return (
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
@@ -270,6 +277,7 @@ export default class SendEmailSettingForm extends React.Component {
           </Paper>
           <Dialog
                 title={this.state.title}
+                actions={actions}
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
