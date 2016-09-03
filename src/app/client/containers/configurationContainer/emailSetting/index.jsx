@@ -58,6 +58,9 @@ const mapDispatchToProps = (dispatch) => {
       logging: (action, id , detail) =>{
         dispatch(addLogs(action, id , detail));
       },
+      onActiveIMAPEmail: (row_id) =>{
+        return dispatch(action.onActiveIMAPEmail(row_id));
+      }
     }
 }
 

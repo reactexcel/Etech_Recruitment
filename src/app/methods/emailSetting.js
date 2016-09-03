@@ -12,9 +12,13 @@ Meteor.methods({
     console.log(details)
     const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
+      details.active = false;
       details.status_last_fetch_details = {
         "last_email_id_fetch": 0*1,
-        "last_email_fetch_date" : moment(new Date()).format("YYYY-MM-DD")
+        "last_email_fetch_date" : moment(new Date()).format("YYYY-MM-DD"),
+        "totalEmailFetched": 0,
+				"time": moment(new Date().getTime() * 1000).format('HH:mm:ss'),
+				'newMailFound': 0,
       }
       details._id = Config.insert(details);
       return details;
@@ -96,6 +100,17 @@ Meteor.methods({
         Config.update({"_id": detail._id},{$set:{"smtp.status": 1}});
       }
       return 1;
-  
+
+ },
+ 'activeIMAPEmail': function ( _id ) {
+   try{
+     let email = Config.find({ "_id" : _id }).fetch();
+     if(email.length > 0){
+       Config.update({'_id': _id}, {$set:{'active': !email[0].active} });
+       return {_id, mode:!email[0].active};
+     }
+   }catch(e){
+     console.log(e);
+   }
  }
 });

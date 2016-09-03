@@ -19,23 +19,34 @@ Meteor.startup(function () {
   // Configure MAIL_URL
   // config_ENV.emailServer._url() generate MAIL_URL as per the given information in config file under emailServer.
   process.env.MAIL_URL = config_ENV.emailServer._url();
-/*
+
   var i = 0;
-  SyncedCron.add({
-    name: 'inbox_mail',
-    schedule: function(parser) {
-      return parser.text('every 2 mins');
-    },
-    job: function() {
-      var imapEmails = Meteor.call('fetchSettings');
-      _.forEach(imapEmails, (imap) =>{
-        Meteor.call('doUpdateEmailsStore', imap._id);
-      })
-      console.log('running', ++i );
-    }
-  });
+  try{
+    SyncedCron.add({
+      name: 'inbox_mail2',
+      schedule: function(parser) {
+        return parser.text('every 2 mins');
+      },
+      job: function() {
+        var imapEmails = Meteor.call('fetchSettings');
+        _.forEach(imapEmails, (imap) =>{
+          try{
+            if(typeof imap.smtp  !== 'object' && imap.active){
+              console.log(imap.emailId);
+              Meteor.call('doUpdateEmailsStore', imap._id);
+            }
+          }catch(ex){
+            console.log('EmailfetchingCronJob ->>exceptipn->>', ex);
+          }
+        })
+        console.log('running', ++i );
+      }
+    });
     SyncedCron.start();
-  */
+  } catch (ex){
+    console.log("cron --> ", ex);
+  }
+
   /*
     It will Configure the ROOT_URL and MONGO_URL when its not running on localhost.
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.

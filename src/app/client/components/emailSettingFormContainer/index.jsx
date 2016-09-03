@@ -52,6 +52,7 @@ export default class EmailSettingFormContainer extends React.Component {
         <div className="row">
           <div className="col-sm-12 col-lg-12 col-md-12">
             <EmailSettingList
+              onActiveIMAPEmail={this.props.onActiveIMAPEmail}
               emailSetting={this.props.emailSetting}
               selectedRow={this.selectedRow}
               onTestDetails={this.props.onTestDetails}
@@ -73,4 +74,5 @@ EmailSettingFormContainer.propTypes = {
   onRemoveDetails: PropTypes.func.isRequired,
   logging: React.PropTypes.func.isRequired,
   emailSetting: PropTypes.any.isRequired,
+  onActiveIMAPEmail: PropTypes.any.isRequired,
 };

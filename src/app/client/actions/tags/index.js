@@ -1,5 +1,7 @@
 import {createAction} from 'redux-actions';
 import {addLogs} from '../logs';
+import { Meteor } from 'meteor/meteor'
+
 
 export const ADD_TAG = "ADD_TAG";
 export const EDIT_TAG = "EDIT_TAG";
@@ -36,6 +38,7 @@ export function onAddTag(tag){
             reject(err);
           }else{
             dispatch(addTag(tag));
+            dispatch(addLogs("ADD TAG", Meteor.userId(),"tag "+ tag.name+" Added"));
             resolve();
           }
       });
@@ -51,6 +54,7 @@ export function onEditTag(title, _id, color){
             reject(err);
           }else{
             dispatch(editTag(tag));
+            dispatch(addLogs("EDIT TAG",Meteor.userId(),"tag "+ tag.name+" edited"));
             resolve();
           }
       });
@@ -66,6 +70,7 @@ export function onRemoveTag( _id ){
             reject(err);
           }else{
             dispatch(removeTag(_id));
+            dispatch(addLogs("REMOVE TAG",Meteor.userId(),"tag  removed"));
             resolve();
           }
       });

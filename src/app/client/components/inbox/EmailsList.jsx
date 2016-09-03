@@ -186,8 +186,8 @@ class EmailsList extends React.Component {
                                 onTouchTap= { () => this.onClick( {t_id : ''}) }
                                 ></FlatButton>
                         }/>
-                        
-                     
+
+
                        {
                         _.map(this.props.tags, (t) => {
                           let unread_mail = 0;
@@ -253,7 +253,7 @@ class EmailsList extends React.Component {
                             </ul>
                             {      }
                             <ul className="pagination pull-right">
-                              {next_page_num !== '' && emailsList.length !== 0?<li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>:''}
+                              {next_page_num !== '' && emailsList.length !== 0 ?<li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>:''}
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
@@ -278,7 +278,7 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <ScheduleCandidate 
+                    <ScheduleCandidate
                     showPopUp={this.state.schedulePop}
                     emailIdList={this.state.emailIdList}
                     emailTemplates={this.props.emailTemplates}
@@ -312,7 +312,7 @@ class EmailsList extends React.Component {
                     onRequestClose={this.handleRequestClose}
                   />
                 </div>
-                
+
               </div>
             </div>
         );

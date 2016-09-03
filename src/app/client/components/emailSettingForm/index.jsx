@@ -50,6 +50,9 @@ export default class EmailSettingForm extends React.Component {
       "server": /^[a-z]+[.][a-z]+[.][a-z]+$/,
       "encrypt": /^[a-z]+$/
     }
+    this.update = this.update.bind(this);
+    this.clear = this.clear.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
     this.testDetails = this.testDetails.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
@@ -272,6 +275,7 @@ export default class EmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
+                {console.log(this.state)}
                 <RadioButtonGroup name="encrypt" valueSelected={this.state.encrypt} labelPosition="right"
                   style={{maxWidth: 250}}
                     onChange={
