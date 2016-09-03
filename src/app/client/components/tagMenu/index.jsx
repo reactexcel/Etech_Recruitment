@@ -21,7 +21,7 @@ class TagMenu extends React.Component {
   }
 
   onClick ( obj ) {
-    this.props.onAssignTag(obj.m_id, obj.t_id).then(()=>{
+    this.props.AssignTag(obj.m_id, obj.t_id).then(()=>{
       this.setState({
         msgOpen:true,
         msg:'Tag Assigned',

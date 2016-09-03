@@ -34,8 +34,9 @@ class EmailListItem extends React.Component {
     componentWillMount( props ){
       
     }
-    AssignTag(m_id, t_id){
+    AssignTag(m_id, t_id){console.log('--------1--')
       this.props.onAssignTag(m_id, t_id).then(()=>{
+        console.log('------2----')
       this.setState({
         msgOpen:true,
         msg:'Tag Assigned',
@@ -46,6 +47,7 @@ class EmailListItem extends React.Component {
         msg:err.toString(),
       })
     })
+    console.log('-----3-----')
     }
     render(){
       let m_id = this.props.email._id
@@ -120,7 +122,7 @@ class EmailListItem extends React.Component {
                 rightIcon={hasAttachment}
                 rightIconButton={
                   <div style={{left:"95%","top":"2%"}}>
-                    <TagMenu onAssignTag={this.AssignTag} {...this.props}/>
+                    <TagMenu AssignTag={this.AssignTag} {...this.props}/>
                   </div>
                 }
                 leftCheckbox={
