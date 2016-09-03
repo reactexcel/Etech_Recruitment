@@ -35,6 +35,7 @@ Meteor.methods({
         "&encryp="+detail.encrypt+
         "&email_id="+ (detail.status_last_fetch_details.last_email_id_fetch || 1);
 	  const API_URL = BASE_URL + PARAMS
+
     try{
       let result = HTTP.call("GET", API_URL );
       let json = JSON.parse( result.content );
