@@ -83,7 +83,7 @@ class Inbox extends React.Component {
             })
             if(this.update){
               this.update = false;
-              this.props.onFetchNewEmails( imap_emails_ids )
+              //this.props.onFetchNewEmails( imap_emails_ids )
             }
         }
     }

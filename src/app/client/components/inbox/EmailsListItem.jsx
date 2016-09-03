@@ -19,13 +19,35 @@ import TagMenu from '../../components/tagMenu';
 import _ from 'lodash';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionDone from 'material-ui/svg-icons/action/done';
+import Snackbar from 'material-ui/Snackbar';
+
 class EmailListItem extends React.Component {
 
     constructor( props ){
         super( props );
+        this.state={
+      msgOpen:false,
+      msg:'',
+    }
+      this.AssignTag = this.AssignTag.bind( this )
     }
     componentWillMount( props ){
       
+    }
+    AssignTag(m_id, t_id){console.log('--------1--')
+      this.props.onAssignTag(m_id, t_id).then(()=>{
+        console.log('------2----')
+      this.setState({
+        msgOpen:true,
+        msg:'Tag Assigned',
+      })
+    }).catch((err)=>{
+      this.setState({
+        msgOpen:true,
+        msg:err.toString(),
+      })
+    })
+    console.log('-----3-----')
     }
     render(){
       let m_id = this.props.email._id
@@ -52,8 +74,6 @@ class EmailListItem extends React.Component {
       let mail_left_border_color = "#C6F7C6"
       let unread_color = '#000000'
       if( typeof m_read_status == 'undefined' || m_read_status == 1 ){
-        //mail_bg_color = "rgb(229, 226, 226)"
-        //mail_left_border_color = "#F3C6C6"
         unread_color = '#808080'
       }
 
@@ -102,7 +122,7 @@ class EmailListItem extends React.Component {
                 rightIcon={hasAttachment}
                 rightIconButton={
                   <div style={{left:"95%","top":"2%"}}>
-                    <TagMenu {...this.props}/>
+                    <TagMenu AssignTag={this.AssignTag} {...this.props}/>
                   </div>
                 }
                 leftCheckbox={
@@ -138,6 +158,12 @@ class EmailListItem extends React.Component {
                 secondaryTextLines={2}
                 onClick={() => this.props.router.push(m_link)}
               />
+              <Snackbar
+                    open={this.state.msgOpen}
+                    message={this.state.msg}
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleRequestClose}
+                  />
           </div>
 
       );

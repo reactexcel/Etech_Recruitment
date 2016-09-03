@@ -255,7 +255,7 @@ try{
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
-		var count_unread_emails = EmailsStore.find({ 'm_read_status' : 0 * 1}).count()
+	var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'm_read_status' : 0}).count()
 	//----
 		if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
@@ -263,7 +263,7 @@ try{
 		var allEmails;
 
 		if(tag == ""){
-	  	allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+	  	allEmails = EmailsStore.find( {tags:{$size:0}}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else if(imapEmail.length > 0 && tag == imapEmail[0]._id){
 			allEmails = EmailsStore.find({ "m_source_email_id": imapEmail[0].emailId},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else{
@@ -280,11 +280,10 @@ try{
   	var tagList=[];
   	tags = Tags.find({}).fetch();
   	_.map(tags, (t) => {
-  		let tagId = t._id;
-  		let count = EmailsStore.find({tags:[t._id], 'm_read_status' : 0 * 1}).count();
+  		let tagId=t._id;
+  		let count=EmailsStore.find({tags:{$in:[tagId]}, m_read_status : 0 }).count();
   		tagList.push({"tagId":tagId,"count":count})
-    })
-
+      })
   	return {
 		emails : allEmails,
 		previous_page : previous_page,
