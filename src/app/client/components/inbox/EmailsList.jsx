@@ -138,14 +138,20 @@ class EmailsList extends React.Component {
         let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
         let emailsList
+        let email = '';
+        _.forEach(this.props.emailSetting, ( e ) =>{
+          if(e._id == tag){
+            email = e.emailId;
+          }
+        })
         if(tag !== ''){
           emailsList = _.map(emails, (email) => {
-          if(_.includes(email.tags, tag)){
+          if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading} 
+                      uiLoading={this.props.uiLoading}
                       />
                 </div>
             )
@@ -282,7 +288,7 @@ class EmailsList extends React.Component {
                                     "SnackbarMessage":err.toString()
                                    })
                                   })
-                                   
+
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})

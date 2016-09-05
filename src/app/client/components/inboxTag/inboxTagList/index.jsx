@@ -57,6 +57,7 @@ export default class InboxTagList extends React.Component {
       "_id": row._id,
       tagName: row.name,
       color: row.color,
+      row: row
     });
   }
 
@@ -217,6 +218,7 @@ export default class InboxTagList extends React.Component {
           open={this.state.open}
           onRequestClose={this.handleClose}
           modal={true}
+          autoScrollBodyContent={true}
           children={
             <div>
               <form className="form-inline">
@@ -266,6 +268,48 @@ export default class InboxTagList extends React.Component {
                     inputStyle={{"color": this.state.color}}
                   />
                 </div>
+                {
+                this.state.row?
+                  this.state.row.automatic?(
+                    <div>
+                      <div className="form-group" style={styles.formInput}>
+                        <TextField
+                          type="Email"
+                          floatingLabelText="Email"
+                          fullWidth={true}
+                          value={this.state.row.email || 'Not specified'}
+                          disabled={true}
+                        />
+                      </div>
+                      <div className="form-group" style={styles.formInput}>
+                        <TextField
+                          type="Subject"
+                          floatingLabelText="Subject"
+                          fullWidth={true}
+                          value={this.state.row.subject || 'Not specified'}
+                          disabled={true}
+                          />
+                      </div>
+                      <div className="form-group" style={styles.formInput}>
+                        <TextField
+                          type="From date"
+                          floatingLabelText="From date"
+                          fullWidth={true}
+                          value={this.state.row.from || 'Not specified'}
+                          disabled={true}
+                        />
+                      </div>
+                      <div className="form-group" style={styles.formInput}>
+                        <TextField
+                          type="To date"
+                          floatingLabelText="To date"
+                          fullWidth={true}
+                          value={this.state.row.to || 'Not specified'}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>):'':''
+                }
               </form>
             </div>
           }

@@ -13,6 +13,9 @@ Meteor.methods({
   },
   "addTag": function(tag){
     let id;
+    if(Tags.find({name: tag.name}).count() >0){
+      return 'Tag name already exists';
+    }
     if(tag.automatic)
       id = Tags.insert({
         name: tag.name,
@@ -20,6 +23,7 @@ Meteor.methods({
         from: tag.from,
         to: tag.to,
         email: tag.email,
+        subject: tag.subject,
         automatic: tag.automatic,
       });
     else
@@ -40,7 +44,7 @@ Meteor.methods({
     EmailsStore.update({},{$pull:{'tags':_id}})
     return ({_id: _id});
   },
-  "assignTag1": function (m_id, t_id){
+  "assignTag": function (m_id, t_id){
     let mail = EmailsStore.find({"_id": m_id}).fetch();
     if(mail.tags != 'undefined'){
       EmailsStore.update(
@@ -237,7 +241,6 @@ Meteor.methods({
              }
     })
    // return {emailIdList:candidateIdList,tagId:tagId}
-   console.log(newIdList,"---------------------------------------")
    let ignrReturn=[]
      _.map(newIdList,(id)=>{
       let data = EmailsStore.find({"_id": id}).fetch()
@@ -245,7 +248,7 @@ Meteor.methods({
      })
      return {email:ignrReturn,tagId:tagId};
 
-   } 
-     
-  
+   }
+
+
 });

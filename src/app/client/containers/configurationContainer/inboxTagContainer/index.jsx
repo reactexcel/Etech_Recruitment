@@ -19,7 +19,7 @@ class InboxTagContainer extends React.Component {
       if (!Meteor.userId()) {
         this.props.router.push('/login');
       }
-  }    
+  }
   handleToggle () {
     this.toggle.handleOpen();
   }
@@ -74,7 +74,7 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(actions.onRemoveTag(_id));
       },
       onAddTag: (tag) =>{
-        dispatch(actions.onAddTag(tag));
+        return dispatch(actions.onAddTag(tag));
       },
     }
 }

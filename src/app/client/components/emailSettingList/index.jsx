@@ -111,13 +111,14 @@ export default class EmailSettingList extends React.Component {
                   </TableRow>
                   <TableRow>
                     <TableRowColumn colSpan={2} tooltip="Email ID" style={{"fontWeight": "bold"}}>Email ID</TableRowColumn>
-                    <TableRowColumn tooltip="Server" style={{"fontWeight": "bold"}}>Server</TableRowColumn>
-                    <TableRowColumn tooltip="Port" style={{"fontWeight": "bold"}}>Port</TableRowColumn>
-                    <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold"}}>Encrypt</TableRowColumn>
+                    <TableRowColumn colSpan={2} tooltip="Server" style={{"fontWeight": "bold"}}>Server</TableRowColumn>
+                    <TableRowColumn tooltip="Port" style={{"fontWeight": "bold", textAlign:'center'}}>Port</TableRowColumn>
+                    <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold", textAlign:'center'}}>Encrypt</TableRowColumn>
                     <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
                     <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Active</TableRowColumn>
                     <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test</TableRowColumn>
-                    <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold"}}>Remove</TableRowColumn>
+                    <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold", textAlign:'center', padding:'0px'}}>Remove</TableRowColumn>
+                    <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold"}}>Statics</TableRowColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -129,21 +130,23 @@ export default class EmailSettingList extends React.Component {
                       onChange={ (evt) => {this.select(row, evt.target.checked)}}
                     >
                       <TableRowColumn colSpan={2}>{row.emailId}</TableRowColumn>
-                      <TableRowColumn>{row.server}</TableRowColumn>
-                      <TableRowColumn>{row.port}</TableRowColumn>
-                      <TableRowColumn>{row.encrypt}</TableRowColumn>
+                      <TableRowColumn colSpan={2}>{row.server}</TableRowColumn>
+                      <TableRowColumn style={{textAlign:'center'}}>{row.port}</TableRowColumn>
+                      <TableRowColumn style={{textAlign:'center'}}>{row.encrypt}</TableRowColumn>
                       <TableRowColumn><IconButton iconClassName={
                           classNames("fa" ,"fa-2x",
                                       {"fa-check": (row.status == 1)},
                                       {"fa-times": (row.status == -1)},
                                       {"fa-minus": (row.status == 0)},
                                      )
-                       } iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
+                       }
+                       style={{textAlign:'center'}}
+                       iconStyle={{"color":(row.status == 1?"#8BC34A":((row.status == -1)?"#B71C1C":"#424242")), fontSize:"18px" }}/></TableRowColumn>
                      <TableRowColumn><IconButton
                         iconClassName={
                           classNames("fa" ,"fa-2x","fa-power-off")
                           }
-                          iconStyle={{"color":(row.active?"#8BC34A":"#B71C1C")}}
+                          iconStyle={{"color":(row.active?"#8BC34A":"#B71C1C"),fontSize:"18px"}}
                         onClick= {
                          (evt) => {
                            evt.stopPropagation();
@@ -152,8 +155,9 @@ export default class EmailSettingList extends React.Component {
                        }
                        />
                      </TableRowColumn>
-                     <TableRowColumn><FlatButton label="Test" primary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn style={{padding:"0px"}}><FlatButton labelStyle={{padding:'0px'}} labelPosition='before' label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn style={{padding:"10px"}}><FlatButton labelStyle={{padding:'0px'}} label="Remove" secondary={true} onClick={(evt) => this.removeMailServer(row, evt)}/></TableRowColumn>
+                     <TableRowColumn><IconButton iconClassName = 'fa fa-bar-chart fa-1x' iconStyle={{color:"#EC407A", fontSize:"15px"}} onClick={(evt) => { evt.stopPropagation(); this.setState({ stat: true, imapEmail:row})}}/></TableRowColumn>
                     </TableRow>
                     ))}
                 </TableBody>
@@ -173,6 +177,28 @@ export default class EmailSettingList extends React.Component {
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
+                ></Dialog>
+            </div>
+            <div>
+              <Dialog
+                title={typeof this.state.imapEmail !== 'undefined'?'Statics of ' + this.state.imapEmail.emailId:''}
+                actions={<FlatButton primary={true} label='close' onTouchTap={(evt) => { this.setState({ stat: false})}}/>}
+                modal={false}
+                open={this.state.stat}
+                onRequestClose={() => { this.setState({ stat: false})}}
+                autoScrollBodyContent={true}
+                children={
+                  this.state.imapEmail?
+                  <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'30%'}}>
+                    New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
+                    Last Update date: {this.state.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
+                    Last Update time: {this.state.imapEmail.status_last_fetch_details.time}<br/>
+                    Total emails fetched: {this.state.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
+                  </p>:''
+                }
+                titleClassName = "text-center text-muted"
+                contentStyle={{width: "40%"}}
+                bodyStyle={{ paddingTop:"5%"}}
                 ></Dialog>
             </div>
           </div>

@@ -202,7 +202,9 @@ try{
 			//insert mail to tha existing account
 			_.forEach(tagList, function ( tag ) {
 					if(tag.automatic){
-						if(tag.email == emailData.sender_mail){
+						if(tag.email == emailData.sender_mail ||
+								emailData.subject.search(tag.subject) > -1 ||
+									emailData.subject.search(tag.name) > -1 ){
 							if(_.indexOf(emailData.tags, tag._id) == -1){
 								emailData.tags.push(tag._id);
 							}
@@ -220,7 +222,9 @@ try{
 			//Insert new mail with tags
 			_.forEach(tagList, function ( tag ) {
 					if(tag.automatic){
-						if(tag.email == emailData.sender_mail){
+						if(tag.email == emailData.sender_mail ||
+								emailData.subject.search(tag.subject) > -1 ||
+									emailData.subject.search(tag.name) > -1 ){
 							if(_.indexOf(emailData.tags, tag._id) == -1){
 								emailData.tags.push(tag._id);
 							}
