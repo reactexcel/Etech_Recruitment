@@ -337,7 +337,6 @@ class EmailsList extends React.Component {
                       })
                     }}
                     />
-                  {console.log(emailsList)}
                     { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>

@@ -241,7 +241,6 @@ Meteor.methods({
              }
     })
    // return {emailIdList:candidateIdList,tagId:tagId}
-   console.log(newIdList,"---------------------------------------")
    let ignrReturn=[]
      _.map(newIdList,(id)=>{
       let data = EmailsStore.find({"_id": id}).fetch()

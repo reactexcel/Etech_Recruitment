@@ -47,7 +47,7 @@ Meteor.startup(function () {
   } catch (ex){
     console.log("cron --> ", ex);
   }
-  console.log(process.env.MAIL_URL,"8888888888888888")
+  console.log(process.env.MAIL_URL)
   /*
     It will Configure the ROOT_URL and MONGO_URL when its not running on localhost.
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.
