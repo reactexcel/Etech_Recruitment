@@ -34,9 +34,8 @@ class EmailListItem extends React.Component {
     componentWillMount( props ){
       
     }
-    AssignTag(m_id, t_id){console.log('--------1--')
+    AssignTag(m_id, t_id){
       this.props.onAssignTag(m_id, t_id).then(()=>{
-        console.log('------2----')
       this.setState({
         msgOpen:true,
         msg:'Tag Assigned',
@@ -47,7 +46,6 @@ class EmailListItem extends React.Component {
         msg:err.toString(),
       })
     })
-    console.log('-----3-----')
     }
     render(){
       let m_id = this.props.email._id
