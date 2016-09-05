@@ -13,30 +13,18 @@ import Snackbar from 'material-ui/Snackbar';
 class TagMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      msgOpen:false,
-      msg:'',
-    }
     this.onClick = this.onClick.bind(this);
   }
 
   onClick ( obj ) {
-    this.props.AssignTag(obj.m_id, obj.t_id).then(()=>{
-      this.setState({
-        msgOpen:true,
-        msg:'Tag Assigned',
-      })
-    }).catch((err)=>{
-      this.setState({
-        msgOpen:true,
-        msg:err.toString(),
-      })
-    })
+    this.props.AssignTag(obj.m_id, obj.t_id)
   }
 
   render() {
-    let tagMenu =  _.map(this.props.tags, ( v ) =>{
-              return  typeof this.props.email.tags != 'undefined'?
+    let tagMenu=[];
+     _.map(this.props.tags, ( v ) =>{
+      if(!v.default){
+              tagMenu.push(typeof this.props.email.tags != 'undefined'?
                 (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem
                   primaryText={<Avatar
@@ -61,7 +49,9 @@ class TagMenu extends React.Component {
                     key={v._id}
                     value={v._id+"-"+v.name}
                     onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
-                    />
+                    
+                    />)
+                  }
               })
     return (
       <div>
@@ -77,12 +67,6 @@ class TagMenu extends React.Component {
             menuItems={tagMenu}
             />
         </IconMenu>
-        <Snackbar
-                    open={this.state.msgOpen}
-                    message={this.state.msg}
-                    autoHideDuration={4000}
-                    onRequestClose={this.handleRequestClose}
-                  />
       </div>
     );
   }
