@@ -13,7 +13,7 @@ const style={
   },
   "formButton":{
     position:"absolute",
-    top: "85%",
+    top: "87%",
     left: "77%"
   }
 }
@@ -32,14 +32,15 @@ export default class TagForm extends React.Component {
 
   add ( ) {
     if(this.state.tagName.length > 0 && this.state.type == "manual"){
-      this.props.onAddTag({
+      this.props.handleToggle();
+      return this.props.onAddTag({
         name: this.state.tagName,
         color: this.props.color(),
         automatic: false
       });
-      this.props.handleToggle();
    }else if(this.state.tagName.length > 0 && this.state.type == "automatic"){
-      this.props.onAddTag({
+     this.props.handleToggle();
+      return this.props.onAddTag({
         name: this.state.tagName,
         color: this.props.color(),
         from: this.state.from,
@@ -48,10 +49,12 @@ export default class TagForm extends React.Component {
         subject: this.state.subject,
         automatic: true
       });
-      this.props.handleToggle();
     }else{
       this.error.tagName = "Enter tag title";
       this.setState({"tagName": ""});
+      return new Promise(function(resolve, reject) {
+        reject("please fill the 'TAG TITLE' field properly");
+      });
     }
   }
 
@@ -83,6 +86,7 @@ export default class TagForm extends React.Component {
           </div>
           <div className="form-group" style={style.formInput}>
             <RadioButtonGroup name="encrypt" labelPosition="right"
+              defaultSelected={'automatic'}
               style={{maxWidth: 250}}
                 onChange={
                   (evt, value) =>{
@@ -167,13 +171,6 @@ export default class TagForm extends React.Component {
                 }
               />
             </div>
-          </div>
-          <div className="form-group" style={style.formButton}>
-            <RaisedButton
-              label="Add Title"
-              primary={true}
-              onClick={this.add}
-            />
           </div>
         </form>
       </div>

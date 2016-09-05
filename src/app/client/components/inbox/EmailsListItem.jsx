@@ -47,7 +47,6 @@ class EmailListItem extends React.Component {
         msg:err.toString(),
       })
     })
-    
     }
     render(){
       let m_id = this.props.email._id

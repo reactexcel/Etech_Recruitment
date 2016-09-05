@@ -8,6 +8,10 @@ import TagForm from './tagForm'
 import InboxTagList from './inboxTagList'
 import { SketchPicker } from 'react-color';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+import ActionCheckCircle from 'material-ui/svg-icons/action/check-circle'
+import Avatar from 'material-ui/Avatar'
+import Snackbar from 'material-ui/Snackbar';
 
 export default class InboxTag extends React.Component {
   constructor(props) {
@@ -16,6 +20,8 @@ export default class InboxTag extends React.Component {
       open: false,
       colorOpen: false,
       color: '#3882b8',
+      applyToAll: false,
+      sOpen:false,
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleColorOpen = this.handleColorOpen.bind(this);
@@ -53,9 +59,38 @@ export default class InboxTag extends React.Component {
          open={this.state.open}
          onRequestClose={this.handleClose}
          autoScrollBodyContent={true}
+         actions={  [
+           <FlatButton
+              label="Close"
+              primary={true}
+              style={{marginRight:5}}
+              onClick={this.handleClose}
+            />,
+           <RaisedButton
+             label="Save"
+             primary={true}
+             onClick={(evt) => {
+               if(this.state.applyToAll){
+                 this.refs.tagForm.add()
+                  .then( (data) => {
+                    Meteor.call('applyTagToAll', data );
+                    this.setState({applyToAll: false,sOpen:false});
+                  })
+                  .catch( (err) => {
+                    this.setState({applyToAll: false, message: err, sOpen:true});
+                  })
+              }else{
+                this.refs.tagForm.add()
+                 .catch( (err) => {
+                   this.setState({applyToAll: false, message: err, sOpen:true});
+                 })
+              }
+            }}
+           />
+          ]}
          children={
            <div>
-            <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose}/>
+            <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm'/>
              <Dialog
                modal={false}
                open={this.state.colorOpen}
@@ -102,11 +137,32 @@ export default class InboxTag extends React.Component {
                    inputStyle={{"color": this.state.color}}
                  />
                </div>
+               <div style={{"marginLeft": "5%", "marginRight": "5%",}}>
+                 <Checkbox
+                   labelStyle={{fontWeight: 'normal'}}
+                   label="Apply this tag on all previous emails"
+                   checkedIcon={<Avatar size={25} children={<ActionCheckCircle color='#000'/>} />}
+                   checked={this.state.applyToAll}
+                   onCheck={(evt, checked) => {
+                     if(checked)
+                      this.setState({applyToAll: true});
+                     else{
+                      this.setState({applyToAll: false});
+                     }
+                   }}
+                   />
+               </div>
              </div>
          }
          contentStyle={{padding:"0px" ,width: "40%"}}
-         bodyStyle={{padding:"0px opx"}}     
+         bodyStyle={{padding:"0px opx"}}
          />
+         <Snackbar
+            open={this.state.sOpen}
+            message={this.state.message}
+            autoHideDuration={4000}
+            onRequestClose={() => this.setState({sOpen:false})}
+          />
      </div>
    );
  }

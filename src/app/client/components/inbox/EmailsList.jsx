@@ -30,6 +30,7 @@ class EmailsList extends React.Component {
           emailIdList:[],
           ignoreTagId:'',
           rejectTagId:'',
+          scheduleTagId:'',
           rejectpop:false,
           schedulePop:false,
           scheduledDate:moment().format("DD-MM-YYYY"),
@@ -61,6 +62,11 @@ class EmailsList extends React.Component {
                  rejectTagId:tag._id
               })
             }
+            if(tag.name=="Schedule"){
+              this.setState({
+                 scheduleTagId:tag._id
+              })
+            }
          })
     }
     submitForm( evt ){
@@ -81,7 +87,8 @@ class EmailsList extends React.Component {
           this.handleClose()
           this.setState({
             "SnackbarMessage":"Candidates are rejected",
-            "SnackbarOpen":true
+            "SnackbarOpen":true,
+            "emailIdList":[]
           })
         }).catch((err)=>{
           this.setState({
@@ -131,14 +138,21 @@ class EmailsList extends React.Component {
         let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
         let emailsList
+        let email = '';
+        _.forEach(this.props.emailSetting, ( e ) =>{
+          if(e._id == tag){
+            email = e.emailId;
+          }
+        })
         if(tag !== ''){
           emailsList = _.map(emails, (email) => {
-          if(_.includes(email.tags, tag)){
+          if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading}/>
+                      uiLoading={this.props.uiLoading}
+                      />
                 </div>
             )
           }
@@ -150,7 +164,8 @@ class EmailsList extends React.Component {
                 <div key={email._id}>
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading}/>
+                      uiLoading={this.props.uiLoading}
+                      {...this.props}/>
                 </div>
             )
           }
@@ -264,7 +279,8 @@ class EmailsList extends React.Component {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId).then(()=>{
                                     this.setState({
                                     "SnackbarOpen":true,
-                                    "SnackbarMessage":"Candidates are ignored"
+                                    "SnackbarMessage":"Candidates are ignored",
+                                    "emailIdList":[]
                                    })
                                   }).catch((err)=>{
                                     this.setState({
@@ -272,7 +288,7 @@ class EmailsList extends React.Component {
                                     "SnackbarMessage":err.toString()
                                    })
                                   })
-                                   
+
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
@@ -309,12 +325,15 @@ class EmailsList extends React.Component {
                      </div>
                     </Dialog>
                     <ScheduleCandidate
+                    scheduleTagId={this.state.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={this.state.emailIdList}
                     emailTemplates={this.props.emailTemplates}
+                    {...this.props}
                     closeDialog={()=>{
                       this.setState({
-                            schedulePop : false
+                            schedulePop : false,
+                            emailIdList :[]
                       })
                     }}
                     />
