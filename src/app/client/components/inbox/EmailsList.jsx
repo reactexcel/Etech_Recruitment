@@ -87,7 +87,8 @@ class EmailsList extends React.Component {
           this.handleClose()
           this.setState({
             "SnackbarMessage":"Candidates are rejected",
-            "SnackbarOpen":true
+            "SnackbarOpen":true,
+            "emailIdList":[]
           })
         }).catch((err)=>{
           this.setState({
@@ -272,7 +273,8 @@ class EmailsList extends React.Component {
                                    this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId).then(()=>{
                                     this.setState({
                                     "SnackbarOpen":true,
-                                    "SnackbarMessage":"Candidates are ignored"
+                                    "SnackbarMessage":"Candidates are ignored",
+                                    "emailIdList":[]
                                    })
                                   }).catch((err)=>{
                                     this.setState({
@@ -324,7 +326,8 @@ class EmailsList extends React.Component {
                     {...this.props}
                     closeDialog={()=>{
                       this.setState({
-                            schedulePop : false
+                            schedulePop : false,
+                            emailIdList :[]
                       })
                     }}
                     />
