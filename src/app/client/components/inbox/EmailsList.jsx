@@ -83,11 +83,17 @@ class EmailsList extends React.Component {
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason)
-        this.handleClose()
-        this.setState({
-          "SnackbarMessage":"Candidates are rejected",
-             "SnackbarOpen":true
+        this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason).then(()=>{
+          this.handleClose()
+          this.setState({
+            "SnackbarMessage":"Candidates are rejected",
+            "SnackbarOpen":true
+          })
+        }).catch((err)=>{
+          this.setState({
+            "SnackbarMessage":err.toString(),
+            "SnackbarOpen":true
+          })
         })
     }else{
         this.setState({
@@ -128,17 +134,34 @@ class EmailsList extends React.Component {
 
     }
     render(){
+        let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
-        let emailsList = emails.map( (email) => {
+        let emailsList
+        if(tag !== ''){
+          emailsList = _.map(emails, (email) => {
+          if(_.includes(email.tags, tag)){
             return (
                 <div key={email._id}>
-
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
                       uiLoading={this.props.uiLoading}/>
                 </div>
             )
+          }
         })
+        }else{
+          emailsList = _.map(emails, (email) => {
+          if(_.isEmpty(email.tags)){
+            return (
+                <div key={email._id}>
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
+                      router={this.props.router}
+                      uiLoading={this.props.uiLoading}/>
+                </div>
+            )
+          }
+        })
+        }
 
 
         const actions = [
@@ -192,8 +215,8 @@ class EmailsList extends React.Component {
                                 onTouchTap= { () => this.onClick( {t_id : ''}) }
                                 ></FlatButton>
                         }/>
-                        
-                     
+
+
                        {
                         _.map(this.props.tags, (t) => {
                           let unread_mail = 0;
@@ -244,11 +267,18 @@ class EmailsList extends React.Component {
                         <nav aria-label="Page navigation">
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
-                                   this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
-                                   this.setState({
+                                   this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId).then(()=>{
+                                    this.setState({
                                     "SnackbarOpen":true,
                                     "SnackbarMessage":"Candidates are ignored"
                                    })
+                                  }).catch((err)=>{
+                                    this.setState({
+                                    "SnackbarOpen":true,
+                                    "SnackbarMessage":err.toString()
+                                   })
+                                  })
+                                   
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
@@ -259,7 +289,7 @@ class EmailsList extends React.Component {
                             </ul>
                             {      }
                             <ul className="pagination pull-right">
-                              {next_page_num !== '' && emailsList.length !== 0?<li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>:''}
+                              {next_page_num !== '' && emailsList.length !== 0 ?<li className="disabled"><span aria-hidden="true">Page no: {next_page_num === ''?1:next_page_num-1}</span></li>:''}
                                 {prev_page_link}
                                 {next_page_link}
                             </ul>
@@ -284,7 +314,7 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <ScheduleCandidate 
+                    <ScheduleCandidate
                     scheduleTagId={this.state.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={this.state.emailIdList}
@@ -320,7 +350,7 @@ class EmailsList extends React.Component {
                     onRequestClose={this.handleRequestClose}
                   />
                 </div>
-                
+
               </div>
             </div>
         );

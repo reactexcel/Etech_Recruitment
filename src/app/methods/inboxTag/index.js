@@ -40,7 +40,7 @@ Meteor.methods({
     EmailsStore.update({},{$pull:{'tags':_id}})
     return ({_id: _id});
   },
-  "assignTag": function (m_id, t_id){
+  "assignTag1": function (m_id, t_id){
     let mail = EmailsStore.find({"_id": m_id}).fetch();
     if(mail.tags != 'undefined'){
       EmailsStore.update(
@@ -53,7 +53,7 @@ Meteor.methods({
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
-    return EmailsStore.find({"_id": m_id}).fetch();
+    return {email:EmailsStore.find({"_id": m_id}).fetch(),tagId:t_id};
   },
   "ignoreMultipleCandidate": function (idList, tagId, userId){
     let username=Meteor.users.findOne({"_id": userId})
@@ -65,7 +65,6 @@ Meteor.methods({
       email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        if(mail[0].tags != 'undefined'){
-        console.log(idList, tagId, userId,"not undefine---------------")
         if(_.includes(mail[0].tags,tagId)==false){
           EmailsStore.update(
                { _id: id },
@@ -74,7 +73,6 @@ Meteor.methods({
           newIdList.push(id)
         }
        }else{
-        console.log(idList, tagId, userId,"undefine---------------")
           EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
@@ -108,8 +106,12 @@ Meteor.methods({
        }
 
      })
-     return {emailIdList:newIdList,tagId:tagId}
-     //return EmailsStore.find({}).fetch();
+     let ignrReturn=[]
+     _.map(newIdList,(id)=>{
+      let data = EmailsStore.find({"_id": id}).fetch()
+      ignrReturn.push(data[0])
+     })
+     return {email:ignrReturn,tagId:tagId};
   },
   "rejectMultipleCandidate": function (idList, tagId, reason, userId){
     let username=Meteor.users.findOne({"_id": userId})
@@ -162,13 +164,21 @@ Meteor.methods({
              }
        }
      })
-     return {emailIdList:newIdList,tagId:tagId}
+//<<<<<<< HEAD
+  //   return {emailIdList:newIdList,tagId:tagId}
      //return EmailsStore.find({}).fetch();
+  let ignrReturn=[]
+     _.map(newIdList,(id)=>{
+      let data = EmailsStore.find({"_id": id}).fetch()
+      ignrReturn.push(data[0])
+     })
+     return {email:ignrReturn,tagId:tagId};
   },
   "sendMailToCandidate" : function(candidateIdList,name,sub,body,tagId,userId){
     let username=Meteor.users.findOne({"_id": userId})
     var mail;
     var email_id;
+    let newIdList=[];
     var currentDate = new Date();
     _.map(candidateIdList,(id)=>{
        email_id = CandidateHistory.find({"email_id":id}).fetch()
@@ -191,12 +201,14 @@ Meteor.methods({
                { _id: id },
                { $addToSet: { 'tags': tagId} }
              );
+            newIdList.push(id)
           }
        }else{
           EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}
            );
+          newIdList.push(id)
        }
        Logs.insert({
                 action_type:"Candidate is Scheduled for "+name,
@@ -222,7 +234,16 @@ Meteor.methods({
                 );
              }
     })
-    return {emailIdList:candidateIdList,tagId:tagId}
+   // return {emailIdList:candidateIdList,tagId:tagId}
+   console.log(newIdList,"---------------------------------------")
+   let ignrReturn=[]
+     _.map(newIdList,(id)=>{
+      let data = EmailsStore.find({"_id": id}).fetch()
+      ignrReturn.push(data[0])
+     })
+     return {email:ignrReturn,tagId:tagId};
 
    } 
+     
+  
 });
