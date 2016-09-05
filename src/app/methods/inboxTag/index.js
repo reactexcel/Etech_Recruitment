@@ -40,6 +40,7 @@ Meteor.methods({
     return ({_id: _id});
   },
   "assignTag1": function (m_id, t_id){
+    //let username=Meteor.users.findOne({"_id": Meteor.userId()})
     let mail = EmailsStore.find({"_id": m_id}).fetch();
     if(mail.tags != 'undefined'){
       EmailsStore.update(
@@ -89,6 +90,7 @@ Meteor.methods({
              if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
+                   progresStatus:4,
                    historyDetails:[{
                     "ignored":true,
                     "date":currentDate,
@@ -147,6 +149,7 @@ Meteor.methods({
           if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
+                   progresStatus:4,
                    historyDetails:[{
                     "rejected":true,
                     "date":currentDate,

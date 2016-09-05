@@ -102,7 +102,7 @@ export function onAssignTag (m_id, t_id){
             reject(err);
           }else{
            dispatch(assignTag(tags));
-            resolve();
+            resolve(tags);
           }
       });
     });

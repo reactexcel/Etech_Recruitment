@@ -7,31 +7,15 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
-import Snackbar from 'material-ui/Snackbar';
-
 
 class TagMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      msgOpen:false,
-      msg:'',
-    }
     this.onClick = this.onClick.bind(this);
   }
 
   onClick ( obj ) {
-    this.props.AssignTag(obj.m_id, obj.t_id).then(()=>{
-      this.setState({
-        msgOpen:true,
-        msg:'Tag Assigned',
-      })
-    }).catch((err)=>{
-      this.setState({
-        msgOpen:true,
-        msg:err.toString(),
-      })
-    })
+    this.props.AssignTag(obj.m_id, obj.t_id)
   }
 
   render() {
@@ -77,12 +61,7 @@ class TagMenu extends React.Component {
             menuItems={tagMenu}
             />
         </IconMenu>
-        <Snackbar
-                    open={this.state.msgOpen}
-                    message={this.state.msg}
-                    autoHideDuration={4000}
-                    onRequestClose={this.handleRequestClose}
-                  />
+        
       </div>
     );
   }
