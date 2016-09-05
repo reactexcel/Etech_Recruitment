@@ -144,7 +144,8 @@ class EmailsList extends React.Component {
                 <div key={email._id}>
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading}/>
+                      uiLoading={this.props.uiLoading} 
+                      />
                 </div>
             )
           }
@@ -156,7 +157,8 @@ class EmailsList extends React.Component {
                 <div key={email._id}>
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading}/>
+                      uiLoading={this.props.uiLoading}
+                      {...this.props}/>
                 </div>
             )
           }

@@ -184,6 +184,7 @@ Meteor.methods({
        email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        /*----------------------------Send email start---------------------------*/
+      if (Meteor.isServer) {
       Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
@@ -194,6 +195,7 @@ Meteor.methods({
         "subject": sub,
         'text': body
       });
+    }
       /*------------------------------Send email end----------------------------*/
       if(mail[0].tags != 'undefined'){
           if(_.includes(mail[0].tags,tagId)==false){
