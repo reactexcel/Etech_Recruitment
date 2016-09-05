@@ -90,6 +90,7 @@ class EmailsList extends React.Component {
             "SnackbarOpen":true,
             "emailIdList":[]
           })
+          this.refs.actionList.className = classNames("pagination","pull-left","hidden");
         }).catch((err)=>{
           this.setState({
             "SnackbarMessage":err.toString(),
@@ -282,6 +283,7 @@ class EmailsList extends React.Component {
                                     "SnackbarMessage":"Candidates are ignored",
                                     "emailIdList":[]
                                    })
+                                   this.refs.actionList.className = classNames("pagination","pull-left","hidden");
                                   }).catch((err)=>{
                                     this.setState({
                                     "SnackbarOpen":true,
@@ -335,6 +337,7 @@ class EmailsList extends React.Component {
                             schedulePop : false,
                             emailIdList :[]
                       })
+                      this.refs.actionList.className = classNames("pagination","pull-left","hidden");
                     }}
                     />
                     { this.props.uiLoading ?
