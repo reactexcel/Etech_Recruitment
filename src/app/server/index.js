@@ -26,7 +26,7 @@ Meteor.startup(function () {
     SyncedCron.add({
       name: 'inbox_mail2',
       schedule: function(parser) {
-        return parser.text('every 20 mins');
+        return parser.text('every 3 mins');
       },
       job: function() {
         var imapEmails = Meteor.call('fetchSettings');
@@ -43,7 +43,7 @@ Meteor.startup(function () {
         console.log('running', ++i );
       }
     });
-    //SyncedCron.start();
+    SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }

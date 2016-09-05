@@ -57,7 +57,8 @@ class ScheduleCandidate extends React.Component {
       let subject=this.state.currentSubject.trim()
       //let content=this.state.content
       let content=this.state.currentContent
-      console.log(idList,name,subject,content,"content")
+
+      this.props.onSendMailToCandidate(idList,name,subject,content,this.props.scheduleTagId)
       this.handleCloseTemplateDialog()
     }
     openSelectedSchedule(templateId){

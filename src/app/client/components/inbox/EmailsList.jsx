@@ -30,6 +30,7 @@ class EmailsList extends React.Component {
           emailIdList:[],
           ignoreTagId:'',
           rejectTagId:'',
+          scheduleTagId:'',
           rejectpop:false,
           schedulePop:false,
           scheduledDate:moment().format("DD-MM-YYYY"),
@@ -61,6 +62,11 @@ class EmailsList extends React.Component {
                  rejectTagId:tag._id
               })
             }
+            if(tag.name=="Schedule"){
+              this.setState({
+                 scheduleTagId:tag._id
+              })
+            }
          })
     }
     submitForm( evt ){
@@ -77,11 +83,17 @@ class EmailsList extends React.Component {
     submitreason(idList){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason)
-        this.handleClose()
-        this.setState({
-          "SnackbarMessage":"Candidates are rejected",
-             "SnackbarOpen":true
+        this.props.onRejectMultipleCandidate(idList,this.state.rejectTagId,reason).then(()=>{
+          this.handleClose()
+          this.setState({
+            "SnackbarMessage":"Candidates are rejected",
+            "SnackbarOpen":true
+          })
+        }).catch((err)=>{
+          this.setState({
+            "SnackbarMessage":err.toString(),
+            "SnackbarOpen":true
+          })
         })
     }else{
         this.setState({
@@ -122,17 +134,42 @@ class EmailsList extends React.Component {
 
     }
     render(){
+        let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
-        let emailsList = emails.map( (email) => {
+        let emailsList
+        let email = '';
+        _.forEach(this.props.emailSetting, ( e ) =>{
+          if(e._id == tag){
+            email = e.emailId;
+          }
+        })
+        if(tag !== ''){
+          emailsList = _.map(emails, (email) => {
+          if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-
                     <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
                       router={this.props.router}
-                      uiLoading={this.props.uiLoading}/>
+                      uiLoading={this.props.uiLoading}
+                      />
                 </div>
             )
+          }
         })
+        }else{
+          emailsList = _.map(emails, (email) => {
+          if(_.isEmpty(email.tags)){
+            return (
+                <div key={email._id}>
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
+                      router={this.props.router}
+                      uiLoading={this.props.uiLoading}
+                      {...this.props}/>
+                </div>
+            )
+          }
+        })
+        }
 
 
         const actions = [
@@ -238,11 +275,18 @@ class EmailsList extends React.Component {
                         <nav aria-label="Page navigation">
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
-                                   this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId);
-                                   this.setState({
+                                   this.props.onIgnoreMultipleCandidate(this.state.emailIdList,this.state.ignoreTagId).then(()=>{
+                                    this.setState({
                                     "SnackbarOpen":true,
                                     "SnackbarMessage":"Candidates are ignored"
                                    })
+                                  }).catch((err)=>{
+                                    this.setState({
+                                    "SnackbarOpen":true,
+                                    "SnackbarMessage":err.toString()
+                                   })
+                                  })
+
                              }}><span aria-hidden="true" >Ignore</span></li>
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
@@ -279,15 +323,18 @@ class EmailsList extends React.Component {
                      </div>
                     </Dialog>
                     <ScheduleCandidate
+                    scheduleTagId={this.state.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={this.state.emailIdList}
                     emailTemplates={this.props.emailTemplates}
+                    {...this.props}
                     closeDialog={()=>{
                       this.setState({
                             schedulePop : false
                       })
                     }}
                     />
+                  {console.log(emailsList)}
                     { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>
