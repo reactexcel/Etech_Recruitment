@@ -23,6 +23,7 @@ import MyCard from './MyCard';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import ScheduleCandidate from '../inbox/ScheduleCandidate'
 const styles = {
   errorStyle: {
     textAlign:'left',
@@ -35,6 +36,7 @@ class EmailBody extends React.Component {
     this.state={
         data:'',
         rejectpop:false,
+        schedulePop:false,
         reason:'',
         errortxt:'',
         SnackbarOpen:false,
@@ -45,8 +47,10 @@ class EmailBody extends React.Component {
     this.submitreason=this.submitreason.bind(this)
     this.ignoreTagId = "";
     this.rejectTagId = '';
+    this.scheduleTagId = "";
     this.ignoreText = 'Ignore';
     this.rejectText = 'Reject';
+    this.scheduleText = 'Schedule';
   }
 componentWillMount(){
    _.map(this.props.inboxTag,(tag)=>{
@@ -55,6 +59,9 @@ componentWillMount(){
       }
       if(tag.name=="Reject"){
           this.rejectTagId = tag._id
+      }
+      if(tag.name=="Schedule"){
+          this.scheduleTagId = tag._id
       }
     })
 }
@@ -154,7 +161,7 @@ render(){
                         })
                       }
         }}/>
-        <MenuItem primaryText="Schedule" onTouchTap={()=>this.props.schedule(data._id)}/>
+        <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
       </IconMenu>
     }
   />
@@ -178,6 +185,18 @@ render(){
          />
         </div>
       </Dialog>
+      <ScheduleCandidate 
+                    scheduleTagId={this.scheduleTagId}
+                    showPopUp={this.state.schedulePop}
+                    emailIdList={[data._id]}
+                    emailTemplates={this.props.emailTemplates}
+                    {...this.props}
+                    closeDialog={()=>{
+                      this.setState({
+                            schedulePop : false
+                      })
+                    }}
+        />
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (

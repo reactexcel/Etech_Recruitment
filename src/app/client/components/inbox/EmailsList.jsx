@@ -30,6 +30,7 @@ class EmailsList extends React.Component {
           emailIdList:[],
           ignoreTagId:'',
           rejectTagId:'',
+          scheduleTagId:'',
           rejectpop:false,
           schedulePop:false,
           scheduledDate:moment().format("DD-MM-YYYY"),
@@ -59,6 +60,11 @@ class EmailsList extends React.Component {
             if(tag.name=="Reject"){
               this.setState({
                  rejectTagId:tag._id
+              })
+            }
+            if(tag.name=="Schedule"){
+              this.setState({
+                 scheduleTagId:tag._id
               })
             }
          })
@@ -309,9 +315,11 @@ class EmailsList extends React.Component {
                      </div>
                     </Dialog>
                     <ScheduleCandidate
+                    scheduleTagId={this.state.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={this.state.emailIdList}
                     emailTemplates={this.props.emailTemplates}
+                    {...this.props}
                     closeDialog={()=>{
                       this.setState({
                             schedulePop : false
