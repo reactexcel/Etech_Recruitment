@@ -20,6 +20,7 @@ import _ from 'lodash';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 
 class EmailListItem extends React.Component {
 
@@ -35,7 +36,7 @@ class EmailListItem extends React.Component {
       
     }
     AssignTag(m_id, t_id){
-      this.props.onAssignTag(m_id, t_id).then(()=>{
+      this.props.onAssignTag(m_id, t_id).then((data)=>{
       this.setState({
         msgOpen:true,
         msg:'Tag Assigned',
@@ -111,7 +112,19 @@ class EmailListItem extends React.Component {
       if( more_emails_count > 0 ){
         show_more_email_count = "("+more_emails_count+")"
       }
-
+      let progressValue = '';
+      let progresStatus = typeof this.props.email.progresStatus !== 'undefined'?this.props.email.progresStatus:0
+      if(progresStatus == 1){
+        progressValue = '25'
+      }else if(progresStatus == 2){
+        progressValue = '50'
+      }else if(progresStatus == 3){
+        progressValue= '75'
+      }else if(progresStatus == 4){
+        progressValue = '100'
+      }else if(progresStatus == 0){
+        progressValue = '0'
+      } 
       return(
 
           <div key={this.props.email._id}  style={{ "marginBottom":"0px"}} >
@@ -151,11 +164,14 @@ class EmailListItem extends React.Component {
                 secondaryText={
                   <p>
                     <i><b> {m_source_email_id} </b></i> - From {m_from} &nbsp; <b>{show_more_email_count}</b>
+                    <LinearProgress mode="determinate" value={progressValue} min='0' max='100' style={{marginTop:'7px'}}/>
                   </p>
+
                 }
                 secondaryTextLines={2}
                 onClick={() => this.props.router.push(m_link)}
               />
+
               <Snackbar
                     open={this.state.msgOpen}
                     message={this.state.msg}

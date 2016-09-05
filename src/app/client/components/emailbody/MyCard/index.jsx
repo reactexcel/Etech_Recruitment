@@ -16,6 +16,25 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
+      let progresStatus = '';
+      let progressValue = '';
+      if(typeof this.props.progresStatus !== 'undefined'){
+        progresStatus = this.props.progresStatus
+      }else{
+        progresStatus = 0
+      }
+      console.log(progresStatus)
+      if(progresStatus == 1){
+        progressValue = '25'
+      }else if(progresStatus == 2){
+        progressValue = '50'
+      }else if(progresStatus == 3){
+        progressValue= '75'
+      }else if(progresStatus == 4){
+        progressValue = '100'
+      }else if(progresStatus == 0){
+        progressValue = '0'
+      } 
       return (
         <Card>
         <Paper
@@ -33,13 +52,16 @@ export default class MyCard extends React.Component {
                 <div style={{"width":"100%"}}>
                   Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
                 </div>
-                } </div>}
+                } 
+                </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
               actAsExpander={i==0?false:true}
               showExpandableButton={i==0?false:true}
               titleStyle={{'fontSize':"12px"}}
               subtitleStyle={{'fontSize':"11px"}}
-              children={<div  style={{float:'right',display:'inline-block',position:'relative'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>}
+              children={<div style={typeof email.attachments !== 'undefined'?{marginTop:"-35px"}:{marginTop:'0px'}}>
+                <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
+                <div ><LinearProgress mode="determinate" value={progressValue} min='0' max='100' style={{marginTop:'7px'}}/></div></div>}
               />
           }
            />

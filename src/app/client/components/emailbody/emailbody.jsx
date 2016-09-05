@@ -104,6 +104,11 @@ componentWillReceiveProps(props){
   }
 
 render(){
+        let progress = 0 
+        if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
+          let tmp = this.props.candidateHistory.history[0]
+          progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
+        }
        let data = this.state.data;
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
@@ -129,7 +134,7 @@ render(){
   <div>
  <AppBar
     title="Email"
-    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/body')}}><NavigationArrowBack /></IconButton>}
+    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={
       <IconMenu
         iconButtonElement={
@@ -200,9 +205,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} />
+                  <MyCard email={email} i={i} key={i} progresStatus={progress}/>
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} />
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress}/>
           </div>
         </div>
 
