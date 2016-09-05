@@ -12,6 +12,9 @@ Meteor.methods({
   },
   "addTag": function(tag){
     let id;
+    if(Tags.find({name: tag.name}).count() >0){
+      return 'Tag name already exists';
+    }
     if(tag.automatic)
       id = Tags.insert({
         name: tag.name,
@@ -19,6 +22,7 @@ Meteor.methods({
         from: tag.from,
         to: tag.to,
         email: tag.email,
+        subject: tag.subject,
         automatic: tag.automatic,
       });
     else
@@ -73,7 +77,6 @@ Meteor.methods({
           newIdList.push(id)
         }
        }else{
-        console.log(idList, tagId, userId,"undefine---------------")
           EmailsStore.update(
              { _id: id },
              { $set: { 'tags': [tagId ] }} ,{upsert:false, multi:true}

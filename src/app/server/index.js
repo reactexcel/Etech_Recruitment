@@ -14,6 +14,7 @@ import '../collections/EmailsStore.js';
 import '../collections/EmailsStoreStatus.js';
 import '../collections/emailTemplates';
 import _ from 'lodash';
+import '../methods/crons/applyTag';
 
 Meteor.startup(function () {
   // Configure MAIL_URL
@@ -25,7 +26,7 @@ Meteor.startup(function () {
     SyncedCron.add({
       name: 'inbox_mail2',
       schedule: function(parser) {
-        return parser.text('every 2 mins');
+        return parser.text('every 20 mins');
       },
       job: function() {
         var imapEmails = Meteor.call('fetchSettings');
@@ -33,7 +34,7 @@ Meteor.startup(function () {
           try{
             if(typeof imap.smtp  !== 'object' && imap.active){
               console.log(imap.emailId);
-              Meteor.call('doUpdateEmailsStore', imap._id);
+            //  Meteor.call('doUpdateEmailsStore', imap._id);
             }
           }catch(ex){
             console.log('EmailfetchingCronJob ->>exceptipn->>', ex);
@@ -42,7 +43,7 @@ Meteor.startup(function () {
         console.log('running', ++i );
       }
     });
-    SyncedCron.start();
+    //SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }

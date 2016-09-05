@@ -21,7 +21,7 @@ class ImapAccountsList extends React.Component {
     }
     render(){
 
-        let imapEmailsList = this.props.imap_emails.map( (email) => {
+        let imapEmailsList = this.props.emailSetting.map( (email) => {
           if(typeof email.smtp == 'undefined' && email.emailId != '')
             return (
                 <div key={email._id}>

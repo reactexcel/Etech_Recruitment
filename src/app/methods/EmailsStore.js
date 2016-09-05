@@ -202,7 +202,9 @@ try{
 			//insert mail to tha existing account
 			_.forEach(tagList, function ( tag ) {
 					if(tag.automatic){
-						if(tag.email == emailData.sender_mail){
+						if(tag.email == emailData.sender_mail ||
+								emailData.subject.search(tag.subject) > -1 ||
+									emailData.subject.search(tag.name) > -1 ){
 							if(_.indexOf(emailData.tags, tag._id) == -1){
 								emailData.tags.push(tag._id);
 							}
@@ -220,7 +222,9 @@ try{
 			//Insert new mail with tags
 			_.forEach(tagList, function ( tag ) {
 					if(tag.automatic){
-						if(tag.email == emailData.sender_mail){
+						if(tag.email == emailData.sender_mail ||
+								emailData.subject.search(tag.subject) > -1 ||
+									emailData.subject.search(tag.name) > -1 ){
 							if(_.indexOf(emailData.tags, tag._id) == -1){
 								emailData.tags.push(tag._id);
 							}
@@ -263,7 +267,7 @@ try{
 		var allEmails;
 
 		if(tag == ""){
-	  	allEmails = EmailsStore.find( {}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
+	  	allEmails = EmailsStore.find( {tags:{$size:0}}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else if(imapEmail.length > 0 && tag == imapEmail[0]._id){
 			allEmails = EmailsStore.find({ "m_source_email_id": imapEmail[0].emailId},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else{

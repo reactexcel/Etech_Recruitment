@@ -28,10 +28,6 @@ class ImapAccountsListItem extends React.Component {
             {this.props.imapEmail.active?
               <p style={{"fontSize": "11px",  lineHeight: "110%"}}>
                 <i className="fa fa-circle" aria-hidden="true" style={{color: 'green'}}></i> Active <br/>
-                New Emali(s): {this.props.imapEmail.status_last_fetch_details.newMailFound}<br/>
-                Last Update date: {this.props.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
-                Last Update time: {this.props.imapEmail.status_last_fetch_details.time}<br/>
-                Total emails fetched: {this.props.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
               </p>:
               <p style={{"fontSize": "11px",  lineHeight: "110%"}}>
               <i className="fa fa-circle" aria-hidden="true" style={{color: '#bb1133'}}></i> Disabled
