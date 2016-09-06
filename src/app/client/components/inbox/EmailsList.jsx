@@ -259,15 +259,6 @@ class EmailsList extends React.Component {
                      </div>}
                     </Menu>
 
-                    <hr/>
-                      {this.props.tags.length === 0?
-                        <div style={{'marginLeft':"10%"}}>
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                        </div>
-                        :
-                        <ImapAccountsList {...this.props}/>
-                      }
                 </div>
                 <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
                   <div className="row">

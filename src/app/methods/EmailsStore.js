@@ -147,8 +147,13 @@ Meteor.methods({
 									last_email_date = email.email_date
 								}
 								email.tags = [];
-								if( email.subject.search('(Fwd:)') > -1 ) {
-									email.sender_mail = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];
+								if ( email.subject.search('(Fwd:)') > -1 ) {
+									let x = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];;
+									if(email.body.match(/<a[^>]*>(.*?)<\/a>/)[1].search('<wbr>') > -1){
+										x = x.split('<wbr>');
+										x = x[0] + x[1] ;
+									}
+									email.sender_mail = x;
 									email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
 									email.subject = email.subject.split('Fwd:')[1];
 									console.log(email);
