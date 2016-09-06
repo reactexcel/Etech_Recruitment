@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Router, browserHistory, Link, withRouter } from 'react-router'
 import * as _ from 'lodash'
+import Header from './../components/generic/Header'
 
 import * as actions_emailsstore from './../actions/emailsstore'
 
@@ -20,7 +21,8 @@ class Home extends React.Component {
     render(){
         return(
         	<div>
-        		Home
+             <Header {...this.props} position={1}/>
+            
         	</div>
         )
     }

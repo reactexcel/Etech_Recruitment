@@ -205,9 +205,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={progress}/>
+                  <MyCard email={email} i={i} key={i} progresStatus={progress} index={i} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress} index={typeof more_email !== 'undefined'?"more":"done"}/>
           </div>
         </div>
 

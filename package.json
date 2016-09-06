@@ -31,6 +31,7 @@
     "redux-actions": "^0.10.1",
     "redux-immutable": "^3.0.6",
     "redux-immutable-state-invariant": "^1.2.3",
+    "redux-localstorage": "^0.4.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0",
     "verge": "^1.9.1"
