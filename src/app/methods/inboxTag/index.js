@@ -94,6 +94,7 @@ Meteor.methods({
              if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
+                   progresStatus:4,
                    historyDetails:[{
                     "ignored":true,
                     "date":currentDate,
@@ -152,6 +153,7 @@ Meteor.methods({
           if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
+                   progresStatus:4,
                    historyDetails:[{
                     "rejected":true,
                     "date":currentDate,

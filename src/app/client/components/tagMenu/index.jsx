@@ -7,8 +7,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
-import Snackbar from 'material-ui/Snackbar';
-
 
 class TagMenu extends React.Component {
   constructor(props) {

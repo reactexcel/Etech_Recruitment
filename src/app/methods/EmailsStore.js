@@ -5,6 +5,7 @@ import {config_ENV} from './../config';
 
 import * as _ from 'lodash'
 
+import CandidateHistory from 'app/collections/candidateHistory' 
 import EmailsStore from 'app/collections/EmailsStore'
 import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
 import Tags  from 'app/collections/inboxTag';
@@ -271,7 +272,7 @@ try{
 		}else if(imapEmail.length > 0 && tag == imapEmail[0]._id){
 			allEmails = EmailsStore.find({ "m_source_email_id": imapEmail[0].emailId},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else{
-	  	allEmails = EmailsStore.find({ tags:{$in: [tag] }},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page } ).fetch();
+	  		allEmails = EmailsStore.find({ tags:{$in: [tag] }},{ sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page } ).fetch();
 		}
   	if( imapEmail.length > 0 ){
   		allEmails = _.map( allEmails, function( email ){
@@ -280,6 +281,17 @@ try{
   			return email
   		})
   	}
+  	//****----
+  	allEmails = _.map( allEmails, function( email ){
+  			let history = CandidateHistory.find({email_id:email._id}).fetch()
+  			if(history.length > 0){
+  				email.progresStatus=history[0].progresStatus
+  			}else{
+  				email.progresStatus = 0
+  			}
+  			return email
+  		})
+  	//****-----
   	var tags;
   	var tagList=[];
   	tags = Tags.find({}).fetch();
