@@ -168,7 +168,6 @@ Meteor.methods({
              }
        }
      })
-//<<<<<<< HEAD
   //   return {emailIdList:newIdList,tagId:tagId}
      //return EmailsStore.find({}).fetch();
   let ignrReturn=[]

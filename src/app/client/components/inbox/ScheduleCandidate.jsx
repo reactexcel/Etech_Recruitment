@@ -73,7 +73,7 @@ class ScheduleCandidate extends React.Component {
             })
                this.state.pickedTemplate.push(
                 <div className="row">
-                <div className='col-xs-12' key={key}>
+                <div className='col-lg-12' key={key}>
                     <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'10px',padding:'10px',background: '#fff',}}>
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Template Name : </span>{template.name}</div>
                     <hr />
