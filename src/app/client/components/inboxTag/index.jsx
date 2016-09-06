@@ -74,7 +74,7 @@ export default class InboxTag extends React.Component {
                  this.refs.tagForm.add()
                   .then( (data) => {
                     Meteor.call('applyTagToAll', data );
-                    this.setState({applyToAll: false,sOpen:false});
+                    this.setState({applyToAll: false, sOpen:true, message: 'We will process your tags in the background. All email matchs to it will be assigned to it'});
                   })
                   .catch( (err) => {
                     this.setState({applyToAll: false, message: err, sOpen:true});

@@ -75,7 +75,6 @@ componentWillReceiveProps(props){
           })
         }
     })
-   
 
 }
 
@@ -104,7 +103,7 @@ componentWillReceiveProps(props){
   }
 
 render(){
-        let progress = 0 
+        let progress = 0
         if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
           let tmp = this.props.candidateHistory.history[0]
           progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
@@ -173,7 +172,7 @@ render(){
   </div>
   <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
     <div className="col-xs-12 col-sm-12" style={{ "float": "right"}}>
-       
+
         <Dialog
           title="Give the reason of rejection"
           actions={actions}
@@ -190,7 +189,7 @@ render(){
          />
         </div>
       </Dialog>
-      <ScheduleCandidate 
+      <ScheduleCandidate
                     scheduleTagId={this.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={[data._id]}
