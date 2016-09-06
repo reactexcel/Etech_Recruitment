@@ -170,8 +170,6 @@ Meteor.methods({
              }
        }
      })
-  //   return {emailIdList:newIdList,tagId:tagId}
-     //return EmailsStore.find({}).fetch();
   let ignrReturn=[]
      _.map(newIdList,(id)=>{
       let data = EmailsStore.find({"_id": id}).fetch()
@@ -227,6 +225,7 @@ Meteor.methods({
        if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
+                   progresStatus:0,
                    historyDetails:[{
                     "scheduled":true,
                     "date":currentDate,

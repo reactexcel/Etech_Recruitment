@@ -91,10 +91,10 @@ class SendEmail extends React.Component {
         })
     }
     deleteTemplate(id){
-    this.props.onDeleteTemplate(id).then( () => {
+    this.props.onDeleteTemplate(id).then( (msg) => {
         this.setState({
           snackbarOpen:true,
-          snackbarmsg:"Template Deleted successfully",
+          snackbarmsg:msg.toString(),
         })
       }).catch( (error) => {
         this.setState({

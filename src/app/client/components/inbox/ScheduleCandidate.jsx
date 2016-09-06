@@ -126,9 +126,8 @@ class ScheduleCandidate extends React.Component {
                      open={this.props.showPopUp}
                      onRequestClose={this.handleCloseScheduleDialog}
                     >
-    
-                    <div style={{textAlign: 'left',fontSize:'17px'}}>Create Time slot:</div>
                     <div>
+                    <div style={{textAlign: 'left',fontSize:'17px'}}>Create Time slot:</div>
                      <DatePicker hintText={this.state.scheduledDate} onChange={(evt,date)=>{
                           this.setState({
                              scheduledDate:moment(date).format("DD-MM-YYYY")
