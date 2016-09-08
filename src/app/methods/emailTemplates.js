@@ -20,7 +20,6 @@ Meteor.methods({
   },
   deletetemplate : function( id ){
     let template = EmailTemplates.find({actions:{$size:0}}).count()
-    console.log(template)
     if(template > 0){
       let _id = EmailTemplates.remove(id)
       return _id

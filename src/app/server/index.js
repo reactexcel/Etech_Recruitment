@@ -15,6 +15,7 @@ import '../collections/EmailsStoreStatus.js';
 import '../collections/emailTemplates';
 import _ from 'lodash';
 import '../methods/crons/applyTag';
+import '../methods/dynamicAction.js'
 
 Meteor.startup(function () {
   // Configure MAIL_URL
