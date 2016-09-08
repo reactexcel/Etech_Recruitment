@@ -27,26 +27,25 @@ Meteor.methods({
        })
        return newActionList
     },
-	"saveAction" : function(action){
-    var tag_id;
-    var tag;
-		if(Tags.find({name: action.title}).count() >0){
-         tag = Tags.find({name: action.title}).fetch();
-         tag_id = tag[0]._id;
-      }else{
-         	tag_id = Tags.insert({
-               name: action.title,
-               color: '#cb891b',
-               dynamicAction: true
-            });
-      }
-            let _id = DynamicActions.insert( {
-            	name:action.name,
-            	template_id:action.templateId,
-            	tag_id:tag_id,
+    "saveAction" : function(id,action){
+    if(id != ''){
+      let _id = DynamicActions.update({"_id":id},{$set:{
+        name:action.name,
+        template_id:action.templateId,
+        tag_id:action.tagId,
+        progress_point:1
+      }})
+      return _id;
+    }else{
+           let _id = DynamicActions.insert( {
+              name:action.name,
+              template_id:action.templateId,
+              tag_id:action.tagId,
               progress_point:1
             } )
             return _id;
+    }
+            
   },
   "deleteAction":function(id){
          let _id = DynamicActions.remove(id)

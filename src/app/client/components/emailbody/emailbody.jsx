@@ -46,6 +46,8 @@ class EmailBody extends React.Component {
     }
     this.handleClose=this.handleClose.bind(this)
     this.submitreason=this.submitreason.bind(this)
+    this.ignoreCandidate=this.ignoreCandidate.bind(this)
+    this.rejectCandidate=this.rejectCandidate.bind(this)
     this.candidateAction=this.candidateAction.bind(this)
     this.ignoreTagId = "";
     this.rejectTagId = '';
@@ -96,6 +98,35 @@ componentWillReceiveProps(props){
   handleClose(){
     this.setState({rejectpop: false});
   }
+  ignoreCandidate(data,ignoreTagId){
+    if(_.includes(data.tags,ignoreTagId)==false){
+            this.ignoreText="Ignored";
+            this.props.onIgnore([data._id],this.ignoreTagId).then(()=>{
+                          this.props.router.push('/inbox/body');
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+            
+      }else{
+            this.setState({
+                "SnackbarOpen":true,
+                "SnackbarMessage":"Candidates is already ignored"
+            })
+      }
+  }
+  rejectCandidate(data,rejectTagId){
+    if(_.includes(data.tags,rejectTagId)==false){
+           this.setState({rejectpop:true})
+       }else{
+            this.setState({
+               "SnackbarOpen":true,
+               "SnackbarMessage":"Candidates is already rejected"
+            })
+      }
+  }
    handleRequestClose = () => {
     this.setState({
       SnackbarOpen: false,
@@ -103,12 +134,19 @@ componentWillReceiveProps(props){
     });
   };
   submitreason(id){
+    console.log(id,"in submit method--------")
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject([id],this.rejectTagId,reason)
-        this.rejectText="Rejected"
-        this.handleClose()
-        this.props.router.push('/inbox');
+         this.handleClose()
+        this.props.onReject([id],this.rejectTagId,reason).then(()=>{
+          this.rejectText="Rejected"
+          this.props.router.push('/inbox/body');
+        }).catch( (error) => {
+          this.setState({
+              snackbarOpen:true,
+              snackbarmsg:error.toString(),
+        })
+     })
     }else{
         this.setState({
             errortxt:'Reason required'
@@ -158,27 +196,10 @@ render(){
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
         <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
-                      if(_.includes(data.tags,this.ignoreTagId)==false){
-                            this.ignoreText="Ignored";
-                            this.props.onIgnore([data._id],this.ignoreTagId)
-                            this.props.router.push('/inbox/b');
-                      }else{
-                        this.setState({
-                          "SnackbarOpen":true,
-                          "SnackbarMessage":"Candidates is already ignored"
-                        })
-                      }
-                    }}/>
+          this.ignoreCandidate(data,this.ignoreTagId)
+        }}/>
         <MenuItem primaryText={this.rejectText} onTouchTap={()=>{
-                     if(_.includes(data.tags,this.rejectTagId)==false){
-                        this.setState({rejectpop:true})
-
-                      }else{
-                        this.setState({
-                          "SnackbarOpen":true,
-                          "SnackbarMessage":"Candidates is already rejected"
-                        })
-                      }
+          this.rejectCandidate(data,this.rejectTagId)
         }}/>
         <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
         <MenuItem primaryText="Dynamic Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />

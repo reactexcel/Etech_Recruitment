@@ -28,11 +28,11 @@ export function deleteTemplate( id ){
 				if(err){
 					reject(err)
 				}else{
-					if(data !== 0){
+					if(typeof data.msg == 'undefined'){
 						dispatch ( fetchTemplate(data) )
-						resolve("Template Deleted successfully")
+					    resolve(data)
 					}else{
-						resolve('Action assigned to this template.\n Can not delete')
+						reject(data.msg);
 					}
 					
 				}

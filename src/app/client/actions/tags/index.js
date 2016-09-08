@@ -69,13 +69,19 @@ export function onEditTag(title, _id, color){
 export function onRemoveTag( _id ){
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('removeTag',_id,(err) => {
+      Meteor.call('removeTag',_id,(err, data) => {
           if(err){
             reject(err);
           }else{
-            dispatch(removeTag(_id));
-            dispatch(addLogs("REMOVE TAG",Meteor.userId(),"tag  removed"));
-            resolve();
+            if(typeof data.msg == 'undefined'){
+              dispatch(removeTag(_id));
+              dispatch(addLogs("REMOVE TAG",Meteor.userId(),"tag  removed"));
+              resolve();
+            }else{
+              reject(data.msg);
+            }
+            
+            
           }
       });
     });

@@ -24,6 +24,7 @@ import DisplayContainer from './containers/displayLogs'
 import LogsContainer from './containers/displayLogs/logs'
 import EmailbodyContainer from './containers/emailBodyContainer'
 import InboxTagContainer from './containers/configurationContainer/inboxTagContainer'
+import InboxDynamicActionContainer from './containers/configurationContainer/inboxDynamicActionContainer'
 import SendMails from './containers/sendmailContainer'
 
 export let isMonitorAction;
@@ -53,6 +54,7 @@ Meteor.startup(
               <Route path="/config" component={ConfigurationContainer}>
                 <Route path="/config/email-server-setting" component={EmailSettingContainer}></Route>
                 <Route path="/config/tag-setting" component={InboxTagContainer}></Route>
+                <Route path="/config/dynamic-actions" component={InboxDynamicActionContainer}></Route>
                 <Route path="/config/email-sending" component={EmailSendingContainer}></Route>
                 <Route path="/config/email-templates" component={SendMails}></Route>
               </Route>
