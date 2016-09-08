@@ -103,6 +103,7 @@ class DynamicActions extends React.Component {
         this.setState({
             snackbarOpen:true,
             snackbarmsg:"Action saved successfully",
+            actionId:''
         })
         
         this.gotoActionPage()
@@ -110,6 +111,7 @@ class DynamicActions extends React.Component {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:error.toString(),
+          actionId:''
         })
       })
         }

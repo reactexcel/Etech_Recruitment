@@ -37,9 +37,10 @@ class InboxTagContainer extends React.Component {
   render() {
     return(
         	<div>
-              {(this.props.tags.length > 0 && this.props.emailTemplates.length >0)?<DynamicActions {...this.props} />:<div className="show" style={style.container}>
+              {(this.props.tags.length > 0 && this.props.dynamicActions.length >0)?<DynamicActions {...this.props} />:
+              <div className="show" style={style.container}>
                           <CircularProgress size={1.5} />
-                        </div>}
+              </div>}
         	</div>
         )
   }

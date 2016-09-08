@@ -6,6 +6,7 @@ import _ from 'lodash'
 import Logs from 'app/collections/index';
 import CandidateHistory from 'app/collections/candidateHistory';
 import { Email } from 'meteor/email';
+import DynamicActions from 'app/collections/dynamicAction'
 
 Meteor.methods({
   "fetchTag": function(){
@@ -40,9 +41,17 @@ Meteor.methods({
     return ({name: title, color: color, _id: _id});
   },
   "removeTag": function(_id){
-    Tags.remove({"_id": _id});
-    EmailsStore.update({},{$pull:{'tags':_id}})
-    return ({_id: _id});
+    let action = DynamicActions.find({tag_id: _id}).fetch();
+    if(action.length>0){
+       return {
+           msg:"Tag is already assigned to some action, Unable to delete!"
+       }
+    }else{
+       Tags.remove({"_id": _id});
+       EmailsStore.update({},{$pull:{'tags':_id}})
+       return ({_id: _id});
+    }
+    
   },
   "assignTag": function (m_id, t_id){
     let mail = EmailsStore.find({"_id": m_id}).fetch();

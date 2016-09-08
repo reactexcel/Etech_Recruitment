@@ -14,6 +14,7 @@ import { SketchPicker } from 'react-color';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = {
   "formInput":{
@@ -36,6 +37,8 @@ export default class InboxTagList extends React.Component {
       tagName: "",
       color: this.props.color,
       "_id": "",
+      snackbarOpen:false,
+      snackbarmsg:'',
      };
      this.handleOpen = this.handleOpen.bind(this);
      this.handleClose = this.handleClose.bind(this);
@@ -71,6 +74,12 @@ export default class InboxTagList extends React.Component {
     });
     this.error.tagName = "";
   }
+  handleRequestClose = () => {
+        this.setState({
+            snackbarOpen: false,
+            snackbarmsg:''
+        });
+    };
 
   handleColorOpen ( ) {
     this.setState({
@@ -165,7 +174,20 @@ export default class InboxTagList extends React.Component {
                   return  <Chip
                       key={row._id}
                       backgroundColor={row.color}
-                      onRequestDelete={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}
+                      onRequestDelete={(evt) => {
+                        evt.stopPropagation();
+                        this.props.onRemoveTag(row._id).then(()=>{
+                          this.setState({
+                            snackbarOpen:true,
+                            snackbarmsg:"Tag Deleted successfully",
+                          })
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+                      }}
                       onTouchTap={(evt) => this.handleOpen(row, evt)}
                       style={{ margin: 4}}>
                       <Avatar
@@ -195,7 +217,20 @@ export default class InboxTagList extends React.Component {
                     return <Chip
                       key={row._id}
                       backgroundColor={row.color}
-                      onRequestDelete={(evt) => {evt.stopPropagation();this.props.onRemoveTag(row._id)}}
+                      onRequestDelete={(evt) => {
+                        evt.stopPropagation();
+                        this.props.onRemoveTag(row._id).then(()=>{
+                          this.setState({
+                            snackbarOpen:true,
+                            snackbarmsg:"Tag Deleted successfully",
+                          })
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+                      }}
                       onTouchTap={(evt) => this.handleOpen(row, evt)}
                       style={{ margin: 4}}>
                       <Avatar
@@ -337,6 +372,12 @@ export default class InboxTagList extends React.Component {
           contentClassName= "row"
           bodyClassName= " col-sm-offset-4 col-sm-12 col-xs-12"
           />
+          <Snackbar
+                    open={this.state.snackbarOpen}
+                    message={this.state.snackbarmsg}
+                    autoHideDuration={3000}
+                    onRequestClose={this.handleRequestClose}
+                  />
       </div>
     );
   }
