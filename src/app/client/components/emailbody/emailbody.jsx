@@ -161,7 +161,6 @@ render(){
         _.map(dynamicActions,(action)=>{
             actionMenu.push(<MenuItem primaryText={action.name} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
         })
-        
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
@@ -241,9 +240,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} index={i} />
+                  <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={data.progresStatus} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
           </div>
         </div>
 

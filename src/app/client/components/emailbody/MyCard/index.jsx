@@ -30,12 +30,10 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
-      let progresStatus ;
+      let progresStatus = 0 ;
       let progresColor = '#038503';
-      if(typeof email.progresStatus !== 'undefined'){
-        progresStatus = email.progresStatus
-      }else{
-        progresStatus = 0
+      if(typeof this.props.progresStatus !== 'undefined'){
+        progresStatus = this.props.progresStatus
       }
       return (
         <Card>

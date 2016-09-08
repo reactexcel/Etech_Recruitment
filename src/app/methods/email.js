@@ -22,7 +22,7 @@ Meteor.methods({
         //-------
         let history = CandidateHistory.find({email_id:email._id}).fetch()
         if(history.length > 0){
-          if(typeof history[0].progress_point !== 'undefined'){
+        if(typeof history[0].progress_point !== 'undefined'){
           email.progresStatus=(history[0].progress_point/totalPoints*100)
         }else{
           email.progresStatus = 0
