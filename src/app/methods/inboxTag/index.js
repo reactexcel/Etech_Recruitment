@@ -20,9 +20,9 @@ Meteor.methods({
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
-        from: tag.from,
-        to: tag.to,
-        email: tag.email,
+        from: tag.from || '',
+        to: tag.to || '',
+        email: tag.email || '',
         subject: tag.subject,
         automatic: tag.automatic,
       });
@@ -99,7 +99,6 @@ Meteor.methods({
              if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
-                   progresStatus:4,
                    historyDetails:[{
                     "ignored":true,
                     "date":currentDate,
@@ -158,7 +157,6 @@ Meteor.methods({
           if(email_id.length===0){
                  CandidateHistory.insert({
                    email_id:id,
-                   progresStatus:4,
                    historyDetails:[{
                     "rejected":true,
                     "date":currentDate,

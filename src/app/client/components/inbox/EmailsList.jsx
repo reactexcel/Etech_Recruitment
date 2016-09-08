@@ -207,7 +207,7 @@ class EmailsList extends React.Component {
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-2 col-sm-2 " style={{ "padding":"0px", "backgroundColor":"#fff", "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
+                <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
 
                     <Menu>
 
@@ -259,19 +259,8 @@ class EmailsList extends React.Component {
                      </div>}
                     </Menu>
 
-                    <hr/>
-                      {this.props.tags.length === 0?
-                        <div style={{'marginLeft':"10%"}}>
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                        </div>
-                        :
-                        <ImapAccountsList {...this.props}/>
-                      }
-
-
                 </div>
-                <div className="col-xs-10 col-sm-10" >
+                <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
                   <div className="row">
                     <div className="col-xs-12" >
                         <nav aria-label="Page navigation">
@@ -340,7 +329,7 @@ class EmailsList extends React.Component {
                       this.refs.actionList.className = classNames("pagination","pull-left","hidden");
                     }}
                     />
-                    { this.props.uiLoading ?
+                  { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>
                           <CircularProgress size={1.5} />
@@ -372,3 +361,17 @@ class EmailsList extends React.Component {
 }
 
 export default withRouter(EmailsList)
+
+/*
+
+                    <hr/>
+                      {this.props.tags.length === 0?
+                        <div style={{'marginLeft':"10%"}}>
+                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :
+                        <ImapAccountsList {...this.props}/>
+                      }
+
+*/

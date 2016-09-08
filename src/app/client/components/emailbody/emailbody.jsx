@@ -77,7 +77,6 @@ componentWillReceiveProps(props){
           })
         }
     })
-   
 
 }
 
@@ -124,13 +123,7 @@ render(){
         _.map(dynamicActions,(action)=>{
             actionMenu.push(<MenuItem primaryText={action.name} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
         })
-        //--
-        let progress = 0 
-        if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
-          let tmp = this.props.candidateHistory.history[0]
-          progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
-        }
-       //--
+        
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
@@ -195,7 +188,7 @@ render(){
   </div>
   <div className="row" style={{ "margin": "0px", "position" : "relative"}}>
     <div className="col-xs-12 col-sm-12" style={{ "float": "right"}}>
-       
+
         <Dialog
           title="Give the reason of rejection"
           actions={actions}
@@ -212,7 +205,7 @@ render(){
          />
         </div>
       </Dialog>
-      <ScheduleCandidate 
+      <ScheduleCandidate
                     scheduleTagId={this.scheduleTagId}
                     showPopUp={this.state.schedulePop}
                     emailIdList={[data._id]}
@@ -227,9 +220,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={progress} index={i} />
+                  <MyCard email={email} i={i} key={i} index={i} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
           </div>
         </div>
 

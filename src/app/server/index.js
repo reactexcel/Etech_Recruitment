@@ -27,14 +27,13 @@ Meteor.startup(function () {
     SyncedCron.add({
       name: 'inbox_mail2',
       schedule: function(parser) {
-        return parser.text('every 3 mins');
+        return parser.text('every 2 mins');
       },
       job: function() {
         var imapEmails = Meteor.call('fetchSettings');
         _.forEach(imapEmails, (imap) =>{
           try{
             if(typeof imap.smtp  !== 'object' && imap.active){
-              console.log(imap.emailId);
               Meteor.call('doUpdateEmailsStore', imap._id);
             }
           }catch(ex){
@@ -44,12 +43,10 @@ Meteor.startup(function () {
         console.log('running', ++i );
       }
     });
-    //SyncedCron.start();
+    SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }
-  //console.log(process.env);
-  //console.log(process.env.PORT)
   /*
     It will Configure the ROOT_URL and MONGO_URL when its not running on localhost.
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.
