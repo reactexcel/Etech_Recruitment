@@ -20,6 +20,7 @@ import Paper from 'material-ui/Paper';
 import _ from 'lodash';
 import MyCard from './MyCard';
 
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -45,6 +46,7 @@ class EmailBody extends React.Component {
     }
     this.handleClose=this.handleClose.bind(this)
     this.submitreason=this.submitreason.bind(this)
+    this.candidateAction=this.candidateAction.bind(this)
     this.ignoreTagId = "";
     this.rejectTagId = '';
     this.scheduleTagId = "";
@@ -79,7 +81,19 @@ componentWillReceiveProps(props){
 
 }
 
-
+  candidateAction(actionId, emailId){
+    this.props.onCandidateAction(actionId, emailId).then((data)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:data.toString()
+    });
+    }).catch((err)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:err.toString()
+    });
+    })
+  }
   handleClose(){
     this.setState({rejectpop: false});
   }
@@ -104,12 +118,19 @@ componentWillReceiveProps(props){
   }
 
 render(){
+        let data = this.state.data;
+        let dynamicActions = this.props.dynamicActions;
+        let actionMenu = []
+        _.map(dynamicActions,(action)=>{
+            actionMenu.push(<MenuItem primaryText={action.name} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+        })
+        //--
         let progress = 0 
         if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
           let tmp = this.props.candidateHistory.history[0]
           progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
         }
-       let data = this.state.data;
+       //--
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
@@ -147,7 +168,7 @@ render(){
                       if(_.includes(data.tags,this.ignoreTagId)==false){
                             this.ignoreText="Ignored";
                             this.props.onIgnore([data._id],this.ignoreTagId)
-                            this.props.router.push('/inbox/body');
+                            this.props.router.push('/inbox/b');
                       }else{
                         this.setState({
                           "SnackbarOpen":true,
@@ -167,6 +188,7 @@ render(){
                       }
         }}/>
         <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+        <MenuItem primaryText="Dynamic Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
       </IconMenu>
     }
   />

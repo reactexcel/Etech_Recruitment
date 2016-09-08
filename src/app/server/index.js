@@ -15,6 +15,7 @@ import '../collections/EmailsStoreStatus.js';
 import '../collections/emailTemplates';
 import _ from 'lodash';
 import '../methods/crons/applyTag';
+import '../methods/dynamicAction.js'
 
 Meteor.startup(function () {
   // Configure MAIL_URL
@@ -34,7 +35,7 @@ Meteor.startup(function () {
           try{
             if(typeof imap.smtp  !== 'object' && imap.active){
               console.log(imap.emailId);
-            //  Meteor.call('doUpdateEmailsStore', imap._id);
+              Meteor.call('doUpdateEmailsStore', imap._id);
             }
           }catch(ex){
             console.log('EmailfetchingCronJob ->>exceptipn->>', ex);
@@ -47,7 +48,8 @@ Meteor.startup(function () {
   } catch (ex){
     console.log("cron --> ", ex);
   }
-  console.log(process.env.MAIL_URL)
+  //console.log(process.env);
+  //console.log(process.env.PORT)
   /*
     It will Configure the ROOT_URL and MONGO_URL when its not running on localhost.
     config_ENV.MongoDB._url() generate MONGO_URL as per the given information in config file under MongoDB.

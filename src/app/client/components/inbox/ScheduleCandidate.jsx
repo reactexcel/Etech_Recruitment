@@ -110,6 +110,7 @@ class ScheduleCandidate extends React.Component {
     _.map(this.props.emailTemplates,(template, key)=>{
       templates.push(
         <Chip
+          key={key}
           backgroundColor={pinkA100}
           onTouchTap={()=>{this.openSelectedSchedule(template._id)}}
           style={styles.chip}
