@@ -88,8 +88,15 @@ componentWillReceiveProps(props){
   ignoreCandidate(data,ignoreTagId){
     if(_.includes(data.tags,ignoreTagId)==false){
             this.ignoreText="Ignored";
-            this.props.onIgnore([data._id],this.ignoreTagId)
-            this.props.router.push('/inbox/body');
+            this.props.onIgnore([data._id],this.ignoreTagId).then(()=>{
+                          this.props.router.push('/inbox/body');
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+            
       }else{
             this.setState({
                 "SnackbarOpen":true,
@@ -114,12 +121,19 @@ componentWillReceiveProps(props){
     });
   };
   submitreason(id){
+    console.log(id,"in submit method--------")
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject([id],this.rejectTagId,reason)
-        this.rejectText="Rejected"
-        this.handleClose()
-        this.props.router.push('/inbox');
+         this.handleClose()
+        this.props.onReject([id],this.rejectTagId,reason).then(()=>{
+          this.rejectText="Rejected"
+          this.props.router.push('/inbox/body');
+        }).catch( (error) => {
+          this.setState({
+              snackbarOpen:true,
+              snackbarmsg:error.toString(),
+        })
+     })
     }else{
         this.setState({
             errortxt:'Reason required'

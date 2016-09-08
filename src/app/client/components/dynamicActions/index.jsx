@@ -41,7 +41,9 @@ class DynamicActions extends React.Component {
             snackbarOpen:false,
             snackbarmsg:'',
             value:this.props.tags[0]._id,
-            tempvalue:this.props.emailTemplates[0]._id
+            tempvalue:this.props.emailTemplates[0]._id,
+            floatingLabelText:'Action Name',
+            hintText:'Enter Action Name'
         }
         this.saveAction  = this.saveAction.bind( this )
         this.openCreateAction  = this.openCreateAction.bind( this );
@@ -114,7 +116,7 @@ class DynamicActions extends React.Component {
           actionId:''
         })
       })
-        }
+      }
     }
     deleteAction(id){
     this.props.onDeleteAction(id).then( () => {
@@ -130,13 +132,15 @@ class DynamicActions extends React.Component {
       })
     }
     editAction(data){
-        this.refs.Name.input.value=data.name;
+        this.refs.Name.input.value = data.name;
         this.setState({
           value:data.tag_id,
           tempvalue:data.template_id,
           tmppage:'hidden',
           tmpcreat:'row',
-          actionId:data._id
+          actionId:data._id,
+          floatingLabelText:'',
+          hintText:''
         })
     }
     handleRequestClose = () => {
@@ -193,8 +197,8 @@ class DynamicActions extends React.Component {
                    <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
                    <TextField
                             ref='Name'
-                            floatingLabelText="Action Name"
-                            hintText="Enter Action Name"
+                            floatingLabelText={this.state.floatingLabelText}
+                            hintText={this.state.hintText}
                             fullWidth={true}
                             errorText={this.state.errName}
                    />

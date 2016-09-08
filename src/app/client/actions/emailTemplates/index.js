@@ -28,8 +28,13 @@ export function deleteTemplate( id ){
 				if(err){
 					reject(err)
 				}else{
-					dispatch ( fetchTemplate(data) )
-					resolve(data)
+					if(typeof data.msg == 'undefined'){
+						dispatch ( fetchTemplate(data) )
+					    resolve(data)
+					}else{
+						reject(data.msg);
+					}
+					
 				}
 			})
 		})
