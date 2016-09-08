@@ -38,7 +38,6 @@ export function inbox( state = Immutable.Map(initialState), action ){
           let tagList = state.get("tagList")
           let count_unread_emails = state.get("count_unread_emails")
           let data = action.payload.email
-          data = data[0]
           let tagUnreadCount = false
             _.map(data,(assign)=>{
               _.map(emails,(email)=>{
