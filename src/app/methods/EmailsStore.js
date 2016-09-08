@@ -5,11 +5,12 @@ import {config_ENV} from './../config';
 
 import * as _ from 'lodash'
 
-import CandidateHistory from 'app/collections/candidateHistory' 
+import CandidateHistory from 'app/collections/candidateHistory'
 import EmailsStore from 'app/collections/EmailsStore'
 import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
 import Tags  from 'app/collections/inboxTag';
 import Config from 'app/collections/config'
+import {matchTag} from './inboxTag/matchTag';
 
 Meteor.methods({
 	'update_first_status_last_fetch_details' : function( mongoid ){
@@ -43,7 +44,7 @@ Meteor.methods({
 
   'doUpdateEmailsStore': function ( mongoid ) {
 
-		console.log("<<-->>", mongoid);
+		//console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
 		var todaysDate = moment(date).format("YYYY-MM-DD")
@@ -146,6 +147,17 @@ Meteor.methods({
 									last_email_date = email.email_date
 								}
 								email.tags = [];
+								if ( email.subject.search('(Fwd:)') > -1 ) {
+									let x = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];;
+									if(email.body.match(/<a[^>]*>(.*?)<\/a>/)[1].search('<wbr>') > -1){
+										x = x.split('<wbr>');
+										x = x[0] + x[1] ;
+									}
+									email.sender_mail = x;
+									email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
+									email.subject = email.subject.split('Fwd:')[1];
+									console.log(email);
+								}
 								Meteor.call('insertNewEmail', source_email_id, email, tagList )
 								emails_fetched++
 							})
@@ -202,42 +214,14 @@ try{
   		}
 			//insert mail to tha existing account
 			_.forEach(tagList, function ( tag ) {
-					if(tag.automatic){
-						if(tag.email == emailData.sender_mail ||
-								emailData.subject.search(tag.subject) > -1 ||
-									emailData.subject.search(tag.name) > -1 ){
-							if(_.indexOf(emailData.tags, tag._id) == -1){
-								emailData.tags.push(tag._id);
-							}
-						}
-					}
-					if(emailData.subject.search(tag.name) > -1){
-						if(_.indexOf(emailData.tags, tag._id) == -1 && !tag.default){
-							emailData.tags.push(tag._id);
-						}
-					}
-				}
-			);
+				matchTag( emailData, tag);
+			});
 			EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } });
 		}else{
 			//Insert new mail with tags
 			_.forEach(tagList, function ( tag ) {
-					if(tag.automatic){
-						if(tag.email == emailData.sender_mail ||
-								emailData.subject.search(tag.subject) > -1 ||
-									emailData.subject.search(tag.name) > -1 ){
-							if(_.indexOf(emailData.tags, tag._id) == -1){
-								emailData.tags.push(tag._id);
-							}
-						}
-					}
-					if(emailData.subject.search(tag.name) > -1){
-						if(_.indexOf(emailData.tags, tag._id) == -1 && !tag.default){
-							emailData.tags.push(tag._id);
-						}
-					}
-				}
-			);
+				matchTag( emailData, tag);
+			});
 		  EmailsStore.insert( emailData );
 		}
 	} catch (exception){

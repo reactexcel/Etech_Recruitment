@@ -9,7 +9,21 @@ export default class MyCard extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      show: true
+      show: true,
+      prog:'show'
+    }
+  }
+  componentWillReceiveProps( props ){
+    if(typeof this.props.index !== 'undefined'){
+      if(this.props.index == 0 || this.props.index == "done"){
+        this.setState({
+          prog:{marginTop:'7px'}
+        })
+      }else{
+        this.setState({
+          prog:{marginTop:'7px',opacity:'-1'}
+        })
+      }
     }
   }
 
@@ -18,22 +32,27 @@ export default class MyCard extends React.Component {
       let i = this.props.i;
       let progresStatus = '';
       let progressValue = '';
+      let progresColor = '';
       if(typeof this.props.progresStatus !== 'undefined'){
         progresStatus = this.props.progresStatus
       }else{
         progresStatus = 0
       }
-      console.log(progresStatus)
       if(progresStatus == 1){
         progressValue = '25'
+        progresColor = '#CF0649'
       }else if(progresStatus == 2){
         progressValue = '50'
+        progresColor = '#751F07'
       }else if(progresStatus == 3){
         progressValue= '75'
+        progresColor = '#02187A'
       }else if(progresStatus == 4){
         progressValue = '100'
-      }else if(progresStatus == 0){
+        progresColor = '#038503'
+      }else{
         progressValue = '0'
+        //progresColor = ''
       } 
       return (
         <Card>
@@ -43,7 +62,7 @@ export default class MyCard extends React.Component {
           zDepth={2}
           children={
             <CardHeader
-              title={<div> {typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:<div>{email.subject} <br/> From: {email.from}</div>} </div>}
+              title={<div> <span>{this.props.progresHide}</span>{typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:<div>{email.subject} <br/> From: {email.from}</div>} </div>}
               subtitle={<div> {typeof email.sender_mail == 'undefined'?
                 <div>
                   <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
@@ -61,7 +80,7 @@ export default class MyCard extends React.Component {
               subtitleStyle={{'fontSize':"11px"}}
               children={<div style={typeof email.attachments !== 'undefined'?{marginTop:"-35px"}:{marginTop:'0px'}}>
                 <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
-                <div ><LinearProgress mode="determinate" value={progressValue} min='0' max='100' style={{marginTop:'7px'}}/></div></div>}
+                <div><LinearProgress color={progresColor} mode="determinate" value={progressValue} min='0' max='100' style={this.state.prog}/></div></div>}
               />
           }
            />

@@ -29,7 +29,6 @@ Meteor.methods({
       let _id = EmailTemplates.remove(id)
       return ({_id: _id});
     }
-    
   }
 });
 
