@@ -53,9 +53,12 @@ Meteor.methods({
     }
     
   },
-  "assignTag": function (m_id, t_id){
-    let mail = EmailsStore.find({"_id": m_id}).fetch();
-    if(mail.tags != 'undefined'){
+  "assignTag": function (mailIds, t_id){
+    let emails = []
+    _.map(mailIds,(m_id)=>{
+      let mail = EmailsStore.find({"_id": m_id}).fetch();
+      mail = mail[0] ;
+    if(typeof mail.tags != 'undefined'){
       EmailsStore.update(
       { _id: m_id },
       { $addToSet: { 'tags': t_id} }
@@ -66,7 +69,9 @@ Meteor.methods({
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
-    return {email:EmailsStore.find({"_id": m_id}).fetch(),tagId:t_id};
+    emails.push(EmailsStore.find({"_id": m_id}).fetch())
+    })
+    return {email:emails,tagId:t_id};
   },
   "ignoreMultipleCandidate": function (idList, tagId, userId){
     let username=Meteor.users.findOne({"_id": userId})

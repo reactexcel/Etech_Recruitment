@@ -20,6 +20,7 @@ import Paper from 'material-ui/Paper';
 import _ from 'lodash';
 import MyCard from './MyCard';
 
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -47,6 +48,7 @@ class EmailBody extends React.Component {
     this.submitreason=this.submitreason.bind(this)
     this.ignoreCandidate=this.ignoreCandidate.bind(this)
     this.rejectCandidate=this.rejectCandidate.bind(this)
+    this.candidateAction=this.candidateAction.bind(this)
     this.ignoreTagId = "";
     this.rejectTagId = '';
     this.scheduleTagId = "";
@@ -80,7 +82,19 @@ componentWillReceiveProps(props){
 
 }
 
-
+  candidateAction(actionId, emailId){
+    this.props.onCandidateAction(actionId, emailId).then((data)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:data.toString()
+    });
+    }).catch((err)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:err.toString()
+    });
+    })
+  }
   handleClose(){
     this.setState({rejectpop: false});
   }
@@ -141,12 +155,13 @@ componentWillReceiveProps(props){
   }
 
 render(){
-        let progress = 0
-        if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
-          let tmp = this.props.candidateHistory.history[0]
-          progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
-        }
-       let data = this.state.data;
+        let data = this.state.data;
+        let dynamicActions = this.props.dynamicActions;
+        let actionMenu = []
+        _.map(dynamicActions,(action)=>{
+            actionMenu.push(<MenuItem primaryText={action.name} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+        })
+        
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
@@ -187,6 +202,7 @@ render(){
           this.rejectCandidate(data,this.rejectTagId)
         }}/>
         <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+        <MenuItem primaryText="Dynamic Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
       </IconMenu>
     }
   />
@@ -225,9 +241,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={progress} index={i} />
+                  <MyCard email={email} i={i} key={i} index={i} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
           </div>
         </div>
 

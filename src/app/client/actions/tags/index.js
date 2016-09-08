@@ -104,10 +104,10 @@ export function onFetchTag (){
 }
 
 
-export function onAssignTag (m_id, t_id){
+export function onAssignTag (mailIds, t_id){
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('assignTag',m_id,t_id,(err, tags) => {
+      Meteor.call('assignTag',mailIds,t_id,(err, tags) => {
           if(err){
             reject(err);
           }else{
