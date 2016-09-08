@@ -26,7 +26,7 @@ Meteor.methods({
 		Config.update( mongoid, { $set: dataToUpdate})
 		return true
   },
-  'update_status_last_fetch_details' : function( mongoid, last_email_id_fetch, last_email_fetch_date, totalEmailFetched, newMailFound ){
+  'update_status_last_fetch_details' : function( mongoid, last_email_id_fetch, last_email_fetch_date, totalEmailFetched, newMailFound, totalemail ){
 		var dataToUpdate = {
   			'status_last_fetch_details' : {
   				"last_email_id_fetch": last_email_id_fetch*1,
@@ -34,6 +34,7 @@ Meteor.methods({
 					"totalEmailFetched": parseInt(totalEmailFetched),
 					"time": moment(new Date().getTime()).format('HH:mm:ss'),
 					'newMailFound': parseInt(newMailFound),
+					'totalMailInInbox': totalemail + parseInt(newMailFound)
   			}
   		}
 			console.log(dataToUpdate);
@@ -43,149 +44,141 @@ Meteor.methods({
 
 
   'doUpdateEmailsStore': function ( mongoid ) {
-
 		//console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
 		var todaysDate = moment(date).format("YYYY-MM-DD")
-
-  	//check fog logged user
-	//if( Meteor.user() == null ){
-	//	console.log("<<-->>", 'invalid user');
-	//	return {
-		//	'type' : 'INVALID_LOGIN',
-	//	}
-	//}
-
-	//check for imap settings
-	var checkSettings = Meteor.call('fetchSettings')
-
-	if( checkSettings.length == 0 ){
-			//console.log("<<-->>", 'setting not found');
-		return {
-			'type' : 'SETTINGS_NOT_FOUND',
-		}
-	}else{
-		var settings = false
-		var status_last_fetch_details = false
-
-		_.forEach( checkSettings, function( imapEmail ){
-			if( mongoid == imapEmail._id ){
-				settings = imapEmail
-			}
-		})
-
-		if( settings == false ){
+		//check for imap settings
+		var checkSettings = Meteor.call('fetchSettings')
+		if( checkSettings.length == 0 ){
 			return {
-				'type' : 'SETTING_NOT_FOUND',
+				'type' : 'SETTINGS_NOT_FOUND',
 			}
 		}else{
-			var source_mongoid =  settings._id
-			var source_email_id = settings.emailId
-  		var source_email_password = settings.password
-  		var source_host = settings.server
-  		var source_port = settings.port
-  		var source_encryp = settings.encrypt
-  		var fetchingEmailsFromId = ''
-			var fetchingEmailsForDate = ''
-			var totalEmailFetched = 0
-			var newMailFound = 0
-  		if( typeof settings.status_last_fetch_details != 'undefined' ){
+			var settings = false
+			var status_last_fetch_details = false
+
+			_.forEach( checkSettings, function( imapEmail ){
+				if( mongoid == imapEmail._id ){
+					settings = imapEmail
+				}
+			})
+			if( settings == false ){
+				return {
+					'type' : 'SETTING_NOT_FOUND',
+				}
+			}else{
+				var source_mongoid =  settings._id
+				var source_email_id = settings.emailId
+  			var source_email_password = settings.password
+  			var source_host = settings.server
+  			var source_port = settings.port
+  			var source_encryp = settings.encrypt
+  			var fetchingEmailsFromId = ''
+				var fetchingEmailsForDate = ''
+				var totalEmailFetched = 0
+				var newMailFound = 0
+				var totalemail = 0;
+  			if( typeof settings.status_last_fetch_details != 'undefined' ){
   				var status_last_fetch_details = settings.status_last_fetch_details;
 					fetchingEmailsFromId = status_last_fetch_details.last_email_id_fetch + 1;
 					fetchingEmailsForDate = status_last_fetch_details.last_email_fetch_date;
 					totalEmailFetched = parseInt(status_last_fetch_details.totalEmailFetched);
 					newMailFound = parseInt(status_last_fetch_details.newMailFound);
+					totalemail = parseInt(status_last_fetch_details.totalemail);
 					if( fetchingEmailsForDate == ''){
 						fetchingEmailsForDate = todaysDate;
 					}
-  		}else{
-  			Meteor.call('update_first_status_last_fetch_details', source_mongoid )
-				fetchingEmailsFromId = '';
-				fetchingEmailsForDate = todaysDate;
-				totalEmailFetched = 0;
-  		}
+  			}else{
+  				Meteor.call('update_first_status_last_fetch_details', source_mongoid )
+					fetchingEmailsFromId = '';
+					fetchingEmailsForDate = todaysDate;
+					totalEmailFetched = 0;
+  			}
   			//----------------------------------------
-			var BASE_URL = config_ENV.IMAP_API_BASE_URL
-			var PARAMS = ""
-			if( fetchingEmailsFromId == ''){
-				PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp
-			}else{
-				PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp+"&email_id="+fetchingEmailsFromId
-			}
-			var API_URL = BASE_URL + PARAMS
-
-			var TYPE = ""
-			var MESSAGE = ""
-			try {
-				var emails_fetched = 0
-				var emails_to_be_fetched = 0
-		    var result = HTTP.call("GET", API_URL );
-				if( typeof result.content != 'undefined' ){
-		    	var json = JSON.parse( result.content )
+				var BASE_URL = config_ENV.IMAP_API_BASE_URL
+				var PARAMS = ""
+				if( fetchingEmailsFromId == ''){
+					PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp
+				}else{
+					PARAMS = "email="+source_email_id+"&pass="+source_email_password+"&date="+fetchingEmailsForDate+"&host="+source_host+"&port="+source_port+"&encryp="+source_encryp+"&email_id="+fetchingEmailsFromId
+				}
+				var API_URL = BASE_URL + PARAMS
+				var TYPE = ""
+				var MESSAGE = ""
+				try {
+					var emails_fetched = 0
+					var emails_to_be_fetched = 0
+		    	var result = HTTP.call("GET", API_URL );
+					if( typeof result.content != 'undefined' ){
+		    		var json = JSON.parse( result.content )
 					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
-					console.log("<<-->>", json.data.length);
-					if(json.data.length > 0 ){
-						TYPE = "SUCCESS"
-						if( json.data.length > 0 ){
-							var emails_to_be_fetched = json.data.length
-			    		var emails = json.data
-							var last_email_id = ''
-							var last_email_date = ''
-							var tagList = Meteor.call('fetchTag');
-							_.forEach( emails, function( email, i ){
-								if( typeof email.email_id != 'undefined' ){
-									if( last_email_id == ''){
-										last_email_id = email.email_id
-									}else{
-										if( email.email_id > last_email_id ){
+						console.log("<<-->>", json.data.length);
+						if(json.data.length > 0 ){
+							TYPE = "SUCCESS"
+							if( json.data.length > 0 ){
+								var emails_to_be_fetched = json.data.length
+			    			var emails = json.data
+								var last_email_id = ''
+								var last_email_date = ''
+								var lastEmailTimeStamp = '';
+								var tagList = Meteor.call('fetchTag');
+								_.forEach( emails, function( email, i ){
+									if( typeof email.email_id != 'undefined' ){
+										if( last_email_id == ''){
 											last_email_id = email.email_id
+										}else{
+											if( email.email_id > last_email_id ){
+												last_email_id = email.email_id
+											}
 										}
 									}
-								}
-								if(  typeof email.email_date != 'undefined' && email.email_date != '' ){
-									last_email_date = email.email_date
-								}
-								email.tags = [];
-								if ( email.subject.search('(Fwd:)') > -1 ) {
-									let x = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];;
-									if(email.body.match(/<a[^>]*>(.*?)<\/a>/)[1].search('<wbr>') > -1){
-										x = x.split('<wbr>');
-										x = x[0] + x[1] ;
+									if(  typeof email.email_date != 'undefined' && email.email_date != '' ){
+										last_email_date = email.email_date
 									}
-									email.sender_mail = x;
-									email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
-									email.subject = email.subject.split('Fwd:')[1];
-									console.log(email);
-								}
-								Meteor.call('insertNewEmail', source_email_id, email, tagList )
-								emails_fetched++
-							})
+									email.tags = [];
+									if ( email.subject.search('(Fwd:)') > -1 ) {
+										let x = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];;
+										if(email.body.match(/<a[^>]*>(.*?)<\/a>/)[1].search('<wbr>') > -1){
+											x = x.split('<wbr>');
+											x = x[0] + x[1] ;
+										}
+										email.sender_mail = x;
+										email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
+										email.subject = email.subject.split('Fwd:')[1];
+										console.log(email);
+									}
+									Meteor.call('insertNewEmail', source_email_id, email, tagList )
+									lastEmailTimeStamp = email.email_timestamp;
+									emails_fetched++
+								})
 							//-start-insert status last inserted email id to db
-							if( last_email_id != '' && last_email_date != '' ){
-								if(fetchingEmailsForDate == last_email_date){
-									newMailFound +=  emails.length ;
-								}else{
-									newMailFound = emails.length;
+								if( last_email_id != '' && last_email_date != '' ){
+									if(fetchingEmailsForDate == last_email_date){
+										newMailFound +=  emails.length ;
+									}else{
+										newMailFound = emails.length;
+									}
+									Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date, ( totalEmailFetched + emails.length ), newMailFound, totalemail )
 								}
-								Meteor.call('update_status_last_fetch_details', source_mongoid, last_email_id, last_email_date, ( totalEmailFetched + emails.length ), newMailFound )
-							}
 							//-end-insert status last inserted email id to db
-						}
-		    	}else{
-		    		TYPE = "RESPONSE_ERROR"
-		    		MESSAGE = json.error[0]
+							}
+		    		}else{
+		    			TYPE = "RESPONSE_ERROR"
+		    			MESSAGE = json.error[0]
+		    		}
 		    	}
-		    }
-				return {
-		    		'type' : TYPE,
-		    		'message' : MESSAGE,
-		    		'emails_fetched' : emails_fetched,
-						'emails_to_be_fecthed' : emails_to_be_fetched
+					return {
+		    		//'type' : TYPE,
+		    		//'message' : MESSAGE,
+		    		//'emails_fetched' : emails_fetched,
+						//'emails_to_be_fecthed' : emails_to_be_fetched
+						length: emails_fetched,
+						timeStamp: lastEmailTimeStamp
 		    	}
 				} catch (e) {
 					console.log("error -->-->-->", e);
-		    	return e ;
+		    	return {} ;
 		  	}
 			}
 		}
@@ -210,7 +203,8 @@ try{
 			var dataToUpdate = {
 				'm_insert_time' : currentDateTime,
    			'm_insert_timestamp' : currentTimeStamp,
-   			'm_read_status' : 0*1
+   			'm_read_status' : 0*1,
+				'unread': !existingEmail.unread?emailData.unread?true:false:existingEmail.unread,
   		}
 			//insert mail to tha existing account
 			_.forEach(tagList, function ( tag ) {

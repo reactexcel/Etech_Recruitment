@@ -275,7 +275,6 @@ export default class EmailSettingForm extends React.Component {
                 />
               </div>
               <div className="form-group" style={style.formInput}>
-                {console.log(this.state)}
                 <RadioButtonGroup name="encrypt" valueSelected={this.state.encrypt} labelPosition="right"
                   style={{maxWidth: 250}}
                     onChange={

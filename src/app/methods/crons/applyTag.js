@@ -19,13 +19,13 @@ Meteor.methods({
         matchTag( emailData, tag);
       },
       schedule: function(parser) {
-        return parser.text('every 5 mins');
+        return parser.text('every 3 mins');
       },
       job: function () {
         let emails = EmailsStore.find({m_insert_timestamp:{$lt: this.timeStamp}},{skip: this.skip, limit: this.limit}).fetch();
         let timeStamp = 0;
         _.forEach( emails, ( email, i ) => {
-          timeStamp = email.m_insert_timestamp;
+        //  timeStamp = email.m_insert_timestamp;
           this.assignTag(email, this.tag);
           _.forEach(email.more_emails, ( mEmail, j ) => {
             //this.assignTag(mEmail, this.tag);
@@ -36,9 +36,11 @@ Meteor.methods({
         if(emails.length < this.limit && emails.length > 0){
           SyncedCron.remove(this.name);
         }else{
-          if( timeStamp < this.timeStamp ){
-            this.timeStamp = timeStamp;
-          }
+        //  if( timeStamp < this.timeStamp ){
+          //  this.timeStamp = timeStamp;
+        //  }
+        this.skip += this.limit;
+        console.log(this.skip);
         }
         console.log(++iq);
       }

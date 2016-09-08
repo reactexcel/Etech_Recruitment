@@ -21,6 +21,8 @@ let assign = false;
 
         if(assign){
           if(_.indexOf(emailData.tags, tag._id) == -1){
+            console.log('---A--->assign');
+            console.log(tag);
             emailData.tags.push(tag._id);
           }
         }
@@ -29,6 +31,8 @@ let assign = false;
         if(emailData.subject.search(nameReg) > -1){
           if(_.indexOf(emailData.tags, tag._id) == -1 && !tag.default){
             emailData.tags.push(tag._id);
+            console.log(tag);
+            console.log('---M--->assign');
           }
         }
       }
