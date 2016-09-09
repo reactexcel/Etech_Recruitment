@@ -91,12 +91,12 @@ class SendEmail extends React.Component {
         })
     }
     deleteTemplate(id){
-    this.props.onDeleteTemplate(id).then( (msg) => {
+    this.props.onDeleteTemplate(id).then( (msg) => {console.log(msg)
         this.setState({
           snackbarOpen:true,
           snackbarmsg:msg.toString(),
         })
-      }).catch( (error) => {
+      }).catch( (error) => {console.log(error,'error')
         this.setState({
           snackbarOpen:true,
           snackbarmsg:error.toString(),
