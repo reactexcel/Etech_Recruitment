@@ -60,7 +60,7 @@ export function emailSetting (state = initialState, action ){
   }else if (action.type === 'START_CRON' ) {
     return  state.map(
         ( value ) => {
-          if(value.get("_id") === action.payload._id) {
+          if(value.get("_id") === action.payload) {
             return value.set("croned", true)
 
           }else{

@@ -13,6 +13,7 @@ import ActionDone from 'material-ui/svg-icons/action/done';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 
 const styles = {
   propContainer: {
@@ -203,10 +204,10 @@ export default class EmailSettingList extends React.Component {
                 children={
                   this.state.imapEmail?
                   <div>
-                      <h4 style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'25%'}} className="">
-                        Current (new) e-mail fetching details
+                      <h4 style={{ lineHeight: "120%", textAlign:'justify'}} className="">
+                        Current (new) e-mail fetching process details
                       </h4>
-                    <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'30%'}}>
+                    <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
                       New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
                       Last Update date: {this.state.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
                       Last Update time: {this.state.imapEmail.status_last_fetch_details.time}<br/>
@@ -215,19 +216,23 @@ export default class EmailSettingList extends React.Component {
                     { typeof this.state.imapEmail.cronDetail !== 'undefined'?
                     <div>
                       <br/>
-                        <h4 style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'25%'}}>
-                          Cron (old) e-mail fetching details
+                        <h4 style={{ lineHeight: "120%", textAlign:'justify'}}>
+                          Cron (old) e-mail fetching process details
                         </h4>
-                        <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'30%'}}>
-                          New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
+                        <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
                           Last fetched email of date: {this.state.imapEmail.cronDetail.lastEmailDate}<br/>
                           Last update time : {this.state.imapEmail.cronDetail.time}<br/>
                           Total emails fetched: {this.state.imapEmail.cronDetail.totalEmailFetched}<br/>
-                          Total count of Inbox emails: {this.state.imapEmail.totalMailInInbox}<br/>
+                          Total count of Inbox emails: {this.state.imapEmail.cronDetail.totalMailInInbox}<br/>
                         </p>
+                        {this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100 < 100?
+                          <LinearProgress mode="determinate" value={this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100} />
+                          :""
+                        }
                       </div>
-                      :''
+                      :this.state.imapEmail.croned?<LinearProgress />:''
                     }
+                    <br/>
                     <div>
                       <Toggle
                         label={this.state.imapEmail.croned?"This email is being processed in background.":"Start cron to fetch all email from the selected email"}
@@ -237,6 +242,7 @@ export default class EmailSettingList extends React.Component {
                         labelStyle={{fontWeight:'normal', color:'#555'}}
                         onToggle={ () => {
                           this.onStartCron( this.state.imapEmail._id)
+                          this.setState({ stat: false})
                           }
                         }
                       />

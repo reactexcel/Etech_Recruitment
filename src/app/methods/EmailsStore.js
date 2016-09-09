@@ -44,7 +44,6 @@ Meteor.methods({
 
 
   'doUpdateEmailsStore': function ( mongoid ) {
-		//console.log("<<-->>", mongoid);
   	//mongoid is id of record in config table
   	var date = new Date()
 		var todaysDate = moment(date).format("YYYY-MM-DD")
@@ -112,8 +111,7 @@ Meteor.methods({
 		    	var result = HTTP.call("GET", API_URL );
 					if( typeof result.content != 'undefined' ){
 		    		var json = JSON.parse( result.content )
-					//if( typeof json.data != 'undefined' && typeof json.data.emails != 'undefined' ){
-						console.log("<<-->>", json.data.length);
+						console.log("<<-Email Length ->>", json.data.length);
 						if(json.data.length > 0 ){
 							TYPE = "SUCCESS"
 							if( json.data.length > 0 ){
@@ -137,25 +135,42 @@ Meteor.methods({
 										last_email_date = email.email_date
 									}
 									email.tags = [];
-									if ( email.subject.search('(Fwd:)') > -1 ) {
+									/*
+										when a forwarded email is encounter then the followling  code snipt will extract
+										the email id and name of the persion who initially write this email.
+									*/
+									if ( email.subject.search('(Fwd:)') > -1 && email.body.search( new RegExp('---------- Forwarded message ----------', 'ig') ) > -1) {
 										let x = email.body.match(/<a[^>]*>(.*?)<\/a>/)[1];;
 										if(email.body.match(/<a[^>]*>(.*?)<\/a>/)[1].search('<wbr>') > -1){
 											x = x.split('<wbr>');
 											x = x[0] + x[1] ;
 										}
 										email.sender_mail = x;
-										email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
-										email.subject = email.subject.split('Fwd:')[1];
-										console.log(email);
+										if(email.body.match(/<b [^>]*>(.*?)<\/b>/)){
+											email.from = email.body.match(/<b [^>]*>(.*?)<\/b>/)[1];
+										}else if(email.body.match(/&quot;(.*?)&quot;/)){
+											email.from = email.body.match(/&quot;(.*?)&quot;/)[1];
+										}
+										if(email.subject.split('Fwd: '))
+											email.subject = email.subject.split('Fwd: ')[1];
+									}else if ( email.subject.search('Fwd:') > -1){
+										if(email.subject.split('Fwd: '))
+											email.subject = email.subject.split('Fwd: ')[1];
 									}
-									Meteor.call('insertNewEmail', source_email_id, email, tagList )
-									lastEmailTimeStamp = email.email_timestamp;
-									emails_fetched++
+									Meteor.call('insertNewEmail', source_email_id, email, tagList, function(err, duplicate){
+										if(!duplicate){
+											lastEmailTimeStamp = email.email_timestamp;
+											emails_fetched++
+										}else{
+											newMailFound--;
+											totalEmailFetched--;
+										}
+									})
 								})
 							//-start-insert status last inserted email id to db
 								if( last_email_id != '' && last_email_date != '' ){
 									if(fetchingEmailsForDate == last_email_date){
-										newMailFound +=  emails.length ;
+										newMailFound +=  emails.length;
 									}else{
 										newMailFound = emails.length;
 									}
@@ -187,40 +202,55 @@ Meteor.methods({
   insertNewEmail : function ( source_email_id, emailData, tagList ){
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
-
+		var dulicate = false;
 
   	emailData.m_source_email_id = source_email_id
 		emailData.m_insert_time = currentDateTime
    	emailData.m_insert_timestamp = currentTimeStamp
    	emailData.m_read_status = 0*1
    	//---------------------------
-try{
-		var senderEmail = emailData.sender_mail
-		var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch()
-		if( checkExistingSenderEmail.length > 0 ){
-			var existingEmail = checkExistingSenderEmail[0]
-			var existingEmail_mongoid = existingEmail._id
-			var dataToUpdate = {
-				'm_insert_time' : currentDateTime,
-   			'm_insert_timestamp' : currentTimeStamp,
-   			'm_read_status' : 0*1,
-				'unread': !existingEmail.unread?emailData.unread?true:false:existingEmail.unread,
-  		}
+		try{
+			var senderEmail = emailData.sender_mail;
+			var checkExistingSenderEmail = EmailsStore.find( { 'sender_mail' : senderEmail } ).fetch();
+			var duplicate = false;
+			if( checkExistingSenderEmail.length > 0 ){
+				_.forEach(checkExistingSenderEmail, function( Ex_email ){
+					if(source_email_id == Ex_email.m_source_email_id){
+						_.forEach(Ex_email.more_emails, function(m_email){
+							if(m_email.email_id == emailData.email_id && source_email_id == m_email.m_source_email_id){
+								duplicate = true;
+							}
+						});
+					}
+				});
+				if ( duplicate ) {
+					console.log(" Warnaing: Duplicate Email found!! ");
+					return duplicate;
+				}
+				var existingEmail = checkExistingSenderEmail[0]
+				var existingEmail_mongoid = existingEmail._id
+				var dataToUpdate = {
+					'm_insert_time' : currentDateTime,
+   				'm_insert_timestamp' : currentTimeStamp,
+   				'm_read_status' : 0*1,
+					'unread': !existingEmail.unread?emailData.unread?true:false:existingEmail.unread,
+  			}
 			//insert mail to tha existing account
-			_.forEach(tagList, function ( tag ) {
-				matchTag( emailData, tag);
-			});
-			EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } });
-		}else{
-			//Insert new mail with tags
-			_.forEach(tagList, function ( tag ) {
-				matchTag( emailData, tag);
-			});
-		  EmailsStore.insert( emailData );
+				_.forEach(tagList, function ( tag ) {
+					matchTag( emailData, tag);
+				});
+				EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } });
+			}else{
+				//Insert new mail with tags
+				_.forEach(tagList, function ( tag ) {
+					matchTag( emailData, tag);
+				});
+		  	EmailsStore.insert( emailData );
+			}
+			return duplicate
+		} catch (exception){
+			console.log("Error in insertNewEmail method ==>>",exception);
 		}
-	} catch (exception){
-		console.log("Error ==>>",exception);
-	}
   },
   getEmailsForInbox : function( emails_per_page, page_num ,tag){
 		var imapEmail = Config.find( {'_id': tag}).fetch();
@@ -238,7 +268,7 @@ try{
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
-	var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'm_read_status' : 0}).count()
+		var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'm_read_status' : 0}).count()
 	//----
 		if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
