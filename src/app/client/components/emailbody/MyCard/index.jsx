@@ -15,10 +15,16 @@ export default class MyCard extends React.Component {
   }
   componentWillReceiveProps( props ){
     if(typeof this.props.index !== 'undefined'){
-      if(this.props.index == 0 || this.props.index == "done"){
-        this.setState({
-          prog:{marginTop:'7px'}
+      if(this.props.index == 0 || this.props.index == "done" ){
+        if(typeof props.progresStatus !== 'undefined' && props.progresStatus!==0){
+          this.setState({
+            prog:{marginTop:'7px'}
         })
+        }else{
+          this.setState({
+            prog:{marginTop:'7px',opacity:'-1'}
+        })
+        }
       }else{
         this.setState({
           prog:{marginTop:'7px',opacity:'-1'}
@@ -30,11 +36,10 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
-      let progresStatus = 0 ;
+      //---progress status
       let progresColor = '#038503';
-      if(typeof this.props.progresStatus !== 'undefined'){
-        progresStatus = this.props.progresStatus
-      }
+      let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
+      
       return (
         <Card>
         <Paper

@@ -270,7 +270,7 @@ try{
   	let allAction = DynamicActions.find({}).fetch()
       let totalPoints = 0
       _.map(allAction,(act)=>{
-        totalPoints += act.progress_point
+        totalPoints = (parseInt(totalPoints)+parseInt(act.progress_point))
       })
   	allEmails = _.map( allEmails, function( email ){
   			let history = CandidateHistory.find({email_id:email._id}).fetch()

@@ -14,7 +14,7 @@ Meteor.methods({
     let allAction = DynamicActions.find({}).fetch()
       let totalPoints = 0
       _.map(allAction,(act)=>{
-        totalPoints += act.progress_point
+        totalPoints = (parseInt(totalPoints)+parseInt(act.progress_point))
       })
       //---
     if( emailData.length > 0 ){
@@ -22,11 +22,8 @@ Meteor.methods({
         //-------
         let history = CandidateHistory.find({email_id:email._id}).fetch()
         if(history.length > 0){
-        if(typeof history[0].progress_point !== 'undefined'){
-          email.progresStatus=(history[0].progress_point/totalPoints*100)
-        }else{
-          email.progresStatus = 0
-        }
+          email.progresStatus = typeof history[0].progress_point !== 'undefined'?(history[0].progress_point/totalPoints*100):0
+          email.candidateActions =  typeof history[0].dynamicActions !== 'undefined'?history[0].dynamicActions:[]
         }else{
           email.progresStatus = 0
         }

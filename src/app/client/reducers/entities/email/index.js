@@ -18,6 +18,7 @@ export function email( state = Immutable.Map(initialState), action ){
     		_.map(state,(email)=>{
     			if(prog.emailId == email._id){
     				email.progresStatus = prog.progress
+                    email.candidateActions = prog.candidateAction
     			}
     		})
     		
