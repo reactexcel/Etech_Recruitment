@@ -112,6 +112,7 @@ class EmailListItem extends React.Component {
       if( more_emails_count > 0 ){
         show_more_email_count = "("+more_emails_count+")"
       }
+      //----progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.email.progresStatus !== 'undefined'?this.props.email.progresStatus:0
       return(
@@ -153,7 +154,7 @@ class EmailListItem extends React.Component {
                 secondaryText={
                   <p>
                     <i><b> {m_source_email_id} </b></i> - From {m_from} &nbsp; <b>{show_more_email_count}</b>
-                    <LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={{marginTop:'7px'}}/>
+                    {progresStatus!==0?<LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={{marginTop:'7px'}}/>:''}
                   </p>
 
                 }

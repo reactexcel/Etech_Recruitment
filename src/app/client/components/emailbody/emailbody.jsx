@@ -134,7 +134,6 @@ componentWillReceiveProps(props){
     });
   };
   submitreason(id){
-    console.log(id,"in submit method--------")
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
          this.handleClose()
@@ -159,7 +158,9 @@ render(){
         let dynamicActions = this.props.dynamicActions;
         let actionMenu = []
         _.map(dynamicActions,(action)=>{
-            actionMenu.push(<MenuItem primaryText={action.name} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+          let disable=0;
+          _.includes(data.candidateActions,action._id)?disable=1:disable=0
+            actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
         })
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){

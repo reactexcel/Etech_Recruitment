@@ -82,6 +82,7 @@ Meteor.methods({
                  CandidateHistory.insert({
                    email_id:email[0]._id,
                    progress_point:candidatePoints,
+                   dynamicActions:[action[0]._id],
                    historyDetails:[{
                     "action":action[0].name,
                     "date":currentDate,
@@ -95,25 +96,43 @@ Meteor.methods({
               }else{
                 candidatePoints = action[0].progress_point
               }
-              CandidateHistory.update(
+              if(typeof history[0].dynamicActions!=='undefined'){
+                CandidateHistory.update(
                 { email_id: email[0]._id },
                 { $set:{progress_point:candidatePoints},
-                  $addToSet: {'historyDetails':{
+                  $addToSet: {
+                    'dynamicActions':action[0]._id,
+                    'historyDetails':{
                     "action":action[0].name,
                     "date":currentDate,
                     "detail":"Action Taken: "+action[0].name,
                     "actionPerformedBy":username.username
                   }}}
+              );  
+              }else{
+                CandidateHistory.update(
+                { email_id: email[0]._id },
+                { $set:{progress_point:candidatePoints,dynamicActions:[action[0]._id],},
+                  $addToSet: {
+                    'historyDetails':{
+                    "action":action[0].name,
+                    "date":currentDate,
+                    "detail":"Action Taken: "+action[0].name,
+                    "actionPerformedBy":username.username
+                  }
+                }}
               );
+              }
              }
-      //--------
+      //--------Fetching updated progress status
       let allAction = DynamicActions.find({}).fetch()
       let totalPoints = 0
       _.map(allAction,(act)=>{
-        totalPoints += act.progress_point
+        totalPoints = (parseInt(totalPoints)+parseInt(act.progress_point))
       })
-      prograsStatus.push({emailId:email[0]._id,progress:(candidatePoints/totalPoints*100)})
-      //---------
+      let updatedHistory = CandidateHistory.find({email_id:email[0]._id}).fetch()
+      prograsStatus.push({emailId:email[0]._id,progress:(candidatePoints/totalPoints*100),candidateAction:updatedHistory[0].dynamicActions})
+      
         successMail.push(email[0]._id)
       }catch(e){
         failed.push(email[0].sender_mail)
