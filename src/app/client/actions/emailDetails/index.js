@@ -31,21 +31,6 @@ export function getEmailData( email_id ){
     }
 }
 
-export function fetchActions(){
-    return ( dispatch, getState ) => {
-        return new Promise( ( resolve, reject ) => {
-            Meteor.call('getEmail', (err, data) => {
-                if(err){
-                    dispatch ( error_email( err ) )
-                }else{
-                    dispatch ( success_email( data  ) )
-                    dispatch ( update_email( data  ) )
-                }
-            })
-
-        })
-    }
-}
 
 
 //------

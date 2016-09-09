@@ -49,13 +49,6 @@ export default class TagForm extends React.Component {
         subject: this.state.subject,
         automatic: true
       });
-    }else if(this.state.tagName.length > 0 && this.state.type == "dynamicAction"){
-      this.props.handleToggle();
-      return this.props.onAddTag({
-        name: this.state.tagName,
-        color: this.props.color(),
-        dynamicAction: true
-      });
     }else{
       this.error.tagName = "Enter tag title";
       this.setState({"tagName": ""});
@@ -112,10 +105,6 @@ export default class TagForm extends React.Component {
               <RadioButton labelStyle={{fontWeight:"normal"}}
                 value="automatic"
                 label="Automatic Tag"
-                />
-                <RadioButton labelStyle={{fontWeight:"normal"}}
-                value="dynamicAction"
-                label="Dynamic Action Tag"
                 />
             </RadioButtonGroup>
           </div>

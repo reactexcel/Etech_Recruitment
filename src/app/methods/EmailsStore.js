@@ -10,7 +10,6 @@ import EmailsStore from 'app/collections/EmailsStore'
 import EmailsStoreStatus from 'app/collections/EmailsStoreStatus'
 import Tags  from 'app/collections/inboxTag';
 import Config from 'app/collections/config'
-import DynamicActions from 'app/collections/dynamicAction'
 import {matchTag} from './inboxTag/matchTag';
 
 Meteor.methods({
@@ -267,19 +266,10 @@ try{
   		})
   	}
   	//****----
-  	let allAction = DynamicActions.find({}).fetch()
-      let totalPoints = 0
-      _.map(allAction,(act)=>{
-        totalPoints += act.progress_point
-      })
   	allEmails = _.map( allEmails, function( email ){
   			let history = CandidateHistory.find({email_id:email._id}).fetch()
   			if(history.length > 0){
-  				if(typeof history[0].progress_point !== 'undefined'){
-  				email.progresStatus=(history[0].progress_point/totalPoints*100)
-  			}else{
-  				email.progresStatus = 0
-  			}
+  				email.progresStatus=history[0].progresStatus
   			}else{
   				email.progresStatus = 0
   			}

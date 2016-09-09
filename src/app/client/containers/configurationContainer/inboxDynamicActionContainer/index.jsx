@@ -35,16 +35,9 @@ class InboxTagContainer extends React.Component {
       this.props.onFetchTag()
   }
   render() {
-    let newTagList = [];
-        _.map(this.props.tags,(tag, key)=>{
-           if(tag.dynamicAction){
-              newTagList.push(tag)
-           }
-        })
     return(
         	<div>
-              {this.props.tags.length > 0?<DynamicActions {...this.props} newTagList={newTagList}/>:""}
-              
+              <DynamicActions {...this.props}/>
         	</div>
         )
   }

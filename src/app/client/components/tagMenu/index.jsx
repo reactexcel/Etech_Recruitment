@@ -21,7 +21,7 @@ class TagMenu extends React.Component {
   render() {
     let tagMenu=[];
      _.map(this.props.tags, ( v ) =>{
-      if(!v.default && !v.dynamicAction){
+      if(!v.default){
               tagMenu.push(typeof this.props.email.tags != 'undefined'?
                 (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem

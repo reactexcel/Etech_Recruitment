@@ -22,7 +22,7 @@ class Home extends React.Component {
         return(
         	<div>
              <Header {...this.props} position={1}/>
-             
+            
         	</div>
         )
     }
