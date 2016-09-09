@@ -75,7 +75,8 @@ Meteor.methods({
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
-    emails.push(EmailsStore.find({"_id": m_id}).fetch())
+    let tmp = EmailsStore.find({"_id": m_id}).fetch()
+    emails.push(tmp[0])
     })
     return {email:emails,tagId:t_id};
   },

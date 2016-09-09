@@ -125,7 +125,7 @@ export function onIgnoreMultipleCandidate (idList, tagId){
       Meteor.call('ignoreMultipleCandidate',idList,tagId,Meteor.userId(),(err, mails) => {
           if(err){
             reject(err);
-          }else{
+          }else{console.log(mails)
             dispatch(assignTag(mails));
             resolve();
           }
