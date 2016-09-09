@@ -15,13 +15,13 @@ class TagMenu extends React.Component {
   }
 
   onClick ( obj ) {
-    this.props.AssignTag([obj.m_id], obj.t_id)
+    this.props.AssignTag(obj.m_id, obj.t_id)
   }
 
   render() {
     let tagMenu=[];
      _.map(this.props.tags, ( v ) =>{
-      if(!v.default){
+      if(!v.default && !v.dynamicAction){
               tagMenu.push(typeof this.props.email.tags != 'undefined'?
                 (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem

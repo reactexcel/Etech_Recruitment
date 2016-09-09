@@ -11,6 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Snackbar from 'material-ui/Snackbar';
 import Chip from 'material-ui/Chip';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const styles = {
   block: {
@@ -27,6 +28,11 @@ const styles = {
     margin: 4,
     display:"inline",
     padding:4
+  },
+  container: {
+    position: 'relative',
+    textAlign:'center',
+    paddingTop:'200px'
   }
 };
 class DynamicActions extends React.Component {
@@ -40,7 +46,7 @@ class DynamicActions extends React.Component {
             templateId:'',
             snackbarOpen:false,
             snackbarmsg:'',
-            value:this.props.tags[0]._id,
+            value:this.props.newTagList[0]._id,
             tempvalue:this.props.emailTemplates[0]._id,
             floatingLabelText:'Action Name',
             hintText:'Enter Action Name'
@@ -55,6 +61,7 @@ class DynamicActions extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
+        
     }
 
     handleChange = (event, index, value) =>{ 
@@ -72,7 +79,7 @@ class DynamicActions extends React.Component {
         this.setState({
             tmppage:'hidden',
             tmpcreat:'row',
-            value:this.props.tags[0]._id,
+            value:this.props.newTagList[0]._id,
             tempvalue:this.props.emailTemplates[0]._id
         })
     }
@@ -149,17 +156,23 @@ class DynamicActions extends React.Component {
         });
     };
     render(){
+      console.log(this.props.newTagList[0]._id,"888888888")
       let items=[];
        _.map(this.props.tags,(tag, key)=>{
-            items.push(<MenuItem value={tag._id} key={key} primaryText={tag.name} />)
+        if(tag.dynamicAction){
+          items.push(<MenuItem value={tag._id} key={key} primaryText={tag.name} />)
+        }
+            
           })
       
         let templates=[];
         _.map(this.props.emailTemplates,(template, key)=>{
             templates.push(<MenuItem value={template._id} key={key} primaryText={template.name} />)
           })
+
         let actions=[];
-    _.map(this.props.dynamicActions,(data, key)=>{
+        {this.props.dynamicActions.length > 0?(
+          _.map(this.props.dynamicActions,(data, key)=>{
       actions.push(<div className='col-xs-12' key={key}>
                     <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'5px',padding:'5px',background: '#fff',}}>
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Name : </span>{data.name}</div>
@@ -187,6 +200,16 @@ class DynamicActions extends React.Component {
                 </div>
       )
     })
+          ):(actions.push(<div className="show" style={styles.container}>
+                    <CircularProgress size={1.5} />
+              </div>))
+              }
+    
+
+
+
+
+
     	return(
     		<div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
             <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>

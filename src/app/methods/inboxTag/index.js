@@ -17,7 +17,7 @@ Meteor.methods({
     if(Tags.find({name: tag.name}).count() >0){
       return 'Tag name already exists';
     }
-    if(tag.automatic)
+    if(tag.automatic){
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
@@ -27,7 +27,13 @@ Meteor.methods({
         subject: tag.subject,
         automatic: tag.automatic,
       });
-    else
+    }else if(tag.dynamicAction){
+      id = Tags.insert({
+        name: tag.name,
+        color: tag.color,
+        dynamicAction: true,
+      });
+    }else
       id = Tags.insert({
         name: tag.name,
         color: tag.color,

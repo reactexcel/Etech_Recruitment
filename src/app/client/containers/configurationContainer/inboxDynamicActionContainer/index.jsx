@@ -35,12 +35,16 @@ class InboxTagContainer extends React.Component {
       this.props.onFetchTag()
   }
   render() {
+    let newTagList = [];
+        _.map(this.props.tags,(tag, key)=>{
+           if(tag.dynamicAction){
+              newTagList.push(tag)
+           }
+        })
     return(
         	<div>
-              {(this.props.tags.length > 0 && this.props.dynamicActions.length >0)?<DynamicActions {...this.props} />:
-              <div className="show" style={style.container}>
-                    <CircularProgress size={1.5} />
-              </div>}
+              {this.props.tags.length > 0?<DynamicActions {...this.props} newTagList={newTagList}/>:""}
+              
         	</div>
         )
   }

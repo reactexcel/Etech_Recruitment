@@ -170,7 +170,7 @@ export default class InboxTagList extends React.Component {
                 }
               }>
                 {_.map(this.props.tags, (row) => {
-                  if(!row.automatic && !row.default)
+                  if(!row.automatic && !row.default && !row.dynamicAction)
                   return  <Chip
                       key={row._id}
                       backgroundColor={row.color}
@@ -215,6 +215,49 @@ export default class InboxTagList extends React.Component {
                 {_.map(this.props.tags, (row) => {
                   if(row.automatic)
                     return <Chip
+                      key={row._id}
+                      backgroundColor={row.color}
+                      onRequestDelete={(evt) => {
+                        evt.stopPropagation();
+                        this.props.onRemoveTag(row._id).then(()=>{
+                          this.setState({
+                            snackbarOpen:true,
+                            snackbarmsg:"Tag Deleted successfully",
+                          })
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+                      }}
+                      onTouchTap={(evt) => this.handleOpen(row, evt)}
+                      style={{ margin: 4}}>
+                      <Avatar
+                        backgroundColor={row.color}
+                        children={
+                          _.upperCase(row.name[0])
+                        }
+                        >
+                      </Avatar>
+                      {row.name}
+                    </Chip>
+                  })}
+              </div>
+            </Paper>
+            <Paper zDepth={2} style={{"padding": "1%", marginTop: "2%"}}>
+              <h4 className="h4">Dynamic Action tag(s)</h4>
+              <Divider />
+              <div style={
+                {
+                  "marginTop": "2%",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                }
+              }>
+                {_.map(this.props.tags, (row) => {
+                  if(row.dynamicAction)
+                  return  <Chip
                       key={row._id}
                       backgroundColor={row.color}
                       onRequestDelete={(evt) => {
