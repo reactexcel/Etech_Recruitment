@@ -13,8 +13,8 @@ export function saveAction(id,action){
 			Meteor.call('saveAction', id,action , (err, data) => {
 				if(err){
 					reject(err)
-				}else{
-					dispatch ( fetchAction() )
+				}else{console.log(data)
+					dispatch ( fetchAction(data) )
 					resolve(data)
 				}
 			})
@@ -31,9 +31,10 @@ export function fetchAction(){
 				}else{
 					if(data.length > 0){
 						dispatch(success_fetch_action(data))
-						resolve('Template loading completed')
+						resolve('Action loading completed')
 					}else{
-						resolve('No template in database')
+						dispatch(success_fetch_action(data))
+						resolve('No action in database')
 					}
 				}
 			})
