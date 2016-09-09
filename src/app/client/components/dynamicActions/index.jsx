@@ -122,8 +122,8 @@ class DynamicActions extends React.Component {
         this.setState({
             tmppage:'row',
             tmpcreat:'hidden',
-            value:this.props.tags[0]._id,
-            tempvalue:this.props.emailTemplates[0]._id
+            value:'',
+            tempvalue:''
         })
     }
     saveAction() {
