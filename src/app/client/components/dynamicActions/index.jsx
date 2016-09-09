@@ -11,6 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Snackbar from 'material-ui/Snackbar';
 import Chip from 'material-ui/Chip';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const styles = {
   block: {
@@ -20,17 +21,22 @@ const styles = {
     marginBottom: 16,
   },
   lable:{
-  	fontWeight:'normal',
-  	fontSize:15
+    fontWeight:'normal',
+    fontSize:15
   },
   chip:{
     margin: 4,
     display:"inline",
     padding:4
+  },
+  container: {
+    position: 'relative',
+    textAlign:'center',
+    paddingTop:'200px'
   }
 };
 class DynamicActions extends React.Component {
-	constructor( props ){
+  constructor( props ){
         super( props );
         this.state={
             actionId:'',
@@ -40,8 +46,8 @@ class DynamicActions extends React.Component {
             templateId:'',
             snackbarOpen:false,
             snackbarmsg:'',
-            value:this.props.tags[0]._id,
-            tempvalue:this.props.emailTemplates[0]._id,
+            value:'',
+            tempvalue:'',
             floatingLabelText:'Action Name',
             hintText:'Enter Action Name'
         }
@@ -68,11 +74,12 @@ class DynamicActions extends React.Component {
        });
     }
     openCreateAction(){
+      let filterValue = _.filter(this.props.tags, { 'automatic':false })
       this.refs.Name.input.value='';
         this.setState({
             tmppage:'hidden',
             tmpcreat:'row',
-            value:this.props.tags[0]._id,
+            value:filterValue[0]._id,
             tempvalue:this.props.emailTemplates[0]._id
         })
     }
@@ -149,17 +156,27 @@ class DynamicActions extends React.Component {
         });
     };
     render(){
+
       let items=[];
-       _.map(this.props.tags,(tag, key)=>{
+      if(this.props.tags.length > 0){
+        _.map(this.props.tags,(tag, key)=>{
+        if(tag.automatic==false){
             items.push(<MenuItem value={tag._id} key={key} primaryText={tag.name} />)
+          }
           })
+      }
+       
       
         let templates=[];
-        _.map(this.props.emailTemplates,(template, key)=>{
+        if(this.props.emailTemplates.length > 0){
+          _.map(this.props.emailTemplates,(template, key)=>{
             templates.push(<MenuItem value={template._id} key={key} primaryText={template.name} />)
           })
+        }
+        
         let actions=[];
-    _.map(this.props.dynamicActions,(data, key)=>{
+    {this.props.dynamicActions.length > 0?(
+          _.map(this.props.dynamicActions,(data, key)=>{
       actions.push(<div className='col-xs-12' key={key}>
                     <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'5px',padding:'5px',background: '#fff',}}>
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Name : </span>{data.name}</div>
@@ -187,8 +204,12 @@ class DynamicActions extends React.Component {
                 </div>
       )
     })
-    	return(
-    		<div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
+          ):(actions.push(<div className="show" style={styles.container}>
+                    <CircularProgress size={1.5} />
+              </div>))
+              }
+      return(
+        <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
             <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>
             <div className='row' style={{background: '#fff'}}>
                    <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
@@ -241,7 +262,7 @@ class DynamicActions extends React.Component {
             </div>
             </div>
 
-    		<div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
+        <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
                       <div className='row'>
                         <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'28px'}}>
@@ -262,8 +283,8 @@ class DynamicActions extends React.Component {
                     autoHideDuration={3000}
                     onRequestClose={this.handleRequestClose}
                   />
-    		</div>
-    		)
+        </div>
+        )
     }
 }
 export default withRouter(DynamicActions)

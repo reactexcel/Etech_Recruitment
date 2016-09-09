@@ -15,7 +15,7 @@ class TagMenu extends React.Component {
   }
 
   onClick ( obj ) {
-    this.props.AssignTag([obj.m_id], obj.t_id)
+    this.props.AssignTag(obj.m_id, obj.t_id)
   }
 
   render() {
