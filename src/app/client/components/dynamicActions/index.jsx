@@ -49,7 +49,8 @@ class DynamicActions extends React.Component {
             value:'',
             tempvalue:'',
             floatingLabelText:'Action Name',
-            hintText:'Enter Action Name'
+            hintText:'Enter Action Name',
+            loader:'hidden'
         }
         this.saveAction  = this.saveAction.bind( this )
         this.openCreateAction  = this.openCreateAction.bind( this );
@@ -61,6 +62,20 @@ class DynamicActions extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
+        this.setState({loader:'show'})
+        this.props.onFetchActions().then( (data) => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:data.toString(),
+          loader:'hidden'
+        })
+      }).catch( (error) => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:error.toString(),
+          loader:'hidden'
+        })
+      })
     }
 
     handleChange = (event, index, value) =>{ 
@@ -75,12 +90,28 @@ class DynamicActions extends React.Component {
     }
     openCreateAction(){
       let filterValue = _.filter(this.props.tags, { 'automatic':false })
+      if(filterValue.length > 0){
+        this.setState({
+          value:filterValue[0]._id,
+        })
+      }else{
+        this.setState({
+          value:''
+        })
+      }
+      if(this.props.emailTemplates.length > 0){
+        this.setState({
+          tempvalue:this.props.emailTemplates[0]._id
+        })
+      }else{
+        this.setState({
+          tempvalue:''
+        })
+      }
       this.refs.Name.input.value='';
         this.setState({
             tmppage:'hidden',
-            tmpcreat:'row',
-            value:filterValue[0]._id,
-            tempvalue:this.props.emailTemplates[0]._id
+            tmpcreat:'row', 
         })
     }
     handleClose(){
@@ -112,7 +143,9 @@ class DynamicActions extends React.Component {
         this.setState({
             snackbarOpen:true,
             snackbarmsg:"Action saved successfully",
-            actionId:''
+            actionId:'',
+            tmppage:'row',
+            tmpcreat:'hidden'
         })
         
         this.gotoActionPage()
@@ -120,7 +153,9 @@ class DynamicActions extends React.Component {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:error.toString(),
-          actionId:''
+          actionId:'',
+          tmppage:'row',
+          tmpcreat:'hidden'
         })
       })
       }
@@ -175,7 +210,7 @@ class DynamicActions extends React.Component {
         }
         
         let actions=[];
-    {this.props.dynamicActions.length > 0?(
+    
           _.map(this.props.dynamicActions,(data, key)=>{
       actions.push(<div className='col-xs-12' key={key}>
                     <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'5px',padding:'5px',background: '#fff',}}>
@@ -204,10 +239,8 @@ class DynamicActions extends React.Component {
                 </div>
       )
     })
-          ):(actions.push(<div className="show" style={styles.container}>
-                    <CircularProgress size={1.5} />
-              </div>))
-              }
+          
+              
       return(
         <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
             <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>
@@ -272,6 +305,9 @@ class DynamicActions extends React.Component {
                             onClick={this.openCreateAction}
                             primary={true}
                             ></RaisedButton>
+                        </div>
+                        <div className={this.state.loader} style={styles.container}>
+                          <CircularProgress size={1.5} />
                         </div>
                           {actions}
                       </div>
