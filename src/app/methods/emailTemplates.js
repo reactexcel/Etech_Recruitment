@@ -26,8 +26,8 @@ Meteor.methods({
         msg:"Template is already assigned to some action, Unable to delete!"
       }
     }else{
-      let _id = EmailTemplates.remove(id)
-      return ({_id: _id});
+      let result = EmailTemplates.remove(id)
+      return (result);
     }
   }
 });
