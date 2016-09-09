@@ -17,7 +17,7 @@ Meteor.methods({
     if(Tags.find({name: tag.name}).count() >0){
       return 'Tag name already exists';
     }
-    if(tag.automatic)
+    if(tag.automatic){
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
@@ -27,7 +27,13 @@ Meteor.methods({
         subject: tag.subject,
         automatic: tag.automatic,
       });
-    else
+    }else if(tag.dynamicAction){
+      id = Tags.insert({
+        name: tag.name,
+        color: tag.color,
+        dynamicAction: true,
+      });
+    }else
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
@@ -53,9 +59,12 @@ Meteor.methods({
     }
     
   },
-  "assignTag": function (m_id, t_id){
-    let mail = EmailsStore.find({"_id": m_id}).fetch();
-    if(mail.tags != 'undefined'){
+  "assignTag": function (mailIds, t_id){
+    let emails = []
+    _.map(mailIds,(m_id)=>{
+      let mail = EmailsStore.find({"_id": m_id}).fetch();
+      mail = mail[0] ;
+    if(typeof mail.tags != 'undefined'){
       EmailsStore.update(
       { _id: m_id },
       { $addToSet: { 'tags': t_id} }
@@ -66,7 +75,10 @@ Meteor.methods({
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
-    return {email:EmailsStore.find({"_id": m_id}).fetch(),tagId:t_id};
+    let tmp = EmailsStore.find({"_id": m_id}).fetch()
+    emails.push(tmp[0])
+    })
+    return {email:emails,tagId:t_id};
   },
   "ignoreMultipleCandidate": function (idList, tagId, userId){
     let username=Meteor.users.findOne({"_id": userId})

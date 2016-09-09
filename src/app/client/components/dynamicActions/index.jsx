@@ -21,8 +21,8 @@ const styles = {
     marginBottom: 16,
   },
   lable:{
-  	fontWeight:'normal',
-  	fontSize:15
+    fontWeight:'normal',
+    fontSize:15
   },
   chip:{
     margin: 4,
@@ -36,7 +36,7 @@ const styles = {
   }
 };
 class DynamicActions extends React.Component {
-	constructor( props ){
+  constructor( props ){
         super( props );
         this.state={
             actionId:'',
@@ -208,8 +208,8 @@ class DynamicActions extends React.Component {
                     <CircularProgress size={1.5} />
               </div>))
               }
-    	return(
-    		<div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
+      return(
+        <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
             <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>
             <div className='row' style={{background: '#fff'}}>
                    <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
@@ -262,7 +262,7 @@ class DynamicActions extends React.Component {
             </div>
             </div>
 
-    		<div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
+        <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
                       <div className='row'>
                         <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'28px'}}>
@@ -283,8 +283,8 @@ class DynamicActions extends React.Component {
                     autoHideDuration={3000}
                     onRequestClose={this.handleRequestClose}
                   />
-    		</div>
-    		)
+        </div>
+        )
     }
 }
 export default withRouter(DynamicActions)

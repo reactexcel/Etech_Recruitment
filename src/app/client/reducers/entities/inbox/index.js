@@ -69,6 +69,17 @@ export function inbox( state = Immutable.Map(initialState), action ){
             }
         })
       return state.set('emails', _.clone(emails))
+    }else if(action.type == 'ACTION_UPDATE_PROGRESS_STATUS'){
+      let data = action.payload;
+      let emails = state.get("emails")
+      _.map(data,(prog)=>{
+        _.map(emails,(email)=>{
+          if(prog.emailId == email._id){
+            email.progresStatus = prog.progress
+          }
+        })
+      })
+      return state.set("emails",_.clone(emails))
     }
     return state
 }
