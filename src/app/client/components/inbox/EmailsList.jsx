@@ -150,9 +150,8 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
-                      router={this.props.router}
-                      uiLoading={this.props.uiLoading}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                      {...this.props}
                       />
                 </div>
             )
@@ -163,9 +162,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}} tags={this.props.tags} onAssignTag={this.props.onAssignTag}
-                      router={this.props.router}
-                      uiLoading={this.props.uiLoading}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )
@@ -246,10 +243,10 @@ class EmailsList extends React.Component {
                                       style={{color:"#fff"}}
                                       size={20}
                                       children={
-                                        _.upperCase(t.name[0])
+                                        _.upperCase(_.trim(t.name)[0])
                                       }></Avatar>
                                   }
-                                  label={t.name + " ("+ unread_mail+")"}
+                                  label={_.trim(t.name) + " ("+ unread_mail+")"}
                                   ></FlatButton>
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}

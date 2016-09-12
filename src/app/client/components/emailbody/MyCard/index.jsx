@@ -27,6 +27,7 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
+
       //---progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
@@ -68,7 +69,7 @@ export default class MyCard extends React.Component {
                 <div style={{"width":"100%"}}>
                   Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
                 </div>
-                } 
+                }
                 </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
               actAsExpander={i==0?false:true}

@@ -33,7 +33,7 @@ class EmailListItem extends React.Component {
       this.AssignTag = this.AssignTag.bind( this )
     }
     componentWillMount( props ){
-      
+
     }
     AssignTag(m_id, t_id){
       this.props.onAssignTag(m_id, t_id).then((data)=>{
@@ -68,11 +68,11 @@ class EmailListItem extends React.Component {
       let f_char = m_from.charAt(0)
       f_char = f_char.toUpperCase();
 
-      let m_read_status = this.props.email.m_read_status
+      let m_read_status = this.props.email.unread
       let mail_bg_color = "#fff"
       let mail_left_border_color = "#C6F7C6"
       let unread_color = '#000000'
-      if( typeof m_read_status == 'undefined' || m_read_status == 1 ){
+      if( !m_read_status ){
         unread_color = '#808080'
       }
 
@@ -80,8 +80,8 @@ class EmailListItem extends React.Component {
 
 
       _.map(this.props.tags,(t) =>{
-        if(typeof this.props.email.tags != 'undefined')
-          if(t._id == this.props.email.tags[0] )
+        if(typeof this.props.inbox.tag != '')
+          if(t._id == this.props.inbox.tag )
             mail_left_border_color = t.color;
       })
       let avatar1 = <Avatar backgroundColor={mail_left_border_color} color={darkBlack} style={{"position":'absolute', marginTop:"-30%", marginLeft:"-40%"}} >{f_char}</Avatar>
