@@ -71,7 +71,7 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(actions.onEditTag(title, _id ,color));
       },
       onRemoveTag: ( _id ) => {
-        dispatch(actions.onRemoveTag(_id));
+        return dispatch(actions.onRemoveTag(_id));
       },
       onAddTag: (tag) =>{
         return dispatch(actions.onAddTag(tag));

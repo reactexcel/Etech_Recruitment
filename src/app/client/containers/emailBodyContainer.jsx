@@ -5,6 +5,7 @@ import {withRouter, Link} from 'react-router';
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
+import { fetchAction, candidateAction } from '../actions/dynamicActions'
 import * as candidateHistory_action from '../actions/candidateHistory'
 import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
@@ -26,6 +27,7 @@ class EmailbodyContainer extends React.Component {
     this.props.onEmailDetail(this.props.params.id);
     this.props.onLoadCandidateHistory(this.props.params.id)
     this.props.onFetchTamplets()
+    this.props.onFetchActions()
   }
   render() {
     return (
@@ -42,7 +44,8 @@ function mapStateToProps( state ){
         email : state.entities.email,
         inboxTag: state.entities.inboxTag,
         candidateHistory:state.entities.candidateHistory,
-        emailTemplates : state.entities.emailTemplates
+        emailTemplates : state.entities.emailTemplates,
+        dynamicActions: state.entities.dynamicAction
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -65,10 +68,16 @@ const mapDispatchToProps = (dispatch) => {
         return dispatch( candidateHistory_action.onLoadCandidateHistory(email_id) )
       },
       onFetchTamplets:()=>{
-            return dispatch(fetchTemplate())
+        return dispatch(fetchTemplate())
       },
       onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
-            return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
+        return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
+      },
+      onFetchActions:()=>{
+        return dispatch(fetchAction())
+      },
+      onCandidateAction : (A_id, email_ids) => {
+        return dispatch(candidateAction(A_id, email_ids))
       }
     }
 }

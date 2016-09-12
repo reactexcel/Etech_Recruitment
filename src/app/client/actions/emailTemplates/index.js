@@ -28,11 +28,11 @@ export function deleteTemplate( id ){
 				if(err){
 					reject(err)
 				}else{
-					if(data !== 0){
-						dispatch ( fetchTemplate(data) )
-						resolve("Template Deleted successfully")
+					if(typeof data.msg == 'undefined'){
+						dispatch ( fetchTemplate() )
+					    resolve('Template removed')
 					}else{
-						resolve('Action assigned to this template.\n Can not delete')
+						reject(data.msg); 
 					}
 					
 				}
@@ -50,11 +50,12 @@ export function fetchTemplate(){
 			Meteor.call('fetchAllTemplates',(err,data)=>{
 				if(err){
 					reject(err)
-				}else{
-					if(data.length > 0){
+				}else{console.log(data,'template in action')
+					if(data.length > 0){console.log(data,'template in action')
 						dispatch(success_fetch_temptale(data))
 						resolve('Template loading completed')
 					}else{
+						dispatch(success_fetch_temptale(data))
 						resolve('No template in database')
 					}
 				}

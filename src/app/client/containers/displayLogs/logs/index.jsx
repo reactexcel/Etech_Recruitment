@@ -41,9 +41,6 @@ class LogsContainer extends React.Component {
       );
     }
 }
-/*LogsContainer.childContextTypes = {
-    muiTheme: React.PropTypes.object.isRequired,
-};*/
 LogsContainer.propTypes = {
   onLogData: React.PropTypes.func.isRequired,
   log:React.PropTypes.any.isRequired,

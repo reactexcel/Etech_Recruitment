@@ -20,6 +20,7 @@ import Paper from 'material-ui/Paper';
 import _ from 'lodash';
 import MyCard from './MyCard';
 
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -45,6 +46,9 @@ class EmailBody extends React.Component {
     }
     this.handleClose=this.handleClose.bind(this)
     this.submitreason=this.submitreason.bind(this)
+    this.ignoreCandidate=this.ignoreCandidate.bind(this)
+    this.rejectCandidate=this.rejectCandidate.bind(this)
+    this.candidateAction=this.candidateAction.bind(this)
     this.ignoreTagId = "";
     this.rejectTagId = '';
     this.scheduleTagId = "";
@@ -78,9 +82,50 @@ componentWillReceiveProps(props){
 
 }
 
-
+  candidateAction(actionId, emailId){
+    this.props.onCandidateAction(actionId, emailId).then((data)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:data.toString()
+    });
+    }).catch((err)=>{
+      this.setState({
+      SnackbarOpen: true,
+      SnackbarMessage:err.toString()
+    });
+    })
+  }
   handleClose(){
     this.setState({rejectpop: false});
+  }
+  ignoreCandidate(data,ignoreTagId){
+    if(_.includes(data.tags,ignoreTagId)==false){
+            this.ignoreText="Ignored";
+            this.props.onIgnore([data._id],this.ignoreTagId).then(()=>{
+                          this.props.router.push('/inbox/body');
+                        }).catch( (error) => {
+                           this.setState({
+                             snackbarOpen:true,
+                             snackbarmsg:error.toString(),
+                          })
+                        })
+
+      }else{
+            this.setState({
+                "SnackbarOpen":true,
+                "SnackbarMessage":"Candidates is already ignored"
+            })
+      }
+  }
+  rejectCandidate(data,rejectTagId){
+    if(_.includes(data.tags,rejectTagId)==false){
+           this.setState({rejectpop:true})
+       }else{
+            this.setState({
+               "SnackbarOpen":true,
+               "SnackbarMessage":"Candidates is already rejected"
+            })
+      }
   }
    handleRequestClose = () => {
     this.setState({
@@ -91,10 +136,16 @@ componentWillReceiveProps(props){
   submitreason(id){
     let reason = this.refs.reg.input.value.trim()
     if(reason.length > 0){
-        this.props.onReject([id],this.rejectTagId,reason)
-        this.rejectText="Rejected"
-        this.handleClose()
-        this.props.router.push('/inbox');
+         this.handleClose()
+        this.props.onReject([id],this.rejectTagId,reason).then(()=>{
+          this.rejectText="Rejected"
+          this.props.router.push('/inbox/body');
+        }).catch( (error) => {
+          this.setState({
+              snackbarOpen:true,
+              snackbarmsg:error.toString(),
+        })
+     })
     }else{
         this.setState({
             errortxt:'Reason required'
@@ -109,6 +160,13 @@ render(){
           progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
         }
        let data = this.props.email[0] || {};
+        let dynamicActions = this.props.dynamicActions;
+        let actionMenu = []
+        _.map(dynamicActions,(action)=>{
+          let disable=0;
+          _.includes(data.candidateActions,action._id)?disable=1:disable=0
+            actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+        })
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
@@ -143,29 +201,13 @@ render(){
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
         <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
-                      if(_.includes(data.tags,this.ignoreTagId)==false){
-                            this.ignoreText="Ignored";
-                            this.props.onIgnore([data._id],this.ignoreTagId)
-                            this.props.router.push('/inbox/body');
-                      }else{
-                        this.setState({
-                          "SnackbarOpen":true,
-                          "SnackbarMessage":"Candidates is already ignored"
-                        })
-                      }
-                    }}/>
+          this.ignoreCandidate(data,this.ignoreTagId)
+        }}/>
         <MenuItem primaryText={this.rejectText} onTouchTap={()=>{
-                     if(_.includes(data.tags,this.rejectTagId)==false){
-                        this.setState({rejectpop:true})
-
-                      }else{
-                        this.setState({
-                          "SnackbarOpen":true,
-                          "SnackbarMessage":"Candidates is already rejected"
-                        })
-                      }
+          this.rejectCandidate(data,this.rejectTagId)
         }}/>
         <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+        <MenuItem primaryText="Dynamic Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
       </IconMenu>
     }
   />
@@ -204,9 +246,9 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={progress} index={i} />
+                  <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={progress} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={data.progresStatus} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
           </div>
         </div>
 

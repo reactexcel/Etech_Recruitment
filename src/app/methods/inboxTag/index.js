@@ -6,6 +6,7 @@ import _ from 'lodash'
 import Logs from 'app/collections/index';
 import CandidateHistory from 'app/collections/candidateHistory';
 import { Email } from 'meteor/email';
+import DynamicActions from 'app/collections/dynamicAction'
 
 Meteor.methods({
   "fetchTag": function(){
@@ -16,7 +17,7 @@ Meteor.methods({
     if(Tags.find({name: tag.name}).count() >0){
       return 'Tag name already exists';
     }
-    if(tag.automatic)
+    if(tag.automatic){
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
@@ -26,7 +27,13 @@ Meteor.methods({
         subject: tag.subject,
         automatic: tag.automatic,
       });
-    else
+    }else if(tag.dynamicAction){
+      id = Tags.insert({
+        name: tag.name,
+        color: tag.color,
+        dynamicAction: true,
+      });
+    }else
       id = Tags.insert({
         name: tag.name,
         color: tag.color,
@@ -40,13 +47,24 @@ Meteor.methods({
     return ({name: title, color: color, _id: _id});
   },
   "removeTag": function(_id){
-    Tags.remove({"_id": _id});
-    EmailsStore.update({},{$pull:{'tags':_id}})
-    return ({_id: _id});
+    let action = DynamicActions.find({tag_id: _id}).fetch();
+    if(action.length>0){
+       return {
+           msg:"Tag is already assigned to some action, Unable to delete!"
+       }
+    }else{
+       Tags.remove({"_id": _id});
+       EmailsStore.update({},{$pull:{'tags':_id}})
+       return ({_id: _id});
+    }
+    
   },
-  "assignTag": function (m_id, t_id){
-    let mail = EmailsStore.find({"_id": m_id}).fetch();
-    if(mail.tags != 'undefined'){
+  "assignTag": function (mailIds, t_id){
+    let emails = []
+    _.map(mailIds,(m_id)=>{
+      let mail = EmailsStore.find({"_id": m_id}).fetch();
+      mail = mail[0] ;
+    if(typeof mail.tags != 'undefined'){
       EmailsStore.update(
       { _id: m_id },
       { $addToSet: { 'tags': t_id} }
@@ -57,7 +75,10 @@ Meteor.methods({
       { $set: { 'tags': [t_id ] }} ,{upsert:false, multi:true}
       )
     }
-    return {email:EmailsStore.find({"_id": m_id}).fetch(),tagId:t_id};
+    let tmp = EmailsStore.find({"_id": m_id}).fetch()
+    emails.push(tmp[0])
+    })
+    return {email:emails,tagId:t_id};
   },
   "ignoreMultipleCandidate": function (idList, tagId, userId){
     let username=Meteor.users.findOne({"_id": userId})

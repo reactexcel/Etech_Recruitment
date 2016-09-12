@@ -47,7 +47,7 @@ Meteor.methods({
         server: function(){return Config.find({emailId: this.emailData.m_source_email_id}).fetch()},
         imapEmail: {},
         schedule: function(parser) {
-          return parser.text('every 10 secs');
+          return parser.text('every 2 secs');
         },
         job: function() {
           try{

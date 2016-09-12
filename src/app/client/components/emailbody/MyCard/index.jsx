@@ -15,10 +15,16 @@ export default class MyCard extends React.Component {
   }
   componentWillReceiveProps( props ){
     if(typeof this.props.index !== 'undefined'){
-      if(this.props.index == 0 || this.props.index == "done"){
-        this.setState({
-          prog:{marginTop:'7px'}
+      if(this.props.index == 0 || this.props.index == "done" ){
+        if(typeof props.progresStatus !== 'undefined' && props.progresStatus!==0){
+          this.setState({
+            prog:{marginTop:'7px'}
         })
+        }else{
+          this.setState({
+            prog:{marginTop:'7px',opacity:'-1'}
+        })
+        }
       }else{
         this.setState({
           prog:{marginTop:'7px',opacity:'-1'}
@@ -30,30 +36,11 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
-      let progresStatus = '';
-      let progressValue = '';
-      let progresColor = '';
-      if(typeof this.props.progresStatus !== 'undefined'){
-        progresStatus = this.props.progresStatus
-      }else{
-        progresStatus = 0
-      }
-      if(progresStatus == 1){
-        progressValue = '25'
-        progresColor = '#CF0649'
-      }else if(progresStatus == 2){
-        progressValue = '50'
-        progresColor = '#751F07'
-      }else if(progresStatus == 3){
-        progressValue= '75'
-        progresColor = '#02187A'
-      }else if(progresStatus == 4){
-        progressValue = '100'
-        progresColor = '#038503'
-      }else{
-        progressValue = '0'
-        //progresColor = ''
-      }
+
+      //---progress status
+      let progresColor = '#038503';
+      let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
+      
       return (
         <Card>
         <Paper
@@ -80,7 +67,7 @@ export default class MyCard extends React.Component {
               subtitleStyle={{'fontSize':"11px"}}
               children={<div style={typeof email.attachments !== 'undefined'?{marginTop:"-35px"}:{marginTop:'0px'}}>
                 <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
-                <div><LinearProgress color={progresColor} mode="determinate" value={progressValue} min='0' max='100' style={this.state.prog}/></div></div>}
+                {typeof email.sender_mail == 'undefined'?'':<div><LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={this.state.prog}/></div>}</div>}
               />
           }
            />

@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor'
 
 import * as _ from 'lodash'
 
-import EmailTemplates from 'app/collections/emailTemplates'
+import EmailTemplates from 'app/collections/emailTemplates';
+import DynamicActions from 'app/collections/dynamicAction'
 
 
 Meteor.methods({
@@ -19,13 +20,14 @@ Meteor.methods({
     }
   },
   deletetemplate : function( id ){
-    let template = EmailTemplates.find({actions:{$size:0}}).count()
-    console.log(template)
-    if(template > 0){
-      let _id = EmailTemplates.remove(id)
-      return _id
+    let action = DynamicActions.find({template_id: id}).fetch();
+    if(action.length>0){
+      return{
+        msg:"Template is already assigned to some action, Unable to delete!"
+      }
     }else{
-      return 0
+      let result = EmailTemplates.remove(id)
+      return (result);
     }
   }
 });
