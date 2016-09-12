@@ -13,6 +13,9 @@ import {fetchTemplate} from '../actions/emailTemplates'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
+    Tracker.autorun(function() {
+      Meteor.ClientCall.setClientId(Meteor.userId());
+    });
   }
   componentWillReceiveProps(props){
   }

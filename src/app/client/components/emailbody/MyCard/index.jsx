@@ -53,7 +53,7 @@ export default class MyCard extends React.Component {
       }else{
         progressValue = '0'
         //progresColor = ''
-      } 
+      }
       return (
         <Card>
         <Paper
@@ -71,7 +71,7 @@ export default class MyCard extends React.Component {
                 <div style={{"width":"100%"}}>
                   Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
                 </div>
-                } 
+                }
                 </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
               actAsExpander={i==0?false:true}

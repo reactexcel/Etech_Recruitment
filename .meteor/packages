@@ -31,3 +31,4 @@ momentjs:moment
 shell-server
 zuuk:stale-session
 percolate:synced-cron
+anti:methods

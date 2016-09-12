@@ -108,7 +108,7 @@ render(){
           let tmp = this.props.candidateHistory.history[0]
           progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
         }
-       let data = this.state.data;
+       let data = this.props.email[0] || {};
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"
