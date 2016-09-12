@@ -11,6 +11,7 @@ import { HTTP } from 'meteor/http'
 Meteor.methods({
   fetchAllEmail: function( _id ){
     let imapEmail = Config.find({'_id': _id}).fetch();
+    let resumeCronProcess = false;
     if(imapEmail.length > 0){
       Config.update({ _id: _id },
         {
@@ -20,6 +21,11 @@ Meteor.methods({
         }
       );
       imapEmail = imapEmail[0];
+      if(imapEmail.croned && imapEmail.cronDetail !== "undefined" ){
+        if(imapEmail.cronDetail.totalEmailFetched < imapEmail.cronDetail.totalMailInInbox){
+          resume = true;
+        }
+      }
       const SELF = this;
       SyncedCron.add({
         SELF: SELF,
@@ -51,7 +57,7 @@ Meteor.methods({
         API_URL: function(){return  this.BASE_URL + this.PARAMS();},
 
         fetchedMailCount: 20,
-        haveDetails: false,
+        haveDetails: resume,
         firstEmailData:[],
         count: 0,
         schedule: function(parser) {
@@ -182,7 +188,7 @@ Meteor.methods({
                   {
                     $set: {
                       'cronDetail': this.imapEmail.cronDetail,
-                      'croned': false,
+                      'croned': true,
                     }
                   }
                 );
