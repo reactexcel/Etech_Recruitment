@@ -15,7 +15,7 @@ export function error_email( data ){
     return createAction( ACTION_ERROR_EMAIL_DATA )( data )
 }
 
-export const func = {}
+//export const func = {}
 export function getEmailData( email_id ){
     return ( dispatch, getState ) => {
         return new Promise( ( resolve, reject ) => {

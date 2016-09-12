@@ -63,12 +63,12 @@ export function inbox( state = Immutable.Map(initialState), action ){
 		}else if( action.type == 'ACTION_UPDATE_EMAIL_DATA' ){
         let data = action.payload
         let emails = state.get('emails')
-      return state.set('emails', _.map(emails, (email)=>{
-					if(email._id === data[0]._id){
-							email.unread = data[0].unread
-					}
-				})
-			)
+        _.map(emails, (email)=>{
+          if(email._id === data[0]._id){
+              email.m_read_status = data[0].m_read_status
+          }
+        })
+      return state.set('emails', emails)
     }else if(action.type == 'ACTION_UPDATE_PROGRESS_STATUS'){
       let data = action.payload;
       let emails = state.get("emails")

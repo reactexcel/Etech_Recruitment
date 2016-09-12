@@ -14,7 +14,7 @@ Meteor.methods({
        _.map(actions,(data,key)=>{
         let tag = Tags.find({_id: data.tag_id}).fetch();
         let template = EmailTemplates.find({_id: data.template_id}).fetch();
-					newActionList.push({
+          newActionList.push({
             "_id": data._id,
             "name": data.name,
             "template_id": data.template_id,

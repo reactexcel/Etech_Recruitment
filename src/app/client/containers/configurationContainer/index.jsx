@@ -106,7 +106,7 @@ class ConfigurationContainer extends React.Component {
           />
           <ListItem
             value={5}
-            primaryText="Dynamic Actions"
+            primaryText="Actions"
             onTouchTap={()=>{this.props.router.push("/config/dynamic-actions");}}
           />
           </SelectableList>

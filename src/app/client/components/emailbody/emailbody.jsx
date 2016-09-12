@@ -20,6 +20,7 @@ import Paper from 'material-ui/Paper';
 import _ from 'lodash';
 import MyCard from './MyCard';
 
+import Chip from 'material-ui/Chip';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconButton from 'material-ui/IconButton';
@@ -154,18 +155,22 @@ componentWillReceiveProps(props){
   }
 
 render(){
-        let progress = 0
-        if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
-          let tmp = this.props.candidateHistory.history[0]
-          progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
-        }
-       let data = this.props.email[0] || {};
+        let data = this.state.data;
+        //---dynamic actions
         let dynamicActions = this.props.dynamicActions;
         let actionMenu = []
         _.map(dynamicActions,(action)=>{
           let disable=0;
           _.includes(data.candidateActions,action._id)?disable=1:disable=0
             actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+        })
+        //-------candidate tags
+      let candidateTags=[]
+      let inboxTags = typeof this.props.inboxTag !== 'undefined'?this.props.inboxTag:[]
+        _.map(inboxTags,(tag)=>{
+          if(_.includes(data.tags,tag._id)==true){
+            candidateTags.push(<Chip backgroundColor={tag.color}>{tag.name}</Chip>)
+          }
         })
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
@@ -193,21 +198,23 @@ render(){
     title="Email"
     iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={
-      <IconMenu
+      <IconMenu 
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >
-        <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
+        <MenuItem primaryText="Tags " rightIcon={<ArrowDropRight />} menuItems={[
+           <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
           this.ignoreCandidate(data,this.ignoreTagId)
-        }}/>
+        }}/>,
         <MenuItem primaryText={this.rejectText} onTouchTap={()=>{
           this.rejectCandidate(data,this.rejectTagId)
-        }}/>
-        <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
-        <MenuItem primaryText="Dynamic Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
+        }}/>,
+        <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>]
+        } />
+        <MenuItem primaryText="Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
       </IconMenu>
     }
   />
@@ -246,9 +253,12 @@ render(){
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
               {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} />
+                  <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} candidateTags={candidateTags} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} progresStatus={data.progresStatus} index={typeof data.more_emails !== 'undefined'?"more":"done"}/>
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} 
+              progresStatus={data.progresStatus} 
+              index={typeof data.more_emails !== 'undefined'?"more":"done"} 
+              candidateTags={candidateTags} />
           </div>
         </div>
 
