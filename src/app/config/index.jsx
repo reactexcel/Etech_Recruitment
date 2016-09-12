@@ -42,5 +42,6 @@ export const config_ENV = {
       );
     },
   },
-  'IMAP_API_BASE_URL' : 'http://excellencetechnologies.co.in/imap/?'
+  'IMAP_API_BASE_URL' : 'http://excellencetechnologies.co.in/imap/?',
+  '_BASE_URL' : 'http://excellencetechnologies.co.in/imap/email.php?'
 }

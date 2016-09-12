@@ -73,7 +73,7 @@ class Inbox extends React.Component {
                 })
             }
         }
-
+        //window.location.replace("http://localhost:3000/#/inbox?_k=n069dj");
     }
     /*
     componentDidUpdate(){
@@ -118,7 +118,7 @@ function mapStateToProps( state ){
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-     	onInboxData : ( emails_per_page, page_num, tag ) => {
+     	  onInboxData : ( emails_per_page, page_num, tag ) => {
             return dispatch( actions_inbox.getInboxData( emails_per_page, page_num, tag ) )
         },
         onFetchSettings : () => {
@@ -144,7 +144,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
             return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
-        }
+        },
+        onRead : ( _id ) => {
+            return dispatch( actions_inbox.getInboxData( _id ) )
+        },
     }
 }
 

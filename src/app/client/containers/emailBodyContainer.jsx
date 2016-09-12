@@ -7,13 +7,16 @@ import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import { fetchAction, candidateAction } from '../actions/dynamicActions'
 import * as candidateHistory_action from '../actions/candidateHistory'
-import {onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
+import {onFetchTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import {fetchTemplate} from '../actions/emailTemplates'
 //import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
     super(props);
+    Tracker.autorun(function() {
+      Meteor.ClientCall.setClientId(Meteor.userId());
+    });
   }
   componentWillReceiveProps(props){
   }
@@ -25,6 +28,7 @@ class EmailbodyContainer extends React.Component {
     this.props.onLoadCandidateHistory(this.props.params.id)
     this.props.onFetchTamplets()
     this.props.onFetchActions()
+    this.props.onFetchTag()
   }
   render() {
     return (
@@ -66,6 +70,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       onFetchTamplets:()=>{
         return dispatch(fetchTemplate())
+      },
+      onFetchTag : () => {
+        return dispatch(onFetchTag());
       },
       onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
         return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))

@@ -12,6 +12,8 @@ import Dialog from 'material-ui/Dialog';
 import ActionDone from 'material-ui/svg-icons/action/done';
 import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 
 const styles = {
   propContainer: {
@@ -31,6 +33,8 @@ export default class EmailSettingList extends React.Component {
       "open" : false,
       "title": "",
       show:false,
+      sOpen: false,
+      snakMsg: '',
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -71,6 +75,16 @@ export default class EmailSettingList extends React.Component {
       this.handleClose () ;
     }
   }
+  onStartCron( _id ){
+    this.props.onStartCron( _id )
+    .then( (data) => {
+      this.setState({snakMsg: data, sOpen: true});
+    })
+    .catch( (err) => {
+      this.setState({snakMsg: err, sOpen: true});
+    })
+  }
+
   render() {
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
@@ -189,12 +203,51 @@ export default class EmailSettingList extends React.Component {
                 autoScrollBodyContent={true}
                 children={
                   this.state.imapEmail?
-                  <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'30%'}}>
-                    New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
-                    Last Update date: {this.state.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
-                    Last Update time: {this.state.imapEmail.status_last_fetch_details.time}<br/>
-                    Total emails fetched: {this.state.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
-                  </p>:''
+                  <div>
+                      <h4 style={{ lineHeight: "120%", textAlign:'justify'}} className="">
+                        Current (new) e-mail fetching process details
+                      </h4>
+                    <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
+                      New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
+                      Last Update date: {this.state.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
+                      Last Update time: {this.state.imapEmail.status_last_fetch_details.time}<br/>
+                      Total emails fetched: {this.state.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
+                    </p>
+                    { typeof this.state.imapEmail.cronDetail !== 'undefined'?
+                    <div>
+                      <br/>
+                        <h4 style={{ lineHeight: "120%", textAlign:'justify'}}>
+                          Cron (old) e-mail fetching process details
+                        </h4>
+                        <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
+                          Last fetched email of date: {this.state.imapEmail.cronDetail.lastEmailDate}<br/>
+                          Last update time : {this.state.imapEmail.cronDetail.time}<br/>
+                          Total emails fetched: {this.state.imapEmail.cronDetail.totalEmailFetched}<br/>
+                          Total count of Inbox emails: {this.state.imapEmail.cronDetail.totalMailInInbox}<br/>
+                        </p>
+                        {this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100 <= 100?
+                          <LinearProgress mode="determinate" value={this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100} />
+                          :""
+                        }
+                      </div>
+                      :this.state.imapEmail.croned?<LinearProgress />:''
+                    }
+                    <br/>
+                    <div>
+                      <Toggle
+                        label={this.state.imapEmail.croned?this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.":"Start cron to fetch all email from the selected email"}
+                        disabled={this.state.imapEmail.croned}
+                        defaultToggled={this.state.imapEmail.croned}
+                        labelPosition="right"
+                        labelStyle={{fontWeight:'normal', color:'#555'}}
+                        onToggle={ () => {
+                          this.onStartCron( this.state.imapEmail._id)
+                          this.setState({ stat: false})
+                          }
+                        }
+                      />
+                    </div>
+                  </div>:''
                 }
                 titleClassName = "text-center text-muted"
                 contentStyle={{width: "40%"}}
@@ -203,6 +256,12 @@ export default class EmailSettingList extends React.Component {
             </div>
           </div>
         </div>
+        <Snackbar
+         open={this.state.sOpen}
+         message={this.state.snakMsg}
+         autoHideDuration={5000}
+         onRequestClose={() => this.setState({sOpen: false})}
+       />
       </div>
     );
   }

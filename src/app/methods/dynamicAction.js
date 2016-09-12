@@ -5,7 +5,7 @@ import DynamicActions from 'app/collections/dynamicAction'
 import Tags  from 'app/collections/inboxTag';
 import EmailTemplates from 'app/collections/emailTemplates'
 import EmailsStore from 'app/collections/EmailsStore'
-import CandidateHistory from 'app/collections/candidateHistory' 
+import CandidateHistory from 'app/collections/candidateHistory'
 
 Meteor.methods({
 	"fetchAllAction" : function(){
@@ -18,15 +18,12 @@ Meteor.methods({
         let dependentActionId="";
         let dependentActionName="";
         if(dependentAction.length > 0){
-          console.log("length found")
           dependentActionName=dependentAction[0].name;
           dependentActionId=dependentAction[0]._id;
         }else{
-          console.log("length not found")
           dependentActionName="";
           dependentActionId=""
         }
-        console.log(dependentActionId,"in method---")
           newActionList.push({
             "_id": data._id,
             "name": data.name,
@@ -42,7 +39,6 @@ Meteor.methods({
             "template_name":template[0].name
           })
        })
-       console.log(newActionList,"in method----------")
        return newActionList
     },
     "saveAction" : function(id,action){
@@ -69,7 +65,7 @@ Meteor.methods({
             } )
             return _id;
     }
-            
+
   },
   "deleteAction":function(id){
          let _id = DynamicActions.remove(id)
@@ -100,7 +96,7 @@ Meteor.methods({
      //---
       let history = CandidateHistory.find({email_id:email[0]._id}).fetch()
       let candidatePoints;
-                    
+
       if(history.length === 0){
                  candidatePoints = action[0].progress_point
                  CandidateHistory.insert({
@@ -132,7 +128,7 @@ Meteor.methods({
                     "detail":"Action Taken: "+action[0].name,
                     "actionPerformedBy":username.username
                   }}}
-              );  
+              );
               }else{
                 CandidateHistory.update(
                 { email_id: email[0]._id },
@@ -156,7 +152,7 @@ Meteor.methods({
       })
       let updatedHistory = CandidateHistory.find({email_id:email[0]._id}).fetch()
       prograsStatus.push({emailId:email[0]._id,progress:(candidatePoints/totalPoints*100),candidateAction:updatedHistory[0].dynamicActions})
-      
+
         successMail.push(email[0]._id)
       }catch(e){
         failed.push(email[0].sender_mail)

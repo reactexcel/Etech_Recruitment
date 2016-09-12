@@ -2,6 +2,7 @@ import Paper from 'material-ui/Paper';
 import React, {PropTypes} from 'react';
 import Avatar from 'material-ui/Avatar';
 import LinearProgress from 'material-ui/LinearProgress';
+import Chip from 'material-ui/Chip';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 
@@ -10,36 +11,46 @@ export default class MyCard extends React.Component {
     super(props);
     this.state={
       show: true,
-      prog:'show'
+      prog:'show',
+      mag:{marginTop:'0px'},
+       wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    float:'left',
+  },
     }
   }
   componentWillReceiveProps( props ){
-    if(typeof this.props.index !== 'undefined'){
-      if(this.props.index == 0 || this.props.index == "done" ){
-        if(typeof props.progresStatus !== 'undefined' && props.progresStatus!==0){
-          this.setState({
-            prog:{marginTop:'7px'}
-        })
-        }else{
-          this.setState({
-            prog:{marginTop:'7px',opacity:'-1'}
-        })
-        }
-      }else{
-        this.setState({
-          prog:{marginTop:'7px',opacity:'-1'}
-        })
-      }
-    }
+   
   }
 
   render() {
       let email = this.props.email;
       let i = this.props.i;
+
       //---progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
-      
+      //-------Tag display
+      let prog, wrapper, container
+    if(typeof this.props.index !== 'undefined'){
+      if(this.props.index == 0 || this.props.index == "done" ){
+        if(typeof this.props.progresStatus !== 'undefined' && this.props.progresStatus!==0){
+          prog={marginTop:'7px'}
+        }else{
+          prog={marginTop:'7px',opacity:'-1'} 
+        }
+        wrapper = {display: 'flex',flexWrap: 'wrap',float:'left'}
+      }else{
+        prog={marginTop:'7px',opacity:'-1'}
+        wrapper = {display: 'flex',flexWrap: 'wrap',float:'left',opacity:'-1'}
+      }
+      if(typeof this.props.email.attachments !== 'undefined' || this.props.candidateTags.length !== 0){
+          container={marginTop:'-40px'}
+        }else{
+          container={marginTop:'0px'}
+        }
+    }
       return (
         <Card>
         <Paper
@@ -48,6 +59,7 @@ export default class MyCard extends React.Component {
           zDepth={2}
           children={
             <CardHeader
+            style={{paddingBottom:'0px'}}
               title={<div> <span>{this.props.progresHide}</span>{typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:<div>{email.subject} <br/> From: {email.from}</div>} </div>}
               subtitle={<div> {typeof email.sender_mail == 'undefined'?
                 <div>
@@ -57,16 +69,20 @@ export default class MyCard extends React.Component {
                 <div style={{"width":"100%"}}>
                   Email: {email.sender_mail + " ("+moment(email.email_timestamp* 1000).format("DD/ MM/ YYYY - HH:MM")+")"}
                 </div>
-                } 
+                }
                 </div>}
               avatar={<Avatar size={40} children={(email.from || "" ).charAt(0)} />}
               actAsExpander={i==0?false:true}
               showExpandableButton={i==0?false:true}
               titleStyle={{'fontSize':"12px"}}
               subtitleStyle={{'fontSize':"11px"}}
-              children={<div style={typeof email.attachments !== 'undefined'?{marginTop:"-35px"}:{marginTop:'0px'}}>
-                <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>{typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
-                {typeof email.sender_mail == 'undefined'?'':<div><LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={this.state.prog}/></div>}</div>}
+              children={<div style={container}>
+                <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>
+                <div style={wrapper}>
+                {this.props.candidateTags}
+                </div>
+                {typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
+                {typeof email.sender_mail == 'undefined'?'':<div style={{margin:'0px -16px'}}><LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={prog}/></div>}</div>}
               />
           }
            />
