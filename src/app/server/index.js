@@ -44,7 +44,7 @@ Meteor.startup(function () {
         console.log('running', ++i );
       }
     });
-    SyncedCron.start();
+   // SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }

@@ -50,8 +50,8 @@ export function fetchTemplate(){
 			Meteor.call('fetchAllTemplates',(err,data)=>{
 				if(err){
 					reject(err)
-				}else{console.log(data,'template in action')
-					if(data.length > 0){console.log(data,'template in action')
+				}else{
+					if(data.length > 0){
 						dispatch(success_fetch_temptale(data))
 						resolve('Template loading completed')
 					}else{
