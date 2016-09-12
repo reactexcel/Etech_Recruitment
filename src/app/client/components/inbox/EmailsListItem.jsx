@@ -115,21 +115,6 @@ class EmailListItem extends React.Component {
       //----progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.email.progresStatus !== 'undefined'?this.props.email.progresStatus:0
-      if(progresStatus == 1){
-        progressValue = '25'
-        progresColor = '#CF0649'
-      }else if(progresStatus == 2){
-        progressValue = '50'
-        progresColor = '#751F07'
-      }else if(progresStatus == 3){
-        progressValue= '75'
-        progresColor = '#02187A'
-      }else if(progresStatus == 4){
-        progressValue = '100'
-        progresColor = '#038503'
-      }else if(progresStatus == 0){
-        progressValue = '0'
-      }
       return(
 
           <div key={this.props.email._id}  style={{ "marginBottom":"0px"}} >

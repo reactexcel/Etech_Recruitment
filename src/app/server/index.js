@@ -17,7 +17,7 @@ import '../collections/dynamicAction';
 import _ from 'lodash';
 import '../methods/crons/applyTag';
 import '../methods/crons/fetchAllEmail';
-import '../methods/dynamicAction.js'
+import '../methods/dynamicAction'
 
 Meteor.startup(function () {
   // Configure MAIL_URL
@@ -30,7 +30,7 @@ Meteor.startup(function () {
     SyncedCron.add({
       name: 'inbox_mail',
       schedule: function(parser) {
-        return parser.text('every 30 mins');
+        return parser.text('every 5 mins');
       },
       job: function() {
         var imapEmails = Meteor.call('fetchSettings');
