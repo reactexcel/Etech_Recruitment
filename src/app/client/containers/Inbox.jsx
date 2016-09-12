@@ -73,7 +73,7 @@ class Inbox extends React.Component {
                 })
             }
         }
-
+        //window.location.replace("http://localhost:3000/#/inbox?_k=n069dj");
     }
     /*
     componentDidUpdate(){
