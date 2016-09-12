@@ -14,6 +14,9 @@ export function empty_inbox( data ){
 export function error_inbox( data ){
 	return createAction( ACTION_ERROR_INBOX )( data )
 }
+export function onRead( _id ){
+	return createAction( "ON_READ_EMAIL" )( _id )
+}
 
 const loading = (bool) => {
   return createAction('LOADING')(bool);

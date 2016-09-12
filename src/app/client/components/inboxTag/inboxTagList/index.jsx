@@ -150,7 +150,7 @@ export default class InboxTagList extends React.Component {
                       <Avatar
                         backgroundColor={row.color}
                         children={
-                          _.upperCase(row.name[0])
+                          _.upperCase(_.trim(row.name)[0])
                         }
                         >
                       </Avatar>
@@ -193,7 +193,7 @@ export default class InboxTagList extends React.Component {
                       <Avatar
                         backgroundColor={row.color}
                         children={
-                          _.upperCase(row.name[0])
+                          _.upperCase(_.trim(row.name)[0])
                         }
                         >
                       </Avatar>
@@ -236,7 +236,7 @@ export default class InboxTagList extends React.Component {
                       <Avatar
                         backgroundColor={row.color}
                         children={
-                          _.upperCase(row.name[0])
+                          _.upperCase(_.trim(row.name)[0])
                         }
                         >
                       </Avatar>

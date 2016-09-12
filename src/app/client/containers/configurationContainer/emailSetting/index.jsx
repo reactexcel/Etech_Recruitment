@@ -46,11 +46,14 @@ const mapDispatchToProps = (dispatch) => {
       onFetchSettings: () =>{
         dispatch(action.onFetchSettingsFromDB());
       },
-      onSaveSettings: (detail) =>{ 
+      onSaveSettings: (detail) =>{
         dispatch(action.onSaveSettingsToDB(detail));
       },
       onTestDetails: (detail) =>{
         return dispatch(action.onTestDetails(detail));
+      },
+      onStartCron: ( _id ) =>{
+        return dispatch(action.onStartCron( _id ));
       },
       onRemoveDetails: (m_id) =>{
         dispatch(action.onRemoveDetails(m_id));

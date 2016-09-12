@@ -59,6 +59,7 @@ export default class EmailSettingFormContainer extends React.Component {
               onRemoveDetails={this.props.onRemoveDetails}
               clear={this.clear}
               uiLoading={this.props.uiLoading}
+              onStartCron={this.props.onStartCron}
               />
           </div>
         </div>

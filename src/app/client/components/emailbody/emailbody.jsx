@@ -109,7 +109,7 @@ componentWillReceiveProps(props){
                              snackbarmsg:error.toString(),
                           })
                         })
-            
+
       }else{
             this.setState({
                 "SnackbarOpen":true,
@@ -154,7 +154,12 @@ componentWillReceiveProps(props){
   }
 
 render(){
-        let data = this.state.data;
+        let progress = 0
+        if(typeof this.props.candidateHistory.history[0] !== 'undefined'){
+          let tmp = this.props.candidateHistory.history[0]
+          progress = typeof tmp.progresStatus !== 'undefined'?tmp.progresStatus:0
+        }
+       let data = this.props.email[0] || {};
         let dynamicActions = this.props.dynamicActions;
         let actionMenu = []
         _.map(dynamicActions,(action)=>{

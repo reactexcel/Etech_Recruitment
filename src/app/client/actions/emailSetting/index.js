@@ -32,6 +32,9 @@ const removeDetails = (_id, status) => {
 const activeIMAPEmail = (data) => {
   return createAction('ACTIVE_OR_DEACTIVE_IMAP_EMAIL')(data);
 }
+const startCron = ( _id ) => {
+  return createAction('START_CRON')( _id );
+}
 
 const loading = (bool) => {
   return createAction('LOADING')(bool);
@@ -73,7 +76,7 @@ export function onSaveSettingsToDB (detail) {
 
 export function onTestDetails (detail) {
   return (dispatch, getState) => {
-    return new Promise( (resolve, reject) => { 
+    return new Promise( (resolve, reject) => {
         dispatch(loading(true));
       Meteor.call('checkMailServer',detail,(err,status) => {
           if(err){
@@ -103,6 +106,28 @@ export function onRemoveDetails (m_id) {
     });
   }
 }
+
+export function onStartCron (_id) {
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('fetchAllEmail',_id,(err,status) => {
+          if(err){
+            reject(err);
+          }else{
+            if(typeof status.msg !== 'undefined'){
+              dispatch(startCron( _id ));
+              resolve(status.msg);
+            }
+            if(typeof status.err !== 'undefined'){
+              reject(status.err);
+            }
+          }
+      });
+    });
+  }
+}
+
+
 //-----------
 export function saveSendSettings (detail) {
   return (dispatch, getState) => {
