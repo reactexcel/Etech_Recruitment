@@ -14,36 +14,58 @@ Meteor.methods({
        _.map(actions,(data,key)=>{
         let tag = Tags.find({_id: data.tag_id}).fetch();
         let template = EmailTemplates.find({_id: data.template_id}).fetch();
-        console.log(tag,'tag')
-        console.log(template,'template')
+        let dependentAction = DynamicActions.find({_id: data.dependentAction}).fetch();
+        let dependentActionId="";
+        let dependentActionName="";
+        if(dependentAction.length > 0){
+          console.log("length found")
+          dependentActionName=dependentAction[0].name;
+          dependentActionId=dependentAction[0]._id;
+        }else{
+          console.log("length not found")
+          dependentActionName="";
+          dependentActionId=""
+        }
+        console.log(dependentActionId,"in method---")
           newActionList.push({
             "_id": data._id,
             "name": data.name,
+            "dependentAction":dependentActionName,
+            "dependentActionId":dependentActionId,
+            "actionEmail":data.actionEmail,
             "template_id": data.template_id,
             "tag_id":data.tag_id,
             "progress_point":data.progress_point,
+            "report":data.report,
             "tag_name":tag[0].name,
             "tag_color":tag[0].color,
             "template_name":template[0].name
           })
        })
+       console.log(newActionList,"in method----------")
        return newActionList
     },
     "saveAction" : function(id,action){
     if(id != ''){
       let _id = DynamicActions.update({"_id":id},{$set:{
         name:action.name,
+        dependentAction:action.dependentAction,
+        actionEmail:action.actionEmail,
         template_id:action.templateId,
         tag_id:action.tagId,
-        progress_point:1
+        progress_point:action.progress,
+        report:action.report
       }})
       return _id;
     }else{
            let _id = DynamicActions.insert( {
               name:action.name,
+              dependentAction:action.dependentAction,
+              actionEmail:action.actionEmail,
               template_id:action.templateId,
               tag_id:action.tagId,
-              progress_point:1
+              progress_point:action.progress,
+              report:action.report
             } )
             return _id;
     }

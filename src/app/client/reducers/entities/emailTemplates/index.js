@@ -6,8 +6,8 @@ let initialState = Immutable.List([]);
 
 export function emailTemplates(state = initialState, action){
 	if (action.type === ACTION.ACTION_SUCCESS_FETCH_TEMPLATE) {
-		let stateclon=state;console.log(stateclon,'before')
-		stateclon=action.payload;console.log(stateclon,'return')
+		let stateclon=state;
+		stateclon=action.payload;
 		return stateclon;
 	}else{
 		return state
