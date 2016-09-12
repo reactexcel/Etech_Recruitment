@@ -21,34 +21,7 @@ export default class MyCard extends React.Component {
     }
   }
   componentWillReceiveProps( props ){
-    if(typeof this.props.index !== 'undefined'){
-      if(this.props.index == 0 || this.props.index == "done" ){
-        if(typeof props.progresStatus !== 'undefined' && props.progresStatus!==0){
-          this.setState({
-            prog:{marginTop:'7px'}
-        })
-        }else{
-          this.setState({
-            prog:{marginTop:'7px',opacity:'-1'}
-        })
-        }
-        if(typeof props.email.attachments !== 'undefined' || this.props.candidateTags.length !== 0){
-          this.setState({
-            mag:{marginTop:'-35px'}
-          })
-        }else{
-          this.setState({
-            mag:{marginTop:'0px'}
-          })
-        }
-      }else{
-        this.setState({
-          prog:{marginTop:'7px',opacity:'-1'},  
-          mag:{marginTop:'0px'},
-          wrapper:{opacity:'-1'}
-        })
-      }
-    }
+   
   }
 
   render() {
