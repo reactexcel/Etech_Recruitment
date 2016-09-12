@@ -13,7 +13,7 @@ export function saveAction(id,action){
 			Meteor.call('saveAction', id,action , (err, data) => {
 				if(err){
 					reject(err)
-				}else{console.log(data)
+				}else{
 					dispatch ( fetchAction(data) )
 					resolve(data)
 				}

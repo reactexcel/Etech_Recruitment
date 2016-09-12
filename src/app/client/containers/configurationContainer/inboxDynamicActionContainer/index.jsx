@@ -8,6 +8,7 @@ import DynamicActions from '../../../components/dynamicActions'
 import {fetchTemplate} from '../../../actions/emailTemplates'
 import {saveAction,fetchAction,deleteAction} from '../../../actions/dynamicActions'
 import { onFetchTag} from '../../../actions/tags'
+import {onFetchSettingsFromDB} from '../../../actions/emailSetting'
 
 class InboxTagContainer extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class InboxTagContainer extends React.Component {
       this.props.onFetchTamplets()
       this.props.onFetchActions()
       this.props.onFetchTag()
+      this.props.onFetchSettingsFromDB()
   }
   render() {
     return(
@@ -34,6 +36,7 @@ function mapStateToProps( state ){
     return {
       emailTemplates : state.entities.emailTemplates,
       dynamicActions : state.entities.dynamicAction,
+      smtpDetails : state.entities.smtpDetails,
       tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
     }
 }
@@ -54,6 +57,9 @@ const mapDispatchToProps = (dispatch) => {
       onFetchTag : () => {
             return dispatch(onFetchTag());
       },
+      onFetchSettingsFromDB : () =>{
+        return dispatch(onFetchSettingsFromDB());
+      }
     }
 }
 

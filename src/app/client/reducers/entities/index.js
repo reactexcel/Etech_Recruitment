@@ -12,6 +12,7 @@ import {candidateHistory} from './candidateHistory'
 import { inboxTag } from './inboxTag';
 import { emailTemplates } from './emailTemplates';
 import { dynamicAction } from './dynamicAction';
+import { smtpDetails } from './smtpDetails';
 export default combineReducers({
 	users,
 	register,
@@ -25,5 +26,6 @@ export default combineReducers({
 	email,
 	emailTemplates,
 	testDetails,
-	dynamicAction
+	dynamicAction,
+	smtpDetails
 })
