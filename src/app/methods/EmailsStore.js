@@ -216,7 +216,7 @@ Meteor.methods({
 			var duplicate = false;
 			if( checkExistingSenderEmail.length > 0 ){
 				_.forEach(checkExistingSenderEmail, function( Ex_email ){
-					if(source_email_id == Ex_email.m_source_email_id){
+					if(source_email_id == Ex_email.m_source_email_id && emailData.email_id !== Ex_email.email_id){
 						_.forEach(Ex_email.more_emails, function(m_email){
 							if(m_email.email_id == emailData.email_id && source_email_id == m_email.m_source_email_id){
 								duplicate = true;

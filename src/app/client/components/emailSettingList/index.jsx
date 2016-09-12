@@ -225,7 +225,7 @@ export default class EmailSettingList extends React.Component {
                           Total emails fetched: {this.state.imapEmail.cronDetail.totalEmailFetched}<br/>
                           Total count of Inbox emails: {this.state.imapEmail.cronDetail.totalMailInInbox}<br/>
                         </p>
-                        {this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100 < 100?
+                        {this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100 <= 100?
                           <LinearProgress mode="determinate" value={this.state.imapEmail.cronDetail.totalEmailFetched/this.state.imapEmail.cronDetail.totalMailInInbox*100} />
                           :""
                         }
@@ -235,7 +235,7 @@ export default class EmailSettingList extends React.Component {
                     <br/>
                     <div>
                       <Toggle
-                        label={this.state.imapEmail.croned?"This email is being processed in background.":"Start cron to fetch all email from the selected email"}
+                        label={this.state.imapEmail.croned?this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.":"Start cron to fetch all email from the selected email"}
                         disabled={this.state.imapEmail.croned}
                         defaultToggled={this.state.imapEmail.croned}
                         labelPosition="right"
