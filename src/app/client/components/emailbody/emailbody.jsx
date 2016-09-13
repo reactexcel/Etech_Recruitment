@@ -103,11 +103,11 @@ componentWillReceiveProps(props){
     if(_.includes(data.tags,ignoreTagId)==false){
             this.ignoreText="Ignored";
             this.props.onIgnore([data._id],this.ignoreTagId).then(()=>{
-                          this.props.router.push('/inbox/body');
+                          this.props.router.push('/inbox/b');
                         }).catch( (error) => {
                            this.setState({
-                             snackbarOpen:true,
-                             snackbarmsg:error.toString(),
+                             SnackbarOpen:true,
+                             SnackbarMessage:error.toString(),
                           })
                         })
 
@@ -143,8 +143,8 @@ componentWillReceiveProps(props){
           this.props.router.push('/inbox/body');
         }).catch( (error) => {
           this.setState({
-              snackbarOpen:true,
-              snackbarmsg:error.toString(),
+              SnackbarOpen:true,
+              SnackbarMessage:error.toString(),
         })
      })
     }else{
@@ -153,7 +153,19 @@ componentWillReceiveProps(props){
         })
     }
   }
-
+handleRequestDelete(emailId,TagId) {
+  this.props.onRemoveTagFromCandidate(emailId,TagId).then((data)=>{
+    this.setState({
+              SnackbarOpen:true,
+              SnackbarMessage:data.toString(),
+        })
+  }).catch((err)=>{
+    this.setState({
+              SnackbarOpen:true,
+              SnackbarMessage:err.toString(),
+        })
+  })
+}
 render(){
         let data = this.state.data;
         //---dynamic actions
@@ -169,9 +181,13 @@ render(){
       let inboxTags = typeof this.props.inboxTag !== 'undefined'?this.props.inboxTag:[]
         _.map(inboxTags,(tag)=>{
           if(_.includes(data.tags,tag._id)==true){
-            candidateTags.push(<Chip backgroundColor={tag.color}>{tag.name}</Chip>)
+            candidateTags.push(<Chip onRequestDelete={()=>{this.handleRequestDelete(data._id,tag._id)}}
+              style={{border:'5px',margin:'2px'}} 
+              labelStyle={{fontSize:'12px',marginTop:'0px'}} 
+              backgroundColor={tag.color}>{tag.name}</Chip>)
           }
         })
+        //---------
        let more_email = typeof data.more_emails !== 'undefined'?data.more_emails.sort(function(a,b){if(a.email_timestamp > b.email_timestamp)return -1;if(a.email_timestamp < b.email_timestamp)return 1; else return 0;}):[];
        if(_.includes(data.tags,this.ignoreTagId)==true){
                 this.ignoreText="Ignored"

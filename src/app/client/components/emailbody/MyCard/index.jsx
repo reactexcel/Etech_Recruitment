@@ -46,7 +46,7 @@ export default class MyCard extends React.Component {
         wrapper = {display: 'flex',flexWrap: 'wrap',float:'left',opacity:'-1'}
       }
       if(typeof this.props.email.attachments !== 'undefined' || this.props.candidateTags.length !== 0){
-          container={marginTop:'-40px'}
+          container={marginTop:'0px'}
         }else{
           container={marginTop:'0px'}
         }
@@ -77,10 +77,10 @@ export default class MyCard extends React.Component {
               titleStyle={{'fontSize':"12px"}}
               subtitleStyle={{'fontSize':"11px"}}
               children={<div style={container}>
-                <div style={{float:'right',display:'block',position:'relative',marginBottom:'25px'}}>
                 <div style={wrapper}>
                 {this.props.candidateTags}
                 </div>
+                <div style={{float:'right',display:'block',position:'relative'}}>
                 {typeof email.attachments == 'undefined'?"":<span ><i className="fa fa-paperclip fa-2x"></i></span>}</div>
                 {typeof email.sender_mail == 'undefined'?'':<div style={{margin:'0px -16px'}}><LinearProgress color={progresColor} mode="determinate" value={progresStatus} min={0} max={100} style={prog}/></div>}</div>}
               />

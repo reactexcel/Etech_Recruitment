@@ -65,7 +65,7 @@ export function inbox( state = Immutable.Map(initialState), action ){
         let emails = state.get('emails')
         _.map(emails, (email)=>{
           if(email._id === data[0]._id){
-              email.m_read_status = data[0].m_read_status
+              email.unread = data[0].unread
           }
         })
       return state.set('emails', emails)
@@ -80,6 +80,15 @@ export function inbox( state = Immutable.Map(initialState), action ){
         })
       })
       return state.set("emails",_.clone(emails))
+    }else if(action.type == 'REMOVE_TAG_FROM_CANDIDATE'){
+       let data = action.payload;
+       let emails = state.get("emails")
+       _.map(emails,(email)=>{
+                if(data._id == email._id){
+                    email.tags = data.tags
+                }
+        })
+        return state.set('emails', _.clone(emails))
     }
     return state
 }
