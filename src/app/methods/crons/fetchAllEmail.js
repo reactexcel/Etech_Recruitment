@@ -21,9 +21,11 @@ Meteor.methods({
         }
       );
       imapEmail = imapEmail[0];
-      if(imapEmail.croned && imapEmail.cronDetail !== "undefined" ){
-        if(imapEmail.cronDetail.totalEmailFetched < imapEmail.cronDetail.totalMailInInbox){
-          resume = true;
+      if(imapEmail.croned && typeof imapEmail.cronDetail === "object" ){
+        if((imapEmail.cronDetail.totalEmailFetched < imapEmail.cronDetail.totalMailInInbox) &&
+            imapEmail.cronDetail.totalEmailFetched > 0 &&
+              imapEmail.cronDetail.totalMailInInbox > 0){
+          resumeCronProcess = true;
         }
       }
       const SELF = this;
@@ -57,7 +59,7 @@ Meteor.methods({
         API_URL: function(){return  this.BASE_URL + this.PARAMS();},
 
         fetchedMailCount: 20,
-        haveDetails: resume,
+        haveDetails: resumeCronProcess,
         firstEmailData:[],
         count: 0,
         schedule: function(parser) {
