@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
 import _ from 'lodash'
 import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
@@ -10,9 +11,12 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Snackbar from 'material-ui/Snackbar';
+import Divider from 'material-ui/Divider';
 import Chip from 'material-ui/Chip';
 import CircularProgress from 'material-ui/CircularProgress';
 import Toggle from 'material-ui/Toggle';
+import Avatar from 'material-ui/Avatar';
+const classNames = require('classnames');
 
 const styles = {
   block: {
@@ -38,14 +42,23 @@ const styles = {
   toggle: {
     marginBottom: 16,
   },
+  formInput:{
+    "marginLeft": "5%",
+    "marginRight": "5%",
+    "width": "60%"
+  },
 };
 class DynamicActions extends React.Component {
   constructor( props ){
         super( props );
         this.state={
+            paper:'show',
+            actionName:'',
             actionId:'',
             tmppage:'row',
             tmpcreat:'hidden',
+            openDialog:false,
+            dialogTitle:'',
             errName:'',
             dependentAction:'',
             templateId:'',
@@ -77,18 +90,23 @@ class DynamicActions extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
-        this.setState({loader:'show'})
+        this.setState({
+          loader:'show',
+          paper:'hidden'
+        })
         this.props.onFetchActions().then( (data) => {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:data.toString(),
-          loader:'hidden'
+          loader:'hidden',
+          paper:'show'
         })
       }).catch( (error) => {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:error.toString(),
-          loader:'hidden'
+          loader:'hidden',
+          paper:'show'
         })
       })
     }
@@ -115,15 +133,18 @@ class DynamicActions extends React.Component {
     });
   };
     openCreateAction(){
+      
       if(this.props.dynamicActions.length > 0){
+        this.state.dependentActionList.push(<MenuItem value="" key={0} primaryText="           "/>);
         _.map(this.props.dynamicActions,(action, key)=>{
-          this.state.dependentActionList.push(<MenuItem value={action._id} key={key} primaryText={action.name} />)
+          this.state.dependentActionList.push(<MenuItem value={action._id} key={key+1} primaryText={action.name} />)
         })
       }
-      this.refs.Name.input.value='';
+      
         this.setState({
-            tmppage:'hidden',
-            tmpcreat:'row',
+          actionName:'',
+            openDialog:true,
+            dialogTitle:"Create Action",
             errName:'',
             tagValue:'',
             tagError:'',
@@ -146,14 +167,17 @@ class DynamicActions extends React.Component {
         this.setState({showReportToggle: !this.state.showReportToggle});
     }
     gotoActionPage(){
-        this.refs.Name.input.value='';
         this.setState({
-            tmppage:'row',
-            tmpcreat:'hidden',
+          actionName:'',
+            openDialog:'',
+            dialogTitle:'',
             actionId:'',
+            errName:'',
             dependentAction:'',
             tagValue:'',
+            tagError:'',
             tempValue:'',
+            tempError:'',
             progressToggle:false,
             showReportToggle:false,
             progressToggle:false,
@@ -164,7 +188,7 @@ class DynamicActions extends React.Component {
         })
     }
     saveAction() {
-        let name=this.refs.Name.input.value.trim()
+        let name=this.state.actionName.trim()
         let tagId=this.state.tagValue
         let templateId=this.state.tempValue
         let id = this.state.actionId
@@ -210,8 +234,8 @@ class DynamicActions extends React.Component {
               report:report
             }
             this.props.onSaveAction(id,action).then( () => {
-                this.refs.Name.input.value='';
         this.setState({
+            actionName:'',
             snackbarOpen:true,
             snackbarmsg:"Action saved successfully",
             actionId:'',
@@ -244,14 +268,14 @@ class DynamicActions extends React.Component {
         })
       })
     }
-    editAction(data){
-        this.refs.Name.input.value = data.name;
+    editAction(data,evt){
         let actionId = data._id;
         this.setState({
+          actionName:data.name,
           tagValue:data.tag_id,
           tempValue:data.template_id,
-          tmppage:'hidden',
-          tmpcreat:'row',
+          openDialog:true,
+          dialogTitle:"Edit Action",
           actionId:data._id,
           floatingLabelText:'',
           hintText:'',
@@ -271,9 +295,10 @@ class DynamicActions extends React.Component {
           
         }
         if(this.props.dynamicActions.length > 0){
+          this.state.dependentActionList.push(<MenuItem value="" key={0} primaryText="           "/>);
         _.map(this.props.dynamicActions,(action, key)=>{
             if(action._id != actionId){
-                this.state.dependentActionList.push(<MenuItem value={action._id} key={key} primaryText={action.name} />)
+                this.state.dependentActionList.push(<MenuItem value={action._id} key={key+1} primaryText={action.name} />)
              }
         })
       }
@@ -284,23 +309,37 @@ class DynamicActions extends React.Component {
         });
     };
     render(){
+      const actions = [
+      <FlatButton
+              label="BACK"
+              primary={true}
+              onTouchTap={this.gotoActionPage.bind(this)}
+              style={{marginRight:5}}
+            />,
+            <RaisedButton
+              label="SAVE"
+              primary={true}
+              onClick={this.saveAction}
+            />,
+    ];
       let tagItems=[];
+      tagItems.push(<MenuItem value="" key={0} primaryText="           "/>);
       if(this.props.tags.length > 0){
         _.map(this.props.tags,(tag, key)=>{
         if(tag.automatic==false){
-            tagItems.push(<MenuItem value={tag._id} key={key} primaryText={tag.name} />)
+            tagItems.push(<MenuItem value={tag._id} key={key+1} primaryText={tag.name} />)
           }
           })
       }
       
-        let tempItems=[];
+        let tempItems=[<MenuItem value="" key={0} primaryText="           "/>];
         if(this.props.emailTemplates.length > 0){
           _.map(this.props.emailTemplates,(template, key)=>{
-            tempItems.push(<MenuItem value={template._id} key={key} primaryText={template.name} />)
+            tempItems.push(<MenuItem value={template._id} key={key+1} primaryText={template.name} />)
           })
         }
         
-        let actions=[];
+        /*let actions=[];
     
           _.map(this.props.dynamicActions,(data, key)=>{
       actions.push(<div className='col-xs-12' key={key}>
@@ -338,58 +377,74 @@ class DynamicActions extends React.Component {
                     </div>
                 </div>
       )
-    })
+    })*/
           
               
       return(
         <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
-            <div className={this.state.tmpcreat} style={{margin:'40px 4px 0px'}}>
-            <div className='row' style={{background: '#fff'}}>
-                   <div className="col-xs-12" style={{background: 'antiquewhite',padding: '10px',borderBottom: '1px solid gainsboro'}}>
-                            <b><i>Create New Action</i></b> <br />
-                   </div>
-                   <div className="col-xs-12" style={{fontSize: '20px',padding: "10px 20px 20px",borderBottom: '1px solid gainsboro'}}>
-                   <TextField
-                            ref='Name'
-                            floatingLabelText={this.state.floatingLabelText}
-                            hintText={this.state.hintText}
-                            fullWidth={true}
-                            errorText={this.state.errName}
-                   />
-                   <br />
-                   <SelectField
+            
+            <Dialog
+              title={this.state.dialogTitle}
+              actions={actions}
+              modal={false}
+              open={this.state.openDialog}
+              onRequestClose={this.gotoActionPage.bind(this)}
+              autoScrollBodyContent={true}
+            >
+            <div>
+              <form className="form-inline">
+              <div className="form-group" style={styles.formInput}>
+              <TextField
+                    ref='Name'
+                    floatingLabelText={this.state.floatingLabelText}
+                    hintText={this.state.hintText}
+                    fullWidth={true}
+                    errorText={this.state.errName}
+                    value={this.state.actionName}
+                    onChange={(e)=>{
+                      this.setState({
+                          actionName: e.target.value,
+                      });
+                    }}
+              />
+              </div>
+              <div className="form-group" style={styles.formInput}>
+              <SelectField
                     value={this.state.dependentAction}
                     onChange={this.changeDependentAction}
                     floatingLabelText="Dependent Action"
                     floatingLabelFixed={true}
                     hintText="Select Dependent Action"
-                   >
+              >
                     {this.state.dependentActionList}
-                   </SelectField>
-                   <br />
-                   <SelectField
+              </SelectField>
+              </div>
+              <div className="form-group" style={styles.formInput}>
+              <SelectField
                     value={this.state.tagValue}
                     onChange={this.changeTag}
                     floatingLabelText="Tags"
                     floatingLabelFixed={true}
                     hintText="Select Tag"
                     errorText={this.state.tagError}
-                   >
+              >
                     {tagItems}
-                   </SelectField>
-                   <br/>
-                   <SelectField
+              </SelectField>
+              </div>
+              <div className="form-group" style={styles.formInput}>
+              <SelectField
                     value={this.state.tempValue}
                     onChange={this.changeTemp}
                     floatingLabelText="Templates"
                     floatingLabelFixed={true}
                     hintText="Select Template"
                     errorText={this.state.tempError}
-                   >
+              >
                     {tempItems}
-                   </SelectField>
-                    <div>
-                    <div style={styles.block}>
+              </SelectField>
+              </div>
+              <div className="form-group" style={styles.formInput}>
+              <div style={styles.block}>
                     <Toggle
                       label="Progress point"
                       labelStyle={styles.lable}
@@ -398,7 +453,7 @@ class DynamicActions extends React.Component {
                       onToggle={this.handleProgresPoint.bind(this)}
                       toggle={this.state.showReportToggle}
                     />
-                    </div>
+              </div>
                     { this.state.progressToggle ?
                       <div>
                     <TextField
@@ -415,7 +470,9 @@ class DynamicActions extends React.Component {
                         <div></div>
                       )
                     }
-                    <div style={styles.block}>
+              </div>
+              <div className="form-group" style={styles.formInput}>
+              <div style={styles.block}>
                     <Toggle
                       label="Show on Report"
                       labelStyle={styles.lable}
@@ -424,29 +481,16 @@ class DynamicActions extends React.Component {
                       onToggle={this.handleReport.bind(this)}
                       toggle={this.state.showReportToggle}
                     />
-                    </div>
-                    <RaisedButton
-                          style={{float:'right',margin:'20px'}}
-                          label='Back'
-                          onClick={this.gotoActionPage.bind(this)}
-                          primary={true}
-                   ></RaisedButton>
-                   <RaisedButton
-                          style={{float:'right',margin:'20px'}}
-                          label='save'
-                          onClick={this.saveAction}
-                          primary={true}
-                   ></RaisedButton>
-                   </div>
-                   </div>
-                   
+              </div>
+              </div>
+              </form>
             </div>
-            </div>
+            </Dialog>
 
         <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
                       <div className='row'>
-                        <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'28px'}}>
+                        <div className='col-xs-12' style={{paddingTop:'10px',paddingRight:'0px'}}>
                           <RaisedButton
                             style={{float:'right',margin:'0px'}}
                             label='Create Action'
@@ -457,7 +501,40 @@ class DynamicActions extends React.Component {
                         <div className={this.state.loader} style={styles.container}>
                           <CircularProgress size={1.5} />
                         </div>
-                          {actions}
+                        <div className={this.state.paper} style={{"marginTop":"8%"}}>
+                        <Paper  zDepth={2} style={{"padding": "1%"}}>
+              <h4 className="h4">Action(s)</h4>
+              <Divider />
+              <div style={
+                {
+                  "marginTop": "2%",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                }
+              }>
+                {_.map(this.props.dynamicActions, (data, key) => {
+                  return  <Chip
+                      key={data._id}
+                      backgroundColor={data.tag_color}
+                      onRequestDelete={(evt) => {
+                        evt.stopPropagation();
+                        this.deleteAction(data._id)
+                      }}
+                      onTouchTap={(evt) => this.editAction(data, evt)}
+                      style={{ margin: 4}}>
+                      <Avatar
+                        backgroundColor={data.tag_color}
+                        children={
+                          _.upperCase(_.trim(data.name)[0])
+                        }
+                        >
+                      </Avatar>
+                      {data.name}
+                    </Chip>
+                  })}
+              </div>
+            </Paper>
+            </div>
                       </div>
                     </div>
                   </div>
