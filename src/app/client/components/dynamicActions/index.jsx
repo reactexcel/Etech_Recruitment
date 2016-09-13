@@ -48,11 +48,9 @@ class DynamicActions extends React.Component {
             tmpcreat:'hidden',
             errName:'',
             dependentAction:'',
-            dependentAcError:'',
             templateId:'',
             snackbarOpen:false,
             snackbarmsg:'',
-            actionEmailValue:null,
             tagValue:'',
             tagError:'',
             tempValue:'',
@@ -94,11 +92,6 @@ class DynamicActions extends React.Component {
         })
       })
     }
-    changeActionEmail = (event,index,value) =>{
-      this.setState({
-        actionEmailValue:value
-      })
-    }
     changeDependentAction = (event,index,value) =>{
       this.setState({
         dependentAction:value
@@ -132,7 +125,6 @@ class DynamicActions extends React.Component {
             tmppage:'hidden',
             tmpcreat:'row',
             errName:'',
-            actionEmailValue:null,
             tagValue:'',
             tagError:'',
             tempValue:'',
@@ -141,7 +133,7 @@ class DynamicActions extends React.Component {
             showReportToggle:false,
             floatingLabelText:'Action Name',
             hintText:'Enter Action Name',
-            dependentAcError:''
+            pPointError:''
         })
     }
     handleClose(){
@@ -162,41 +154,28 @@ class DynamicActions extends React.Component {
             dependentAction:'',
             tagValue:'',
             tempValue:'',
-            actionEmailValue:null,
             progressToggle:false,
             showReportToggle:false,
             progressToggle:false,
             pPointValue:1,
             showReportToggle:false,
-            dependentActionList:[]
+            dependentActionList:[],
+            pPointError:''
         })
     }
     saveAction() {
-      console.log(this.state.dependentActionList,"After save----")
         let name=this.refs.Name.input.value.trim()
-        let actionEmail=this.state.actionEmailValue
         let tagId=this.state.tagValue
         let templateId=this.state.tempValue
         let id = this.state.actionId
         let progress = this.state.progressToggle
         let report = this.state.showReportToggle
         let dependentAction = this.state.dependentAction
-        let dependencyClear = false
+        let pPointClear = false;
         if(name!=''){
             this.setState({errName:''})
         }else{
             this.setState({errName:'Required'})
-        }
-        if(this.state.dependentActionList.length>0){
-          if(dependentAction==''){
-                this.setState({dependentAcError:'Select depending action'})
-          }else{
-                this.setState({dependentAcError:''})
-                dependencyClear=true
-          }
-
-        }else{
-                dependencyClear=true
         }
         if(tagId==''){
             this.setState({tagError:'Select a tag'})
@@ -215,15 +194,16 @@ class DynamicActions extends React.Component {
           }else{
             progress=parseInt(this.state.pPointValue);
             this.setState({pPointError:''})
+            pPointClear=true;
           }
         }else{
           progress=0;
+          pPointClear=true;
         }
-        if(name!='' && dependencyClear==true && tagId!='' && templateId!='' && (this.state.pPointValue!='' || progress==false)){
+        if(name!='' && tagId!='' && templateId!='' && pPointClear==true){
             let action={
               name:name,
               dependentAction:dependentAction, 
-              actionEmail:actionEmail, 
               tagId:tagId, 
               templateId:templateId, 
               progress:progress,
@@ -268,7 +248,6 @@ class DynamicActions extends React.Component {
         this.refs.Name.input.value = data.name;
         let actionId = data._id;
         this.setState({
-          actionEmailValue:data.actionEmail,
           tagValue:data.tag_id,
           tempValue:data.template_id,
           tmppage:'hidden',
@@ -276,18 +255,9 @@ class DynamicActions extends React.Component {
           actionId:data._id,
           floatingLabelText:'',
           hintText:'',
-          showReportToggle:data.report
+          showReportToggle:data.report,
+          dependentAction:data.dependentActionId
         })
-        if(data.dependentAction==""){
-          this.setState({
-            dependentActionList:[],
-            dependentAction:data.dependentActionId
-          })
-        }else{
-          this.setState({
-            dependentAction:data.dependentActionId
-          })
-        }
         if(data.progress_point!=0){
           this.setState({
             progressToggle:true,
@@ -323,14 +293,6 @@ class DynamicActions extends React.Component {
           })
       }
       
-      let emailItem=[];
-      if(this.props.smtpDetails.length > 0){
-        _.map(this.props.smtpDetails,(email, key)=>{
-            emailItem.push(<MenuItem value={email.smtp.emailId} key={key} primaryText={email.smtp.emailId} />)
-          })
-      }
-       
-      
         let tempItems=[];
         if(this.props.emailTemplates.length > 0){
           _.map(this.props.emailTemplates,(template, key)=>{
@@ -346,9 +308,7 @@ class DynamicActions extends React.Component {
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Name : </span>{data.name}</div>
                     <hr />
                     {data.dependentAction != ""?<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Depend On : </span>{data.dependentAction}</div>
-                    :""}<hr />
-                    {data.actionEmail != null?<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Email : </span>{data.actionEmail}</div>
-                    :<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Email : </span>No Email selected</div>}
+                    :<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Independent from other actions</span></div>}
                     <hr />
                     <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Tag : </span><Chip style={styles.chip} backgroundColor={data.tag_color}>{data.tag_name}</Chip></div>
                     <hr />
@@ -397,31 +357,16 @@ class DynamicActions extends React.Component {
                             errorText={this.state.errName}
                    />
                    <br />
-                   { this.state.dependentActionList.length > 0 ?
-                    <div>
                    <SelectField
                     value={this.state.dependentAction}
                     onChange={this.changeDependentAction}
                     floatingLabelText="Dependent Action"
                     floatingLabelFixed={true}
                     hintText="Select Dependent Action"
-                    errorText={this.state.dependentAcError}
                    >
                     {this.state.dependentActionList}
                    </SelectField>
-                   </div>
-                      :""
-                    }
-                   <SelectField
-                    value={this.state.actionEmailValue}
-                    onChange={this.changeActionEmail}
-                    floatingLabelText="Action Emails"
-                    floatingLabelFixed={true}
-                    hintText="Select Email"
-                   >
-                    {emailItem}
-                   </SelectField>
-                   <br/>
+                   <br />
                    <SelectField
                     value={this.state.tagValue}
                     onChange={this.changeTag}
