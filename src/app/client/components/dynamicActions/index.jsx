@@ -338,48 +338,7 @@ class DynamicActions extends React.Component {
             tempItems.push(<MenuItem value={template._id} key={key+1} primaryText={template.name} />)
           })
         }
-        
-        /*let actions=[];
-    
-          _.map(this.props.dynamicActions,(data, key)=>{
-      actions.push(<div className='col-xs-12' key={key}>
-                    <div style={{border:'1px solid gray',borderRadius:'5px', height:'auto',margin:'5px',padding:'5px',background: '#fff',}}>
-                    <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Name : </span>{data.name}</div>
-                    <hr />
-                    {data.dependentAction != ""?<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Action Depend On : </span>{data.dependentAction}</div>
-                    :<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Independent from other actions</span></div>}
-                    <hr />
-                    <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Tag : </span><Chip style={styles.chip} backgroundColor={data.tag_color}>{data.tag_name}</Chip></div>
-                    <hr />
-                    <div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>
-                    Template : </span>{data.template_name}</div>
-                    <hr />
-                    {data.progress_point != 0?<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Progress Point : </span>{data.progress_point}</div>
-                    :<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Progress Point : </span>Dissabled</div>}
-                    <hr />
-                    {data.report != false?<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Show Report : </span>Enabled</div>
-                    :<div><span style={{textAlign:'left',fontWeight:'bold',fontSize:'13px',fontStyle:'italic'}}>Show On Report : </span>Dissabled</div>}
-                    <hr />
-                    <div style={{textAlign:'right'}}>
-                    <FlatButton
-                    style={{margin:'0px'}}
-                    label='Edit'
-                    onClick={()=>{this.editAction(data)}}
-                    primary={true}
-                    ></FlatButton>
-                    <FlatButton
-                    style={{margin:'0px'}}
-                    label='Delete'
-                    onClick={()=>{this.deleteAction(data._id)}}
-                    primary={true}
-                    ></FlatButton>
-                    </div>
-                    </div>
-                </div>
-      )
-    })*/
           
-              
       return(
         <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
             
