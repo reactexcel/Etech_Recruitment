@@ -63,7 +63,7 @@ Meteor.methods({
         firstEmailData:[],
         count: 0,
         schedule: function(parser) {
-          return parser.text('every 30 secs');
+          return parser.text('every 2 mins');
         },
 
         firstEmail: function(){

@@ -132,7 +132,7 @@ export default class InboxTagList extends React.Component {
             }
           >
             <Paper zDepth={2} style={{"padding": "1%"}}>
-              <h4 className="h4">Defdault tag(s)</h4>
+              <h4 className="h4">Default tag(s)</h4>
               <Divider />
               <div style={
                 {
