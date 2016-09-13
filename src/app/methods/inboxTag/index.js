@@ -267,6 +267,11 @@ Meteor.methods({
      })
      return {email:ignrReturn,tagId:tagId};
 
+   },
+   "removeTagFromCandidate" : function(emailId, tagId){
+    let res = EmailsStore.update({_id:emailId},{$pull:{'tags':tagId}})
+    let data = EmailsStore.find({"_id": emailId}).fetch()
+     return {result:res,email:data[0]}
    }
 
 

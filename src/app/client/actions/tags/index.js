@@ -10,6 +10,7 @@ export const FETCH_TAG = "FETCH_TAG";
 export const ASSIGN_TAG = "ASSIGN_TAG";
 
 
+
 const addTag = (addTag) => {
   return createAction(ADD_TAG)(addTag);
 }
@@ -28,6 +29,9 @@ const fetchTag = (tags) => {
 
 const assignTag = (mail) => {
   return createAction(ASSIGN_TAG)(mail);
+}
+const removeCandidateTag = (data)=>{
+  return createAction('REMOVE_TAG_FROM_CANDIDATE')(data)
 }
 
 export function onAddTag(tag){
@@ -158,6 +162,25 @@ export function sendMailToCandidate(candidateIdList,name,sub,body,tagId){
         }else{
           dispatch(assignTag(mails));
           resolve();
+        }
+      })
+    })
+  }
+}
+
+export function removeTagFromCandidate(emailId, tagId){
+  return(dispatch, getState)=>{
+    return new Promise((resolve,reject)=>{
+      Meteor.call('removeTagFromCandidate',emailId, tagId,(err, data)=>{
+        if(err){
+          reject(err)
+        }else{
+          if(data.result){
+            dispatch(removeCandidateTag(data.email));
+            resolve("Tag removed")
+          }else{
+            resolve("Error: Not removed try again")
+          }
         }
       })
     })

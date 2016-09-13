@@ -24,6 +24,15 @@ export function email( state = Immutable.Map(initialState), action ){
     		
     	})
     	return _.clone(state)
+    }else if(action.type == 'REMOVE_TAG_FROM_CANDIDATE'){
+       let data = action.payload;
+       let clonestate = state
+       _.map(clonestate,(email)=>{
+                if(data._id == email._id){
+                    email.tags = data.tags
+                }
+        })
+       return _.clone(clonestate)
     }
     return state
 }

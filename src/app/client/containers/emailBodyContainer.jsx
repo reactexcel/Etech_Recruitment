@@ -7,7 +7,7 @@ import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import { fetchAction, candidateAction } from '../actions/dynamicActions'
 import * as candidateHistory_action from '../actions/candidateHistory'
-import {onFetchTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
+import {onFetchTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate, sendMailToCandidate, removeTagFromCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import {fetchTemplate} from '../actions/emailTemplates'
 //import Header from '../components/generic/Header'
@@ -82,6 +82,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       onCandidateAction : (A_id, email_ids) => {
         return dispatch(candidateAction(A_id, email_ids))
+      },
+      onRemoveTagFromCandidate : (emailId, tagId)=>{
+        return dispatch(removeTagFromCandidate(emailId,tagId))
       }
     }
 }
