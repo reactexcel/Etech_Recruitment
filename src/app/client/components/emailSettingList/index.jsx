@@ -235,7 +235,8 @@ export default class EmailSettingList extends React.Component {
                     <br/>
                     <div>
                       <Toggle
-                        label={this.state.imapEmail.croned?this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.":"Start cron to fetch all email from the selected email"}
+                        label={this.state.imapEmail.croned?(this.state.imapEmail.cronDetail !== 'object'?("This email is being processed in background."):this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.")
+                          :"Start cron to fetch all email from the selected email"}
                         disabled={this.state.imapEmail.croned}
                         defaultToggled={this.state.imapEmail.croned}
                         labelPosition="right"
