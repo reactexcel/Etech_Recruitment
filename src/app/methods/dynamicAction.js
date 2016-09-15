@@ -82,17 +82,18 @@ Meteor.methods({
     let prograsStatus = []
     _.map(email_ids,(emailId)=>{
       let email = EmailsStore.find({_id : emailId}).fetch()
-      try{/*
+      try{
       Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
-        "to": 'atul@excellencetechnologies.in',//email[0].sender_mail,
-        "from": email[0].m_source_email_id,
+        "to": 'excellenceseo@gmail.com',//email[0].sender_mail,
+        //"from": email[0].m_source_email_id,
+        "from": 'abhishek@excellencetechnologies.in',
         "subject": template[0].subject,
         'text':template[0].content
       });
-     */
+     
      //---
       let history = CandidateHistory.find({email_id:email[0]._id}).fetch()
       let candidatePoints;
@@ -162,8 +163,9 @@ Meteor.methods({
   return {
     successMail:successMail,
     failedMail:failed,
-    tag:tag[0]._id,
+    tag:tag[0],
     prograsStatus:prograsStatus,
+    emailIdS:email_ids
   }
   }
 })

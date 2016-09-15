@@ -57,7 +57,7 @@ Meteor.startup(function () {
     SyncedCron.config({
       logger: MyLogger
     });
-    SyncedCron.start();
+    //SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }

@@ -5,6 +5,7 @@ import {onAssignTag} from '../tags'
 export const ACTION_ERROR_FETCH_ACTION = "ACTION_ERROR_FETCH_ACTION"
 export const ACTION_SUCCESS_FETCH_ACTION = "ACTION_SUCCESS_FETCH_ACTION"
 export const ACTION_UPDATE_PROGRESS_STATUS = "ACTION_UPDATE_PROGRESS_STATUS"
+export const UPDATE_TAGID = "UPDATE_TAGID"
 
 
 export function saveAction(id,action){
@@ -69,7 +70,8 @@ export function candidateAction(A_id, email_ids){
 					reject(err)
 				}else{
 					if(data.successMail.length > 0){
-						dispatch ( onAssignTag(data.successMail, data.tag) )
+						dispatch(updateTagId(data.tag._id,data.emailIdS))
+						dispatch ( onAssignTag(data.successMail, data.tag._id) )
 						dispatch(updateProgressStatus(data.prograsStatus))
 						resolve('Action performed')
 					}else{
@@ -82,5 +84,8 @@ export function candidateAction(A_id, email_ids){
 }
 export const updateProgressStatus = (data)=>{
 	return createAction(ACTION_UPDATE_PROGRESS_STATUS)(data)
+}
+export const updateTagId = (tagId,emailIds)=>{
+	return createAction(UPDATE_TAGID)(tagId,emailIds)
 }
 

@@ -72,7 +72,7 @@ class EmailListItem extends React.Component {
       let mail_bg_color = "#fff"
       let mail_left_border_color = "#C6F7C6"
       let unread_color = '#000000'
-      if( !m_read_status ){
+      if( m_read_status == false ){
         unread_color = '#808080'
       }
 

@@ -203,7 +203,7 @@ Meteor.methods({
   insertNewEmail : function ( source_email_id, emailData, tagList ){
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
-		var dulicate = false;
+	var dulicate = false;
 
   	emailData.m_source_email_id = source_email_id
 		emailData.m_insert_time = currentDateTime
@@ -269,7 +269,7 @@ Meteor.methods({
   		totalPages = Math.ceil( totalPages )
   	}
 	//----
-		var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'm_read_status' : 0}).count()
+		var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'unread' : true}).count()
 	//----
 		if( totalPages > 0 && next_page > totalPages){
 		next_page = ''
@@ -315,7 +315,7 @@ Meteor.methods({
   	tags = Tags.find({}).fetch();
   	_.map(tags, (t) => {
   		let tagId=t._id;
-  		let count=EmailsStore.find({tags:{$in:[tagId]}, m_read_status : 0 }).count();
+  		let count=EmailsStore.find({tags:{$in:[tagId]}, unread : true }).count();
   		tagList.push({"tagId":tagId,"count":count})
       })
   	return {

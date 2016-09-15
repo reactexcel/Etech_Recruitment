@@ -1,5 +1,6 @@
   import Immutable from 'immutable';
 import * as ACTION from '../../../actions/tags';
+import * as UPDATE_ACTION from '../../../actions/dynamicActions';
 import _ from 'lodash';
 let initialState = Immutable.List([]);
 
