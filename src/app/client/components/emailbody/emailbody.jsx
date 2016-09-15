@@ -173,8 +173,15 @@ render(){
         let actionMenu = []
         _.map(dynamicActions,(action)=>{
           let disable=0;
-          _.includes(data.candidateActions,action._id)?disable=1:disable=0
+          if(action.dependentActionId != ""){
+             if(_.includes(data.candidateActions,action.dependentActionId)==true){
+              _.includes(data.candidateActions,action._id)?disable=1:disable=0
+              actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+             }
+          }else{
+            _.includes(data.candidateActions,action._id)?disable=1:disable=0
             actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+          }
         })
         //-------candidate tags
       let candidateTags=[]

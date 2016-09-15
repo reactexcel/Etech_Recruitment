@@ -1,11 +1,26 @@
 import ip from 'ip';
 
 export const config_ENV = {
-  "emailServer": {
-    "_id": "excellenceseo@gmail.com",
-    "_password": "java@123",
+  /*"emailServer": {
+    "_id":encodeURIComponent("excellenceseo@gmail.com"),
+    "_password": encodeURIComponent("java@123"),
     "_host": "smtp.gmail.com",
-    "_port": 25,
+    "_port": 587,
+    "_url" : function(){
+      return (
+        'smtp://'+
+        this._id+
+        ':'+this._password+
+        '@'+this._host+
+        ':'+this._port
+      );
+    },
+  },*/
+  "emailServer": {
+    "_id":"abhishek@excellencetechnologies.in",
+    "_password":"nKR9ENcoWmAtGZL",
+    "_host": "smtp-pulse.com",
+    "_port": 465,
     "_url" : function(){
       return (
         'smtp://'+

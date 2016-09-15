@@ -206,18 +206,19 @@ Meteor.methods({
        email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        /*----------------------------Send email start---------------------------*/
-      if (Meteor.isServer) {
+      //if (Meteor.isServer) {
       Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
         //"to": mail[0].sender_mail,
-        "to": 'abhi.jsmj1993@gmail.com',
-        "from": username.username,
+        "to": 'excellenceseo@gmail.com',
+        //"from": mail[0].m_source_email_id,
+        "from": 'abhishek@excellencetechnologies.in',
         "subject": sub,
         'text': body
       });
-    }
+    //}
       /*------------------------------Send email end----------------------------*/
       if(mail[0].tags != 'undefined'){
           if(_.includes(mail[0].tags,tagId)==false){

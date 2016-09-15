@@ -1,6 +1,7 @@
 import Immutable from 'immutable'
 import {ACTION_SUCCESS_EMAIL_DATA,
         ACTION_ERROR_EMAIL_DATA, } from '../../../actions/emailDetails'
+import {UPDATE_TAGID} from '../../../actions/dynamicActions'
 
 let initialState = {}
 
@@ -33,6 +34,14 @@ export function email( state = Immutable.Map(initialState), action ){
                 }
         })
        return _.clone(clonestate)
+    }
+    else if(action.type == 'UPDATE_TAGID'){
+        let tagId = action.payload;
+        let clonestate = state;
+        _.map(clonestate,(email)=>{
+                    email.tags.push(tagId)
+              })
+        return _.clone(clonestate)
     }
     return state
 }
