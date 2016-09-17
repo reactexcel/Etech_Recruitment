@@ -10,6 +10,7 @@ import * as candidateHistory_action from '../actions/candidateHistory'
 import {onFetchTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate, sendMailToCandidate, removeTagFromCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import {fetchTemplate} from '../actions/emailTemplates'
+import {fetchVariable} from '../actions/variable'
 //import Header from '../components/generic/Header'
 class EmailbodyContainer extends React.Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class EmailbodyContainer extends React.Component {
     this.props.onFetchTamplets()
     this.props.onFetchActions()
     this.props.onFetchTag()
+    this.props.onFetchVariables()
   }
   render() {
     return (
@@ -46,7 +48,8 @@ function mapStateToProps( state ){
         inboxTag: state.entities.inboxTag,
         candidateHistory:state.entities.candidateHistory,
         emailTemplates : state.entities.emailTemplates,
-        dynamicActions: state.entities.dynamicAction
+        dynamicActions: state.entities.dynamicAction,
+        variables:state.entities.variables
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -80,11 +83,14 @@ const mapDispatchToProps = (dispatch) => {
       onFetchActions:()=>{
         return dispatch(fetchAction())
       },
-      onCandidateAction : (A_id, email_ids) => {
-        return dispatch(candidateAction(A_id, email_ids))
+      onCandidateAction : (A_id, email_ids, key,value) => {
+        return dispatch(candidateAction(A_id, email_ids, key,value))
       },
       onRemoveTagFromCandidate : (emailId, tagId)=>{
         return dispatch(removeTagFromCandidate(emailId,tagId))
+      },
+      onFetchVariables:()=>{
+            return dispatch(fetchVariable())
       }
     }
 }

@@ -1,21 +1,20 @@
 import { createAction } from 'redux-actions'
 import * as _ from 'lodash'
-import {onAssignTag} from '../tags'
 
-export const ACTION_ERROR_FETCH_ACTION = "ACTION_ERROR_FETCH_ACTION"
-export const ACTION_SUCCESS_FETCH_ACTION = "ACTION_SUCCESS_FETCH_ACTION"
-export const ACTION_UPDATE_PROGRESS_STATUS = "ACTION_UPDATE_PROGRESS_STATUS"
-export const UPDATE_TAGID = "UPDATE_TAGID"
+//export const ACTION_SUCCESS_FETCH_VARIABLE = "ACTION_SUCCESS_FETCH_VARIABLE"
+export const ACTION_SUCCESS_FETCH_VARIABLE = "ACTION_SUCCESS_FETCH_VARIABLE"
+//export const ACTION_UPDATE_PROGRESS_STATUS = "ACTION_UPDATE_PROGRESS_STATUS"
+//export const UPDATE_TAGID = "UPDATE_TAGID"
 
 
-export function saveAction(id,action){
+export function saveVariable(id,variable){
 	return (dispatch,getState) => {
 		return new Promise( (resolve,reject) => {
-			Meteor.call('saveAction', id,action , (err, data) => {
+			Meteor.call('saveVariable', id,variable , (err, data) => {
 				if(err){
 					reject(err)
 				}else{
-					dispatch ( fetchAction(data) )
+					dispatch ( fetchVariable(data) )
 					resolve(data)
 				}
 			})
@@ -23,19 +22,19 @@ export function saveAction(id,action){
 	}
 }
 
-export function fetchAction(){
+export function fetchVariable(){
 	return (dispatch,getState)=>{
 		return new Promise((resolve,reject)=>{
-			Meteor.call('fetchAllAction',(err,data)=>{
+			Meteor.call('fetchAllVariable',(err,data)=>{
 				if(err){
 					reject(err)
 				}else{
 					if(data.length > 0){
-						dispatch(success_fetch_action(data))
-						resolve('Action loading completed')
+						dispatch(success_fetch_variable(data))
+						resolve('variable loading completed')
 					}else{
-						dispatch(success_fetch_action(data))
-						resolve('No action in database')
+						dispatch(success_fetch_variable(data))
+						resolve('No variable in database')
 					}
 				}
 			})
@@ -44,10 +43,10 @@ export function fetchAction(){
 }
 
 
-export function success_fetch_action( data ){
-	return createAction( ACTION_SUCCESS_FETCH_ACTION )( data )
+export function success_fetch_variable( data ){
+	return createAction( ACTION_SUCCESS_FETCH_VARIABLE )( data )
 }
-export function deleteAction( id ){
+/*export function deleteAction( id ){
 	return (dispatch,getState) => {
 		return new Promise( (resolve,reject) => {
 			Meteor.call('deleteAction', id , (err, data) => {
@@ -62,10 +61,10 @@ export function deleteAction( id ){
 	}
 }
 
-export function candidateAction(A_id, email_ids, key,value){
+export function candidateAction(A_id, email_ids){
 	return (dispatch,getState) => {
 		return new Promise( (resolve, reject) => {
-			Meteor.call('candidateActionTaken', A_id, email_ids, key,value, (err, data) =>{
+			Meteor.call('candidateActionTaken', A_id, email_ids, (err, data) =>{
 				if(err){
 					reject(err)
 				}else{
@@ -87,5 +86,5 @@ export const updateProgressStatus = (data)=>{
 }
 export const updateTagId = (tagId,emailIds)=>{
 	return createAction(UPDATE_TAGID)(tagId,emailIds)
-}
+}*/
 

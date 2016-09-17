@@ -6,6 +6,7 @@ import * as _ from 'lodash'
 import {saveTemplate, fetchTemplate, deleteTemplate} from '../actions/emailTemplates'
 import Header from './../components/generic/Header'
 import SendEmail from './../components/sendmail'
+import {fetchVariable} from '../actions/variable'
 
 
 
@@ -15,8 +16,9 @@ class SendMails extends React.Component {
     }
     componentWillMount(){
         if (!Meteor.userId()) {
-        this.props.router.push('/login');
+          this.props.router.push('/login');
         }
+        this.props.onFetchVariables()
     }
 
     render(){
@@ -33,6 +35,7 @@ function mapStateToProps( state ){
         emailTemplates : state.entities.emailTemplates,
         inbox : state.entities.inbox,
         emailSetting : state.entities.emailSetting,
+        variables:state.entities.variables,
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
     }
 }
@@ -46,6 +49,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onDeleteTemplate:(id)=>{
             return dispatch(deleteTemplate(id))
+        },
+        onFetchVariables:()=>{
+            return dispatch(fetchVariable())
         }
     }
 }

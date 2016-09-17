@@ -71,7 +71,7 @@ Meteor.methods({
          let _id = DynamicActions.remove(id)
          return _id
   },
-  "candidateActionTaken":function(A_id, email_ids){
+  "candidateActionTaken":function(A_id, email_ids,key,value){
     let action = DynamicActions.find({_id:A_id}).fetch()
     let template = EmailTemplates.find({_id:action[0].template_id}).fetch()
     let tag = Tags.find({_id:action[0].tag_id}).fetch()
@@ -80,6 +80,13 @@ Meteor.methods({
     let successMail = []
     let failed = []
     let prograsStatus = []
+    let actualContent=template[0].content
+    
+    _.map(key,(v,k)=>{
+          actualContent=_.replace(actualContent, key[k], value[k]);
+      })
+    
+    
     _.map(email_ids,(emailId)=>{
       let email = EmailsStore.find({_id : emailId}).fetch()
       try{
@@ -91,7 +98,7 @@ Meteor.methods({
         //"from": email[0].m_source_email_id,
         "from": 'abhishek@excellencetechnologies.in',
         "subject": template[0].subject,
-        'text':template[0].content
+        'text':actualContent
       });
      
      //---
