@@ -108,7 +108,11 @@ class Variables extends React.Component {
       }
       if(varCode!='' && varVal!=''){
         varCode = varCode.toLowerCase()
-        varCode = "#"+varCode
+        if(_.trim(varCode)[0]=="#"){
+
+        }else{
+           varCode = "#"+varCode
+        }
         let variable={
               varCode:varCode,
               varValue:varVal
