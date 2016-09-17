@@ -10,7 +10,12 @@ import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import Divider from 'material-ui/Divider';
+import Delete from 'material-ui/svg-icons/action/delete';
+import ActionCheckCircle from 'material-ui/svg-icons/action/check-circle'
+import Avatar from 'material-ui/Avatar'
 import CircularProgress from 'material-ui/CircularProgress';
+import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
 const classNames = require('classnames');
 
@@ -51,10 +56,11 @@ class Variables extends React.Component {
           hintCode:'Enter Variable Code',
           floatingLabelValue:'Variable Value',
           hintCode:'Enter Variable Value',
-          loader:'hidden',
+          loader:'hidden'
         }
         this.openCreateVariable = this.openCreateVariable.bind(this)
         this.saveVariable = this.saveVariable.bind(this)
+        this.deleteVariable = this.deleteVariable.bind(this);
         
     }
     componentWillMount(){
@@ -62,6 +68,19 @@ class Variables extends React.Component {
             this.props.router.push('/login');
         }
         
+    }
+    deleteVariable(id){
+    this.props.onDeleteVariable(id).then( () => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:"Variable Deleted successfully",
+        })
+      }).catch( (error) => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:error.toString(),
+        })
+      })
     }
     openCreateVariable(){
       
@@ -93,8 +112,8 @@ class Variables extends React.Component {
         })
     }
     saveVariable() {
-      let varCode = this.state.variableCode.trim()
-      let varVal = this.state.variableValue.trim()
+      let varCode = this.state.variableCode.replace(/^\s+|\s+$/gm,'')
+      let varVal = this.state.variableValue.replace(/^\s+|\s+$/gm,'')
       let id = this.state.varId
       if(varCode!=''){
         this.setState({varCodeError:''})
@@ -137,85 +156,7 @@ class Variables extends React.Component {
       })
       }
     }
-        /*let name=this.state.actionName.trim()
-        let tagId=this.state.tagValue
-        let templateId=this.state.tempValue
-        let id = this.state.actionId
-        let progress = this.state.progressToggle
-        let report = this.state.showReportToggle
-        let dependentAction = this.state.dependentAction
-        let pPointClear = false;
-        if(name!=''){
-            this.setState({errName:''})
-        }else{
-            this.setState({errName:'Required'})
-        }
-        if(tagId==''){
-            this.setState({tagError:'Select a tag'})
-        }else{
-            this.setState({tagError:''})
-        }
-        if(templateId==''){
-            this.setState({tempError:'Select a template'})
-        }else{
-            this.setState({tagError:''})
-        }if(progress==true){
-          if(this.state.pPointValue==''){
-            this.setState({pPointError:'Required'})
-          }else if(!this.regExp.pPoint.test(this.state.pPointValue)){
-            this.setState({pPointError:'Invalid value'})
-          }else{
-            progress=parseInt(this.state.pPointValue);
-            this.setState({pPointError:''})
-            pPointClear=true;
-          }
-        }else{
-          progress=0;
-          pPointClear=true;
-        }
-        if(name!='' && tagId!='' && templateId!='' && pPointClear==true){
-            let action={
-              name:name,
-              dependentAction:dependentAction, 
-              tagId:tagId, 
-              templateId:templateId, 
-              progress:progress,
-              report:report
-            }
-            this.props.onSaveAction(id,action).then( () => {
-        this.setState({
-            actionName:'',
-            snackbarOpen:true,
-            snackbarmsg:"Action saved successfully",
-            actionId:'',
-            tmppage:'row',
-            tmpcreat:'hidden'
-        })
-        
-        this.gotoActionPage()
-      }).catch( (error) => {
-        this.setState({
-          snackbarOpen:true,
-          snackbarmsg:error.toString(),
-          actionId:'',
-          tmppage:'row',
-          tmpcreat:'hidden'
-        })
-      })
-      }*/
-    /*deleteAction(id){
-    this.props.onDeleteAction(id).then( () => {
-        this.setState({
-          snackbarOpen:true,
-          snackbarmsg:"Action Deleted successfully",
-        })
-      }).catch( (error) => {
-        this.setState({
-          snackbarOpen:true,
-          snackbarmsg:error.toString(),
-        })
-      })
-    }*/
+
     editVariable(data){
         this.setState({
             variableCode:data.varCode,
@@ -250,15 +191,7 @@ class Variables extends React.Component {
               onClick={this.saveVariable}
             />,
     ];
-      /*let tagItems=[];
-      tagItems.push(<MenuItem value="" key={0} primaryText="           "/>);
-      if(this.props.tags.length > 0){
-        _.map(this.props.tags,(tag, key)=>{
-        if(tag.automatic==false){
-            tagItems.push(<MenuItem value={tag._id} key={key+1} primaryText={tag.name} />)
-          }
-          })
-      }*/
+      
       
       return(
         <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
@@ -341,18 +274,18 @@ class Variables extends React.Component {
                          displaySelectAll={false}
                         >
                         <TableRow>
-                        <TableRowColumn colSpan="2" >
+                        <TableRowColumn colSpan="3" >
                            <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>Variable(s)</h4>
                         </TableRowColumn>
                         </TableRow>
                         <TableRow>
-                         <TableRowColumn colSpan={1} tooltip="Variable code" style={{"fontWeight": "bold"}}>Variable code</TableRowColumn>
-                         <TableRowColumn colSpan={1} tooltip="Variable value" style={{"fontWeight": "bold"}}>Variable value</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Variable code" style={{"fontWeight": "bold",textAlign:'center'}}>Variable code</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Variable value" style={{"fontWeight": "bold",textAlign:'center'}}>Variable value</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Delete" style={{"fontWeight": "bold",textAlign:'center'}}>Delete</TableRowColumn>
                         </TableRow>
                         </TableHeader>
                         <TableBody
                          displayRowCheckbox={false}
-                         showRowHover={true}
                         >
                         {_.map(this.props.variables, (vari) => (
                           <TableRow key={vari._id}
@@ -360,15 +293,31 @@ class Variables extends React.Component {
                             }}
                             style={{'cursor':'pointer'}}
                           >
-                          <TableRowColumn colSpan={1}>{vari.varCode}</TableRowColumn>
-                          <TableRowColumn colSpan={1}>{vari.varValue}</TableRowColumn>
+                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{vari.varCode}</TableRowColumn>
+                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{vari.varValue}</TableRowColumn>
+                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>
+                          <IconButton
+                          tooltip="Delete Variable"
+                          tooltipPosition="right"
+                          iconStyle={{"color":"#B71C1C"}}
+                          children={
+                            <Delete color='#B71C1C'/>
+                          }
+                        onClick= {
+                         (evt) => {
+                           evt.stopPropagation();
+                           this.deleteVariable(vari._id)
+                         }
+                       }
+                       />
+                          </TableRowColumn>
                           </TableRow>
                           ))}
                         </TableBody>
                         </Table>
                         </Paper>
-                        </div>
                       </div>
+
                     </div>
                   </div>
                   <Snackbar
@@ -377,6 +326,7 @@ class Variables extends React.Component {
                     autoHideDuration={3000}
                     onRequestClose={this.handleRequestClose}
                   />
+        </div>
         </div>
         )
     }

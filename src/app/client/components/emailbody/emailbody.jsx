@@ -129,7 +129,7 @@ openPopUp(action){
             )
         }
         if(val == "#current_date"){
-          this.match_value['#current_date']=moment.format('MMMM Do YYYY, h:mm:ss a')
+          this.match_value['#current_date']=moment().format('MMMM Do YYYY, h:mm:ss a')
           this.state.popUpContent.push(
             <div>
             <TextField
@@ -446,13 +446,14 @@ render(){
       </Dialog>
       <Dialog
           title="Email Template Variables"
+          autoScrollBodyContent={true}
           actions={[
       <FlatButton
         label="Cancel"
         primary={true}
         onTouchTap={this.handleCloseVariable}
       />,
-      <FlatButton
+      <RaisedButton
         label="Submit"
         primary={true}
         onTouchTap={()=>{this.candidateAction(this.state.actionId, [data._id])}}

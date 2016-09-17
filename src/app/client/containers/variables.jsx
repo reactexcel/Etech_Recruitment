@@ -4,7 +4,7 @@ import { Router, browserHistory, Link, withRouter } from 'react-router'
 import * as _ from 'lodash'
 import Header from './../components/generic/Header'
 import Variables from './../components/variables'
-import {saveVariable,fetchVariable} from '../actions/variable'
+import {saveVariable,fetchVariable,deleteVariable} from '../actions/variable'
 
 
 
@@ -40,7 +40,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         onSaveVariable:(id,variable)=>{
             return dispatch(saveVariable(id,variable))
-        }
+        },
+        onDeleteVariable:(id)=>{
+            return dispatch(deleteVariable(id))
+      },
     }
 }
 

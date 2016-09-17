@@ -227,9 +227,11 @@ class EmailsList extends React.Component {
                        {
                         _.map(this.props.tags, (t) => {
                           let unread_mail = 0;
+                          let total_mail = 0;
                           _.forEach(this.props.inbox.tagList, (list) => {
                             if(list.tagId == t._id){
                                unread_mail=list.count
+                               total_mail=list.total
                             }
                           })
                           return <MenuItem
@@ -246,7 +248,7 @@ class EmailsList extends React.Component {
                                         _.upperCase(_.trim(t.name)[0])
                                       }></Avatar>
                                   }
-                                  label={_.trim(t.name) + " ("+ unread_mail+")"}
+                                  label={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                                   ></FlatButton>
                             }
                             onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
@@ -359,16 +361,4 @@ class EmailsList extends React.Component {
 
 export default withRouter(EmailsList)
 
-/*
 
-                    <hr/>
-                      {this.props.tags.length === 0?
-                        <div style={{'marginLeft':"10%"}}>
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                            <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"110px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                        </div>
-                        :
-                        <ImapAccountsList {...this.props}/>
-                      }
-
-*/

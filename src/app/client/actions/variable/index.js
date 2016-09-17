@@ -42,6 +42,21 @@ export function fetchVariable(){
 	}
 }
 
+export function deleteVariable( id ){
+	return (dispatch,getState) => {
+		return new Promise( (resolve,reject) => {
+			Meteor.call('deleteVariable', id , (err, data) => {
+				if(err){
+					reject(err)
+				}else{
+					dispatch ( fetchVariable(data) )
+					resolve(data)
+				}
+			})
+		})
+	}
+}
+
 
 export function success_fetch_variable( data ){
 	return createAction( ACTION_SUCCESS_FETCH_VARIABLE )( data )
