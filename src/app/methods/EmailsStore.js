@@ -316,7 +316,8 @@ Meteor.methods({
   	_.map(tags, (t) => {
   		let tagId=t._id;
   		let count=EmailsStore.find({tags:{$in:[tagId]}, unread : true }).count();
-  		tagList.push({"tagId":tagId,"count":count})
+  		let total=EmailsStore.find({tags:{$in:[tagId]}}).count();
+  		tagList.push({"tagId":tagId,"count":count,"total":total})
       })
   	return {
 		emails : allEmails,

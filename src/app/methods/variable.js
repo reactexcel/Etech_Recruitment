@@ -23,5 +23,9 @@ Meteor.methods({
             return _id;
     }
 
+  },
+  "deleteVariable":function(id){
+         let _id = Variables.remove(id)
+         return _id
   }
 })
