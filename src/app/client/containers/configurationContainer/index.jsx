@@ -109,6 +109,11 @@ class ConfigurationContainer extends React.Component {
             primaryText="Actions"
             onTouchTap={()=>{this.props.router.push("/config/dynamic-actions");}}
           />
+          <ListItem
+            value={6}
+            primaryText="Variables"
+            onTouchTap={()=>{this.props.router.push("/config/variables");}}
+          />
           </SelectableList>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>

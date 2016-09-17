@@ -8,7 +8,8 @@ import Snackbar from 'material-ui/Snackbar';
 import AppBar from 'material-ui/AppBar';
 import IconMenu from 'material-ui/IconMenu';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 import TextField from 'material-ui/TextField';
 import List from 'material-ui/List'
 import CandidateHistory from './candidateHistory'
@@ -42,14 +43,22 @@ class EmailBody extends React.Component {
         reason:'',
         errortxt:'',
         SnackbarOpen:false,
-        SnackbarMessage:''
+        SnackbarMessage:'',
+        popUpContent:[],
+        popUpContentOpen:false,
+        scheduledDate:'',
+        scheduledTime:'',
+        actionId:''
 
     }
     this.handleClose=this.handleClose.bind(this)
+    this.handleCloseVariable=this.handleCloseVariable.bind(this)
     this.submitreason=this.submitreason.bind(this)
     this.ignoreCandidate=this.ignoreCandidate.bind(this)
     this.rejectCandidate=this.rejectCandidate.bind(this)
     this.candidateAction=this.candidateAction.bind(this)
+    this.openPopUp=this.openPopUp.bind(this)
+    this.match_value = []
     this.ignoreTagId = "";
     this.rejectTagId = '';
     this.scheduleTagId = "";
@@ -82,9 +91,169 @@ componentWillReceiveProps(props){
     })
 
 }
+openPopUp(action){
+  let tempId = action.template_id
+  let template = []
+   _.map(this.props.emailTemplates,(temp)=>{
+        if(temp._id == tempId){
+           template.push(temp)
+        }
+    })
+   let content = template[0].content
+   this.match_value = content.match(/#{1}[a-zA-Z_]+/ig)
+   _.map(this.match_value,(val)=>{
+        if(val == "#candidate_name"){
+          this.match_value['#candidate_name']=this.state.data.from
+          this.state.popUpContent.push(
+            <div>
+            <TextField
+             disabled={true}
+             floatingLabelText={val}
+             floatingLabelFixed={true}
+             value={this.match_value['#candidate_name']}
+            />
+            </div>
+            )
+        }
+        if(val == "#candidate_email"){
+          this.match_value['#candidate_email']=this.state.data.sender_mail
+          this.state.popUpContent.push(
+            <div>
+            <TextField
+             disabled={true}
+             floatingLabelText={val}
+             floatingLabelFixed={true}
+             value={this.match_value['#candidate_email']}
+            />
+            </div>
+            )
+        }
+        if(val == "#current_date"){
+          this.match_value['#current_date']=moment.format('MMMM Do YYYY, h:mm:ss a')
+          this.state.popUpContent.push(
+            <div>
+            <TextField
+             disabled={true}
+             floatingLabelText={val}
+             floatingLabelFixed={true}
+             value={this.match_value['#current_date']}
+            />
+            </div>
+            )
+        }
+        if(val == "#schedule_date"){
+          this.state.popUpContent.push(
+            <div>
+            <DatePicker floatingLabelText={val} hintText="Date" onChange={(evt,date)=>{
+                          this.setState({
+                             scheduledDate:moment(date).format("DD-MM-YYYY")
+                          })
+            }}/>
+            </div>
+            )
+        }
+        if(val == "#schedule_time"){
+          this.state.popUpContent.push(
+            <div>
+            <TimePicker floatingLabelText={val} onChange={(evt,time)=>{
+                          this.setState({
+                            scheduledTime:moment(time).format("hh:mm:ss a")
+                          })  
+            }}/>
+            </div>
+            )
+        }
+    })
+    if(this.props.variables.length > 0){
+      let dbVariable = this.props.variables
+      _.map(dbVariable,(vari)=>{
+        if(_.includes(this.match_value,vari.varCode )){
+          this.match_value[vari.varCode]=vari.varValue
+          this.state.popUpContent.push(
+          <div>
+            <TextField
+             disabled={true}
+             floatingLabelText={vari.varCode}
+             floatingLabelFixed={true}
+             value={this.match_value[vari.varCode]}
+            />
+          </div>
+          )
+          
+        }
+      })
+      
+    }
+   console.log(this.match_value,"000000")
+   console.log(this.state.popUpContent,"popup content")
+   this.setState({
+     popUpContentOpen:true,
+     actionId:action._id
+   })
 
+}
   candidateAction(actionId, emailId){
-    this.props.onCandidateAction(actionId, emailId).then((data)=>{
+    let date=false
+    let time=false
+    if(_.includes(this.match_value,"#schedule_date" )){
+      if(this.state.scheduledDate==""){
+          this.setState({
+             SnackbarOpen: true,
+             SnackbarMessage:"Enter Schedule Date"
+          });
+        }else{
+           this.match_value['#schedule_date'] = this.state.scheduledDate
+           date=true
+        }
+      }else{
+        date=true
+      }
+      if(_.includes(this.match_value,"#schedule_time" )){
+        if(this.state.scheduledTime==""){
+          this.setState({
+             SnackbarOpen: true,
+             SnackbarMessage:"Enter Schedule Time"
+          });
+        }else{
+           this.match_value['#schedule_time'] = this.state.scheduledTime
+           time=true
+        }
+      }else{
+        time=true
+      } 
+      if(date==true && time==true){
+        this.setState({
+            popUpContentOpen:false,
+        })
+        let key=[]
+        let value=[]
+        _.map(this.match_value,(val)=>{
+          key.push(val)
+          value.push(this.match_value[val])
+        })
+        console.log(key,"key")
+        console.log(value,"value")
+        this.props.onCandidateAction(actionId, emailId, key,value).then((data)=>{
+             this.setState({
+               popUpContent:[],
+               SnackbarOpen: true,
+               SnackbarMessage:data.toString()
+             });
+        }).catch((err)=>{
+             this.setState({
+               SnackbarOpen: true,
+               SnackbarMessage:err.toString()
+          });
+         })
+        console.log(actionId)
+        console.log("actionId")
+        console.log(emailId)
+        console.log("emailId")
+        console.log(this.match_value)
+        console.log("this.match_value")
+      }
+    
+    /*this.props.onCandidateAction(actionId, emailId).then((data)=>{
       this.setState({
       SnackbarOpen: true,
       SnackbarMessage:data.toString()
@@ -94,10 +263,18 @@ componentWillReceiveProps(props){
       SnackbarOpen: true,
       SnackbarMessage:err.toString()
     });
-    })
+    })*/
   }
   handleClose(){
     this.setState({rejectpop: false});
+  }
+  handleCloseVariable(){
+    this.setState({
+        popUpContent:[],
+        popUpContentOpen:false,
+        scheduledDate:'',
+        scheduledTime:''
+    })
   }
   ignoreCandidate(data,ignoreTagId){
     if(_.includes(data.tags,ignoreTagId)==false){
@@ -176,11 +353,17 @@ render(){
           if(action.dependentActionId != ""){
              if(_.includes(data.candidateActions,action.dependentActionId)==true){
               _.includes(data.candidateActions,action._id)?disable=1:disable=0
-              actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+              actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{
+                //this.candidateAction(action._id, [data._id])
+                this.openPopUp(action)
+              }} />)
              }
           }else{
             _.includes(data.candidateActions,action._id)?disable=1:disable=0
-            actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{this.candidateAction(action._id, [data._id])}} />)
+            actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{
+              //this.candidateAction(action._id, [data._id])
+              this.openPopUp(action)
+            }} />)
           }
         })
         //-------candidate tags
@@ -260,6 +443,26 @@ render(){
          floatingLabelText="Reason To Reject"
          />
         </div>
+      </Dialog>
+      <Dialog
+          title="Email Template Variables"
+          actions={[
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleCloseVariable}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        onTouchTap={()=>{this.candidateAction(this.state.actionId, [data._id])}}
+      />,
+    ]}
+          modal={false}
+          open={this.state.popUpContentOpen}
+          onRequestClose={this.handleCloseVariable}
+        >
+        {this.state.popUpContent}
       </Dialog>
       <ScheduleCandidate
                     scheduleTagId={this.scheduleTagId}

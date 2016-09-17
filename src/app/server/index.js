@@ -14,10 +14,13 @@ import '../collections/EmailsStore.js';
 import '../collections/EmailsStoreStatus.js';
 import '../collections/emailTemplates';
 import '../collections/dynamicAction';
+import '../collections/variables';
 import _ from 'lodash';
 import '../methods/crons/applyTag';
 import '../methods/crons/fetchAllEmail';
-import '../methods/dynamicAction'
+import '../methods/dynamicAction';
+import '../methods/variable';
+
 
 Meteor.startup(function () {
   // Configure MAIL_URL
@@ -57,7 +60,7 @@ Meteor.startup(function () {
     SyncedCron.config({
       logger: MyLogger
     });
-    //SyncedCron.start();
+    SyncedCron.start();
   } catch (ex){
     console.log("cron --> ", ex);
   }
