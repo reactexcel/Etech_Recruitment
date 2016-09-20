@@ -9,7 +9,6 @@ import * as _ from 'lodash'
 Meteor.methods({
 	"fetchAllUser" : function(){
        let users = Meteor.users.find({}).fetch()
-       console.log(users,"users list")
        return users
     },
     "addUsers" : function(id,userDetails){
@@ -18,7 +17,6 @@ Meteor.methods({
       check(userDetails.userType, String)
       check(userDetails.password, String)
     if(id != ''){
-      console.log(id,userDetails,"edit method")
       Meteor.users.update(id, {
                 $set: {
                     email: userDetails.email,

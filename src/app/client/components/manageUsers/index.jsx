@@ -274,7 +274,6 @@ class Variables extends React.Component {
           })
     }
     render(){
-      console.log(this.props.userList,"userList-------")
       const actions = [
       <FlatButton
               label="BACK"
