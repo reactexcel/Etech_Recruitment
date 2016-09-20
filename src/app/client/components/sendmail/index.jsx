@@ -121,8 +121,9 @@ class SendEmail extends React.Component {
             dialogTitle:''
         })
     }
-    deleteTemplate(id){
-    this.props.onDeleteTemplate(id).then( (msg) => {console.log(msg)
+    deleteTemplate(data){
+    this.props.onDeleteTemplate(data._id).then( (msg) => {console.log(msg)
+      this.props.logging("Email template deleted",Meteor.userId(),"Template name : "+data.name)
         this.setState({
           snackbarOpen:true,
           snackbarmsg:msg.toString(),
@@ -182,6 +183,11 @@ class SendEmail extends React.Component {
           snackbarOpen:true,
           snackbarmsg:"Template saved successfully",
         })
+        if(id==""){
+            this.props.logging("New email template added",Meteor.userId(),"Template name : "+name)
+        }else{
+            this.props.logging("Email template edited",Meteor.userId(),"Template name : "+name)
+        }
         this.gotoTmppage()
       }).catch( (error) => {
         this.setState({
@@ -339,7 +345,7 @@ class SendEmail extends React.Component {
                       backgroundColor={pink100}
                       onRequestDelete={(evt) => {
                         evt.stopPropagation();
-                        this.deleteTemplate(data._id)
+                        this.deleteTemplate(data)
                       }}
                       onTouchTap={(evt) => this.editTemplate(data, evt)}
                       style={{ margin: 4}}>

@@ -9,6 +9,7 @@ import {fetchTemplate} from '../../../actions/emailTemplates'
 import {saveAction,fetchAction,deleteAction} from '../../../actions/dynamicActions'
 import { onFetchTag} from '../../../actions/tags'
 import {onFetchSettingsFromDB} from '../../../actions/emailSetting'
+import {addLogs} from '../../../actions/logs'
 
 class InboxTagContainer extends React.Component {
   constructor(props) {
@@ -54,6 +55,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       onFetchTag : () => {
             return dispatch(onFetchTag());
+      },
+      logging: (action, id , detail) =>{
+            return dispatch(addLogs(action, id , detail));
       }
     }
 }

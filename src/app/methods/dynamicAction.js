@@ -6,6 +6,7 @@ import Tags  from 'app/collections/inboxTag';
 import EmailTemplates from 'app/collections/emailTemplates'
 import EmailsStore from 'app/collections/EmailsStore'
 import CandidateHistory from 'app/collections/candidateHistory'
+import Logs from 'app/collections/index';
 
 Meteor.methods({
 	"fetchAllAction" : function(){
@@ -100,7 +101,14 @@ Meteor.methods({
         "subject": template[0].subject,
         'text':actualContent
       });
-     
+     //----Update User activity logs---------
+     Logs.insert({
+                action_type:"Candidate is moved to "+tag[0].name+" tag",
+                user_id:Meteor.userId(),
+                details:"Action apply on Candidate : "+email[0].from,
+                username:username.username,
+                created_on:new Date()
+             });
      //---
       let history = CandidateHistory.find({email_id:email[0]._id}).fetch()
       let candidatePoints;

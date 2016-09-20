@@ -67,14 +67,34 @@ class Variables extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
+        this.setState({
+          loader:'show',
+          paper:'hidden'
+        })
+        this.props.onFetchVariables().then( (data) => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:data.toString(),
+          loader:'hidden',
+          paper:'show'
+        })
+      }).catch( (error) => {
+        this.setState({
+          snackbarOpen:true,
+          snackbarmsg:error.toString(),
+          loader:'hidden',
+          paper:'show'
+        })
+      })
         
     }
-    deleteVariable(id){
-    this.props.onDeleteVariable(id).then( () => {
+    deleteVariable(vari){
+    this.props.onDeleteVariable(vari._id).then( () => {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:"Variable Deleted successfully",
         })
+        this.props.logging("Variable deleted",Meteor.userId(),"Variable name : "+vari.varCode)
       }).catch( (error) => {
         this.setState({
           snackbarOpen:true,
@@ -144,7 +164,11 @@ class Variables extends React.Component {
             snackbarmsg:"Variable saved successfully",
             varId:''
           })
-        
+        if(id==""){
+            this.props.logging("New variable added",Meteor.userId(),"Variable name : "+varCode)
+        }else{
+            this.props.logging("Variable edited",Meteor.userId(),"Variable name : "+varCode)
+        }
         this.gotoVariablePage()
       }).catch( (error) => {
         this.setState({
@@ -306,7 +330,7 @@ class Variables extends React.Component {
                         onClick= {
                          (evt) => {
                            evt.stopPropagation();
-                           this.deleteVariable(vari._id)
+                           this.deleteVariable(vari)
                          }
                        }
                        />

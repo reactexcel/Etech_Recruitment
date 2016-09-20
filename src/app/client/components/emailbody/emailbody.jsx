@@ -452,6 +452,7 @@ render(){
         label="Cancel"
         primary={true}
         onTouchTap={this.handleCloseVariable}
+        style={{'marginRight':2}}
       />,
       <RaisedButton
         label="Submit"

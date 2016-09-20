@@ -7,6 +7,7 @@ import {saveTemplate, fetchTemplate, deleteTemplate} from '../actions/emailTempl
 import Header from './../components/generic/Header'
 import SendEmail from './../components/sendmail'
 import {fetchVariable} from '../actions/variable'
+import {addLogs} from '../actions/logs'
 
 
 
@@ -52,6 +53,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onFetchVariables:()=>{
             return dispatch(fetchVariable())
+        },
+        logging: (action, id , detail) =>{
+            return dispatch(addLogs(action, id , detail));
         }
     }
 }
