@@ -23,7 +23,9 @@ Meteor.methods({
                     username: userDetails.username
                 }
             });
-      Accounts.setPassword(id, userDetails.password);
+      if(userDetails.password != ''){
+        Accounts.setPassword(id, userDetails.password);
+      }
       Roles.setUserRoles( id,userDetails.userType );
     }else{
       let userId = Accounts.createUser({
