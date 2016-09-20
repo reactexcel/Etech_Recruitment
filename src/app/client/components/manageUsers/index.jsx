@@ -252,6 +252,7 @@ class Variables extends React.Component {
       let user = this.state.user
     this.props.onDeleteUser(user._id).then( () => {
         this.setState({
+          openAlert:false,
           snackbarOpen:true,
           snackbarmsg:"User Deleted successfully",
         })
@@ -274,7 +275,6 @@ class Variables extends React.Component {
           })
     }
     render(){
-      console.log(this.props.userList,"userList-------")
       const actions = [
       <FlatButton
               label="BACK"
