@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { Router, browserHistory, Link, withRouter } from 'react-router'
 import * as _ from 'lodash'
 import Header from './../components/generic/Header'
-import Variables from './../components/variables'
-import {saveVariable,fetchVariable,deleteVariable} from '../actions/variable'
+import ManageUsers from './../components/manageUsers'
 import {addLogs} from '../actions/logs'
+import {addUsers,fetchUsers,deleteUser} from '../actions/manageUsers'
 
 
 
-class VariablesContainer extends React.Component {
+class ManageUsersContainer extends React.Component {
     constructor( props ){
         super( props )
     }
@@ -17,13 +17,13 @@ class VariablesContainer extends React.Component {
         if (!Meteor.userId()) {
         this.props.router.push('/login');
         }
-        this.props.onFetchVariables()
+        this.props.onFetchUsers()
     }
 
     render(){
         return(
         	<div>
-                <Variables {...this.props} />
+                <ManageUsers {...this.props} />
         	</div>
         )
     }
@@ -31,27 +31,28 @@ class VariablesContainer extends React.Component {
 function mapStateToProps( state ){
     state = state.toJS()
     return {
-        variables:state.entities.variables
+        userList:state.entities.userList
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        onFetchVariables:()=>{
-            return dispatch(fetchVariable())
-        },
-        onSaveVariable:(id,variable)=>{
-            return dispatch(saveVariable(id,variable))
-        },
-        onDeleteVariable:(id)=>{
-            return dispatch(deleteVariable(id))
+        onFetchUsers:()=>{
+            return dispatch(fetchUsers())
         },
         logging: (action, id , detail) =>{
             return dispatch(addLogs(action, id , detail));
-        }
+        },
+        onSaveUser: (id,userDetail) =>{
+            console.log(id,userDetail,"in dispatch--------")
+            return dispatch(addUsers(id,userDetail))
+        },
+        onDeleteUser: (id)=>{
+            return dispatch(deleteUser(id))
+        },
     }
 }
 
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)( VariablesContainer ))
+)( ManageUsersContainer ))

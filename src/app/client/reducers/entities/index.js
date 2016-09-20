@@ -13,6 +13,7 @@ import { inboxTag } from './inboxTag';
 import { emailTemplates } from './emailTemplates';
 import { dynamicAction } from './dynamicAction';
 import {variables} from './variables';
+import {userList} from './manageUsers';
 export default combineReducers({
 	users,
 	register,
@@ -27,5 +28,6 @@ export default combineReducers({
 	emailTemplates,
 	testDetails,
 	dynamicAction,
-	variables
+	variables,
+	userList
 })

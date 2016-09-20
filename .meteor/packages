@@ -20,7 +20,7 @@ webpack:css
 webpack:assets
 
 accounts-ui@1.1.9
-accounts-password@1.3.0
+accounts-password
 blaze-html-templates@1.0.4
 standard-minifier-css@1.2.0
 standard-minifier-js@1.2.0
@@ -32,3 +32,4 @@ shell-server
 zuuk:stale-session
 percolate:synced-cron
 anti:methods
+alanning:roles

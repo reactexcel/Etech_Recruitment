@@ -242,7 +242,11 @@ class DynamicActions extends React.Component {
             tmppage:'row',
             tmpcreat:'hidden'
         })
-        
+        if(id==""){
+            this.props.logging("New action added",Meteor.userId(),"Action name : "+name)
+        }else{
+            this.props.logging("Action edited",Meteor.userId(),"Action name : "+name)
+        }
         this.gotoActionPage()
       }).catch( (error) => {
         this.setState({
@@ -255,12 +259,13 @@ class DynamicActions extends React.Component {
       })
       }
     }
-    deleteAction(id){
-    this.props.onDeleteAction(id).then( () => {
+    deleteAction(data){
+    this.props.onDeleteAction(data._id).then( () => {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:"Action Deleted successfully",
         })
+      this.props.logging("Action deleted",Meteor.userId(),"Action name : "+data.name)
       }).catch( (error) => {
         this.setState({
           snackbarOpen:true,
@@ -477,7 +482,7 @@ class DynamicActions extends React.Component {
                       backgroundColor={data.tag_color}
                       onRequestDelete={(evt) => {
                         evt.stopPropagation();
-                        this.deleteAction(data._id)
+                        this.deleteAction(data)
                       }}
                       onTouchTap={(evt) => this.editAction(data, evt)}
                       style={{ margin: 4}}>

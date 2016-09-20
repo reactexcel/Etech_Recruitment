@@ -2,6 +2,7 @@ import React, {Component,PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import {Menu, MenuItem} from 'material-ui/Menu';
 import Header from '../../components/generic/Header';
+import { Roles } from 'meteor/alanning:roles';
 import verge from 'verge';
 import _ from 'lodash';
 import {List, ListItem, MakeSelectable} from 'material-ui/List';
@@ -114,6 +115,12 @@ class ConfigurationContainer extends React.Component {
             primaryText="Variables"
             onTouchTap={()=>{this.props.router.push("/config/variables");}}
           />
+          {Roles.userIsInRole( Meteor.userId(), 'Admin' )?<ListItem
+            value={7}
+            primaryText="Manage Users"
+            onTouchTap={()=>{this.props.router.push("/config/manageUsers");}}
+          />:""}
+          
           </SelectableList>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>

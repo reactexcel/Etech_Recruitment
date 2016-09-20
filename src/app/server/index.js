@@ -20,6 +20,7 @@ import '../methods/crons/applyTag';
 import '../methods/crons/fetchAllEmail';
 import '../methods/dynamicAction';
 import '../methods/variable';
+import '../methods/manageUsers';
 
 
 Meteor.startup(function () {
