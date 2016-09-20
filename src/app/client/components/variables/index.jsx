@@ -73,7 +73,7 @@ class Variables extends React.Component {
         })
         this.props.onFetchVariables().then( (data) => {
         this.setState({
-          snackbarOpen:true,
+          snackbarOpen:false,
           snackbarmsg:data.toString(),
           loader:'hidden',
           paper:'show'
@@ -281,7 +281,7 @@ class Variables extends React.Component {
                           <CircularProgress size={1.5} />
                         </div>
                         <div className={this.state.paper} style={{"marginTop":"8%"}}>
-                        <Paper  zDepth={2} style={{"padding": "1%"}}>
+                        <Paper  zDepth={2} >
                         <Table
                          fixedHeader={true}
                          fixedFooter={true}
@@ -299,12 +299,12 @@ class Variables extends React.Component {
                         >
                         <TableRow>
                         <TableRowColumn colSpan="3" >
-                           <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>Variable(s)</h4>
+                           <h4 style={{float: 'left', "marginLeft":"-5%","paddingTop":"1%","paddingBottom":"1%","paddingLeft":"5%","paddingRight":"3%","fontWeight": "bold"}}>Variable(s)</h4>
                         </TableRowColumn>
                         </TableRow>
                         <TableRow>
-                         <TableRowColumn colSpan={1} tooltip="Variable code" style={{"fontWeight": "bold",textAlign:'center'}}>Variable code</TableRowColumn>
-                         <TableRowColumn colSpan={1} tooltip="Variable value" style={{"fontWeight": "bold",textAlign:'center'}}>Variable value</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Variable code" style={{"fontWeight": "bold"}}>Variable code</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Variable value" style={{"fontWeight": "bold"}}>Variable value</TableRowColumn>
                          <TableRowColumn colSpan={1} tooltip="Delete" style={{"fontWeight": "bold",textAlign:'center'}}>Delete</TableRowColumn>
                         </TableRow>
                         </TableHeader>
@@ -317,8 +317,8 @@ class Variables extends React.Component {
                             }}
                             style={{'cursor':'pointer'}}
                           >
-                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{vari.varCode}</TableRowColumn>
-                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{vari.varValue}</TableRowColumn>
+                          <TableRowColumn colSpan={1} >{vari.varCode}</TableRowColumn>
+                          <TableRowColumn colSpan={1} >{vari.varValue}</TableRowColumn>
                           <TableRowColumn colSpan={1} style={{textAlign:'center'}}>
                           <IconButton
                           tooltip="Delete Variable"

@@ -79,7 +79,7 @@ class Variables extends React.Component {
         })
         this.props.onFetchUsers().then( (data) => {
         this.setState({
-          snackbarOpen:true,
+          snackbarOpen:false,
           snackbarmsg:data.toString(),
           loader:'hidden',
           paper:'show'
@@ -141,6 +141,8 @@ class Variables extends React.Component {
       let userType = this.state.userType
       let emailValid = true
       let id = this.state.userId
+      let pass = false
+      let con_pass = false
       if(username == ""){
         this.setState({
           nameError:"Name Required"
@@ -173,25 +175,33 @@ class Variables extends React.Component {
         }else{
             this.setState({userTypeError:''})
         }
-      if(password == ""){
-         this.setState({
-            errorPass:"Password required"
-         })
-      }else{
-          this.setState({
-            errorPass:""
-          })
-      }
-      if(password !== this.state.conf_password){
-        this.setState({
-            errorCpass:"Password do not match"
-        })
-      }else{
-        this.setState({
-           errorCpass:""
-        })
-      }
-      if(email != '' && emailValid == true && username != '' && userType != '' && password != '' && password == this.state.conf_password){
+        if(this.state.userId == ""){
+          if(password == ""){
+              this.setState({
+                 errorPass:"Password required"
+              })
+          }else{
+              this.setState({
+                 errorPass:""
+              })
+              pass =true
+          }
+          if(password !== this.state.conf_password){
+             this.setState({
+                errorCpass:"Password do not match"
+             })
+          }else{
+            this.setState({
+               errorCpass:""
+            })
+            con_pass = true
+          }
+        }else{
+          pass = true
+          con_pass = true
+        }
+      
+      if(email != '' && emailValid == true && username != '' && userType != '' && pass == true && con_pass == true){
         let userDetail= {
           username:username,
           email:email,
@@ -414,7 +424,7 @@ class Variables extends React.Component {
                           <CircularProgress size={1.5} />
                         </div>
                         <div className={this.state.paper} style={{"marginTop":"8%"}}>
-                        <Paper  zDepth={2} style={{"padding": "1%"}}>
+                        <Paper  zDepth={2}>
                         <Table
                          fixedHeader={true}
                          fixedFooter={true}
@@ -432,13 +442,13 @@ class Variables extends React.Component {
                         >
                         <TableRow>
                         <TableRowColumn colSpan="4" >
-                           <h4 style={{float: 'left', "marginLeft":"-5%","padding":"3%","fontWeight": "bold"}}>User(s)</h4>
+                           <h4 style={{float: 'left', "marginLeft":"-5%","paddingTop":"1%","paddingBottom":"1%","paddingLeft":"5%","paddingRight":"3%","fontWeight": "bold"}}>User(s)</h4>
                         </TableRowColumn>
                         </TableRow>
                         <TableRow>
-                         <TableRowColumn colSpan={1} tooltip="User name" style={{"fontWeight": "bold",textAlign:'center'}}>User name</TableRowColumn>
-                         <TableRowColumn colSpan={1} tooltip="Email" style={{"fontWeight": "bold",textAlign:'center'}}>Email</TableRowColumn>
-                         <TableRowColumn colSpan={1} tooltip="User type" style={{"fontWeight": "bold",textAlign:'center'}}>User type</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="User name" style={{"fontWeight": "bold"}}>User name</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="Email" style={{"fontWeight": "bold"}}>Email</TableRowColumn>
+                         <TableRowColumn colSpan={1} tooltip="User type" style={{"fontWeight": "bold"}}>User type</TableRowColumn>
                          <TableRowColumn colSpan={1} tooltip="Delete" style={{"fontWeight": "bold",textAlign:'center'}}>Delete</TableRowColumn>
                         </TableRow>
                         </TableHeader>
@@ -453,9 +463,9 @@ class Variables extends React.Component {
                             }}
                             style={{'cursor':'pointer'}}
                           >
-                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{user.username}</TableRowColumn>
-                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{user.emails[0].address}</TableRowColumn>
-                          <TableRowColumn colSpan={1} style={{textAlign:'center'}}>{user.roles[0]}</TableRowColumn>
+                          <TableRowColumn colSpan={1} >{user.username}</TableRowColumn>
+                          <TableRowColumn colSpan={1} >{user.emails[0].address}</TableRowColumn>
+                          <TableRowColumn colSpan={1} >{user.roles[0]}</TableRowColumn>
                           <TableRowColumn colSpan={1} style={{textAlign:'center'}}>
                           <IconButton
                           tooltip="Delete User"
@@ -477,7 +487,7 @@ class Variables extends React.Component {
                        />
                           </TableRowColumn>
                           </TableRow>:""
-                          ))):(<TableRow ><TableRowColumn colSpan={5} style={{textAlign:'center'}}>{"No User found"}</TableRowColumn></TableRow>)}
+                          ))):(<TableRow ><TableRowColumn colSpan={4} style={{textAlign:'center'}}>{"No User found"}</TableRowColumn></TableRow>)}
                         </TableBody>
                         </Table>
                         </Paper>
