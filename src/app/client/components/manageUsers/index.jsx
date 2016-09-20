@@ -252,6 +252,7 @@ class Variables extends React.Component {
       let user = this.state.user
     this.props.onDeleteUser(user._id).then( () => {
         this.setState({
+          openAlert:false,
           snackbarOpen:true,
           snackbarmsg:"User Deleted successfully",
         })
