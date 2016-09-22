@@ -94,6 +94,26 @@ class CandidateHistory extends React.Component {
           </Step>
             )
          }
+         if(!hist.ignored && !hist.rejected && !hist.scheduled){
+          historySteper.push(
+            <Step key={i} active={true}>
+            <StepButton>
+              <div>{hist.action}</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY HH:mm:ss")})</div>
+            </StepButton>
+            <StepContent>
+              <div>
+              <div style={{fontWeight:'bold'}}>
+              Action performed by:{hist.actionPerformedBy}
+              </div>
+              <p>
+                {hist.detail}
+              </p>
+              </div>
+            </StepContent>
+          </Step>
+            )
+         }
           
       })
     }else{

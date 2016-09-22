@@ -21,6 +21,7 @@ import '../methods/crons/fetchAllEmail';
 import '../methods/dynamicAction';
 import '../methods/variable';
 import '../methods/manageUsers';
+import '../methods/dashboard';
 
 
 Meteor.startup(function () {
@@ -34,7 +35,7 @@ Meteor.startup(function () {
     SyncedCron.add({
       name: 'inbox_mail',
       schedule: function(parser) {
-        return parser.text('every 5 mins');
+        return parser.text('every 3 mins');
       },
       job: function() {
         var imapEmails = Meteor.call('fetchSettings');

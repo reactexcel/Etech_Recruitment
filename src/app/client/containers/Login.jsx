@@ -42,8 +42,8 @@ function mapStateToProps(state,props){
 }
 const mapDispatchToProps=(dispatch)=>{
 	return{
-		login:(email,password)=>{
-			return dispatch(all_actions.loginUser(email,password));
+		login:(email,password,rememeberMe)=>{
+			return dispatch(all_actions.loginUser(email,password,rememeberMe));
 		}
 	}
 }

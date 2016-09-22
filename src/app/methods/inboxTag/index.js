@@ -26,6 +26,7 @@ Meteor.methods({
         email: tag.email || '',
         subject: tag.subject,
         automatic: tag.automatic,
+        showOnReport:tag.showOnReport
       });
     }else if(tag.dynamicAction){
       id = Tags.insert({

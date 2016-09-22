@@ -33,3 +33,4 @@ zuuk:stale-session
 percolate:synced-cron
 anti:methods
 alanning:roles
+dispatch:login-token

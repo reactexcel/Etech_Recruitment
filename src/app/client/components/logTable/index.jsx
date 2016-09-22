@@ -64,13 +64,13 @@ export default class LogTable extends React.Component{
   render(){
     let logs=this.props.log.logs
     if(this.state.emailList.length==0){
-      this.state.emailList.push(<MenuItem primaryText="Show all logs" onTouchTap={()=>this.onSelectingAll()}/>)
+      this.state.emailList.push(<MenuItem key={0} primaryText="Show all logs" onTouchTap={()=>this.onSelectingAll()}/>)
     }
     _.map(logs,(log,i)=>{
       if(_.includes(this.state.emails,log.username)==false){
         this.state.emails.push(log.username)
         this.state.emailList.push(
-             <MenuItem primaryText={log.username} onTouchTap={()=>this.onSelectingId(log.username)}/>
+             <MenuItem key={i+1} primaryText={log.username} onTouchTap={()=>this.onSelectingId(log.username)}/>
           );
        }
     }) 
@@ -87,7 +87,7 @@ export default class LogTable extends React.Component{
            })
       }else{
         self.state.logList.push(
-        <Step key={i}>
+        <Step key={i} active={true}>
             <StepButton onTouchTap={() => self.setState({stepIndex: i})} style={{cursor:'pointer'}}>
               <div>{logs[i].username}</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({logs[i].created_on.toString()})</div>
@@ -110,7 +110,7 @@ export default class LogTable extends React.Component{
       _.map(logs,(log,i)=>{
         if(self.state.current_email==log.username){
           this.state.logList.push(
-        <Step key={i}>
+        <Step key={i} active={true}>
             <StepButton onTouchTap={() => this.setState({stepIndex: i})} style={{cursor:'pointer'}}>
               <div>{log.username}</div>&nbsp;&nbsp;&nbsp;
               <div style={{color:'#8c8c8c'}}>({log.created_on.toString()})</div>

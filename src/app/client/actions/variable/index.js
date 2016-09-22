@@ -61,45 +61,5 @@ export function deleteVariable( id ){
 export function success_fetch_variable( data ){
 	return createAction( ACTION_SUCCESS_FETCH_VARIABLE )( data )
 }
-/*export function deleteAction( id ){
-	return (dispatch,getState) => {
-		return new Promise( (resolve,reject) => {
-			Meteor.call('deleteAction', id , (err, data) => {
-				if(err){
-					reject(err)
-				}else{
-					dispatch ( fetchAction(data) )
-					resolve(data)
-				}
-			})
-		})
-	}
-}
 
-export function candidateAction(A_id, email_ids){
-	return (dispatch,getState) => {
-		return new Promise( (resolve, reject) => {
-			Meteor.call('candidateActionTaken', A_id, email_ids, (err, data) =>{
-				if(err){
-					reject(err)
-				}else{
-					if(data.successMail.length > 0){
-						dispatch(updateTagId(data.tag._id,data.emailIdS))
-						dispatch ( onAssignTag(data.successMail, data.tag._id) )
-						dispatch(updateProgressStatus(data.prograsStatus))
-						resolve('Action performed')
-					}else{
-						resolve('Failed to perform action')
-					}
-				}
-			})
-		})
-	}
-}
-export const updateProgressStatus = (data)=>{
-	return createAction(ACTION_UPDATE_PROGRESS_STATUS)(data)
-}
-export const updateTagId = (tagId,emailIds)=>{
-	return createAction(UPDATE_TAGID)(tagId,emailIds)
-}*/
 
