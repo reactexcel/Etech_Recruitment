@@ -14,6 +14,7 @@ import { emailTemplates } from './emailTemplates';
 import { dynamicAction } from './dynamicAction';
 import {variables} from './variables';
 import {userList} from './manageUsers';
+import {dashboard} from './dashboard';
 export default combineReducers({
 	users,
 	register,
@@ -29,5 +30,6 @@ export default combineReducers({
 	testDetails,
 	dynamicAction,
 	variables,
-	userList
+	userList,
+	dashboard
 })

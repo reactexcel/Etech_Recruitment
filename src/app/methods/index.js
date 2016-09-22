@@ -15,6 +15,18 @@ Meteor.methods({
       password: password
     })
   },
+  'user_remember_login': function(rememberme){
+        try{
+            if(rememberme){
+              Accounts.config({loginExpirationInDays: 3650})
+            } 
+            else{
+              Accounts.config({loginExpirationInDays: null})
+            } 
+        }catch(ex){
+            console.log(ex)
+        }
+  },
   'log.insert':function(action_type,user_id,details){
     let username=Meteor.users.findOne({"_id": user_id})
     let logId = Logs.insert({

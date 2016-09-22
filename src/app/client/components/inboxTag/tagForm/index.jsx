@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import DatePicker from 'material-ui/DatePicker';
+import Toggle from 'material-ui/Toggle';
 const classNames = require('classnames');
 
 const style={
@@ -15,7 +16,18 @@ const style={
     position:"absolute",
     top: "87%",
     left: "77%"
-  }
+  },
+  "block": {
+    maxWidth: 250,
+  },
+  "toggle": {
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  "lable":{
+    fontWeight:'normal',
+    fontSize:15
+  },
 }
 
 export default class TagForm extends React.Component {
@@ -25,9 +37,13 @@ export default class TagForm extends React.Component {
       tagName: "",
       color: this.props.color,
       type: "automatic",
+      showReportToggle:this.props.toggle,
     }
     this.error=[];
     this.add = this.add.bind(this);
+  }
+  handleReport() {
+        this.setState({showReportToggle: !this.state.showReportToggle});
   }
 
   add ( ) {
@@ -47,7 +63,8 @@ export default class TagForm extends React.Component {
         to: this.state.to,
         email: this.state.email,
         subject: this.state.subject,
-        automatic: true
+        automatic: true,
+        showOnReport:this.state.showReportToggle
       });
     }else{
       this.error.tagName = "Enter tag title";
@@ -84,7 +101,7 @@ export default class TagForm extends React.Component {
               value={this.state.tagName}
             />
           </div>
-          <div className="form-group" style={style.formInput}>
+          <div className = "form-group" style={style.formInput}>
             <RadioButtonGroup name="encrypt" labelPosition="right"
               defaultSelected={'automatic'}
               style={{maxWidth: 250}}
@@ -170,6 +187,18 @@ export default class TagForm extends React.Component {
                   }
                 }
               />
+            </div>
+            <div className="form-group" style={style.formInput}>
+              <div style={style.block}>
+                    <Toggle
+                      label="Show on Report"
+                      labelStyle={style.lable}
+                      defaultToggled={this.state.showReportToggle}
+                      style={style.toggle}
+                      onToggle={this.handleReport.bind(this)}
+                      toggle={this.state.showReportToggle}
+                    />
+              </div>
             </div>
           </div>
         </form>

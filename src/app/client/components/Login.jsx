@@ -46,6 +46,7 @@ export default class Login extends React.Component{
 			showSnackbar:false,
 			errorMessage:'',
 			showButton:'show',
+      rememberMe:false,
 			showloader:'hide'
 		}
 		this.loginUser=this.loginUser.bind(this);
@@ -57,7 +58,7 @@ export default class Login extends React.Component{
   }
 	loginUser(){
         let email=this.state.email.trim()
-		let password=this.state.password.trim()
+		    let password=this.state.password.trim()
 		if(email == ""){
            this.setState({
              emailError:"Please enter an e-mail address"
@@ -79,7 +80,7 @@ export default class Login extends React.Component{
              showButton:'hide'
           });
 
-          this.props.onLogin(this.state.email,this.state.password).then(()=>{
+          this.props.onLogin(this.state.email,this.state.password,this.state.rememberMe).then(()=>{
            	 this.setState({
 			   email:'',
 			   password:'',
@@ -146,7 +147,19 @@ export default class Login extends React.Component{
 				}/>
 				</div>
 				<div>
-                 <Checkbox labelStyle={styles.checkbox} label="Keep me signed in" style={styles.checkbox}/>
+                 <Checkbox labelStyle={styles.checkbox} label="Keep me signed in" style={styles.checkbox}
+                 onCheck={(e, check)=>{
+                      if(check==true){
+                        this.setState({
+                          rememberMe:true
+                        })
+                      }else{
+                        this.setState({
+                          rememberMe:false
+                        })
+                      }
+                    }}
+                    onClick={(e) => e.stopPropagation()}/>
 				</div>
 
 				<div style={{marginTop:'10px'}} className={this.state.showButton}>

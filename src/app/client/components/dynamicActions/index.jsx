@@ -179,8 +179,6 @@ class DynamicActions extends React.Component {
             tempValue:'',
             tempError:'',
             progressToggle:false,
-            showReportToggle:false,
-            progressToggle:false,
             pPointValue:1,
             showReportToggle:false,
             dependentActionList:[],
