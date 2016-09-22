@@ -18,7 +18,79 @@ const BarChart = require("react-chartjs").Bar;
 
 const styles = {
   paper:{
-    height: 350,
+  height: 500,
+  width: 500,
+  margin: 10,
+  textAlign: 'center',
+  display: 'inline-block',
+  padding:5
+  },
+  headline: {
+    fontSize: 24,
+    paddingTop: 16,
+    marginBottom: 12,
+    fontWeight: 400,
+  },
+  slide: {
+    padding: 0,
+  },
+};
+
+class Dashboard extends React.Component {
+  constructor( props ){
+        super( props );
+    }
+    componentWillMount(){
+
+    } 
+    render(){
+      let tagChart = []
+      if(this.props.dashboardData.tagList.length>0){
+        let dataset = []
+        let colorSet = ["#E91E63","#673AB7","#8BC34A","#EF9A9A"]
+        _.map(this.props.dashboardData.tagList, (tagg,key) => {
+          dataset.push({
+            label:tagg.tag_name,
+            fillColor:colorSet[key],
+            borderWidth: 2,
+            data:tagg.countList
+          })
+        })
+        let chartData = {
+          labels: this.props.dashboardData.tagList[0].yLabel,
+          datasets: dataset
+        };
+        tagChart.push(<Paper style={styles.paper} zDepth={3}>
+                <BarChart 
+                width={400}
+                height={400}
+                data={chartData} 
+                />
+                </Paper>)
+      }
+
+let chartOptions = {
+        scales: {
+                xAxes: [{
+                        stacked: true
+                }],
+                yAxes: [{
+                        stacked: true
+                }]
+            }
+        }
+      return(
+               <div>
+               {tagChart}
+               </div>     
+        )
+    }
+}
+export default withRouter(Dashboard)
+
+/*const styles = {
+  paper:{
+  height: 350,
   width: 350,
   margin: 10,
   textAlign: 'left',
@@ -167,4 +239,4 @@ class Dashboard extends React.Component {
         )
     }
 }
-export default withRouter(Dashboard)
+export default withRouter(Dashboard)*/
