@@ -15,6 +15,7 @@ import '../collections/EmailsStoreStatus.js';
 import '../collections/emailTemplates';
 import '../collections/dynamicAction';
 import '../collections/variables';
+import '../collections/report';
 import _ from 'lodash';
 import '../methods/crons/applyTag';
 import '../methods/crons/fetchAllEmail';
