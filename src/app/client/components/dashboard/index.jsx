@@ -48,6 +48,37 @@ class Dashboard extends React.Component {
       if(this.props.dashboardData.tagList.length>0){
         let dataset = []
         let colorSet = ["#E91E63","#673AB7","#8BC34A","#EF9A9A"]
+
+        let chartOptions = {
+            title: {
+               display: true,
+               text: 'Emails in tags'
+            },
+            legend: {
+            display: true,
+            labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            },
+            position:'bottom'
+            },
+            multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>",
+            scales: {
+            xAxes: [{
+                stacked: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Date'
+                }
+            }],
+            yAxes: [{
+                stacked: true,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Emails'
+                }
+            }]
+        }
+        }
         _.map(this.props.dashboardData.tagList, (tagg,key) => {
           dataset.push({
             label:tagg.tag_name,
@@ -61,24 +92,17 @@ class Dashboard extends React.Component {
           datasets: dataset
         };
         tagChart.push(<Paper style={styles.paper} zDepth={3}>
+          <div style={{'marginBottom':5}}>Automatic tag Email</div>
                 <BarChart 
+                type='bar'
                 width={400}
                 height={400}
                 data={chartData} 
+                options = {chartOptions}
                 />
                 </Paper>)
       }
 
-let chartOptions = {
-        scales: {
-                xAxes: [{
-                        stacked: true
-                }],
-                yAxes: [{
-                        stacked: true
-                }]
-            }
-        }
       return(
                <div>
                {tagChart}
