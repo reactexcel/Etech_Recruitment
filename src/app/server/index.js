@@ -33,6 +33,9 @@ Meteor.startup(function () {
   var i = 0;
 
   try{
+    // console.log('removed----before');
+    // SyncedCron.remove("excellenceseo@gmail.com");
+    // console.log('removed----afetr');
     SyncedCron.add({
       name: 'inbox_mail',
       schedule: function(parser) {
@@ -43,7 +46,7 @@ Meteor.startup(function () {
         _.forEach(imapEmails, (imap) =>{
           try{
             if(typeof imap.smtp  !== 'object' && imap.active){
-                Meteor.call('doUpdateEmailsStore', imap._id);
+              Meteor.call('doUpdateEmailsStore', imap._id);
             }
           }catch(ex){
             console.log('EmailfetchingCronJob ->>exceptipn->>', ex);

@@ -110,7 +110,7 @@ export function onRemoveDetails (m_id) {
 export function onStartCron (_id) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('fetchAllEmail',_id,(err,status) => {
+      Meteor.call('fetchAllEmail',_id,(err,status) => { 
           if(err){
             reject(err);
           }else{

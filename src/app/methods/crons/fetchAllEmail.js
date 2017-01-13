@@ -63,6 +63,7 @@ Meteor.methods({
         firstEmailData:[],
         count: 0,
         schedule: function(parser) {
+          console.log('every 2 mins');
           return parser.text('every 2 mins');
         },
 
@@ -82,6 +83,7 @@ Meteor.methods({
         },
 
         getEmails: function(){
+          console.log('-----getEmails-----');
           try{
             console.log(this.API_URL());
             this.SELF.unblock();
@@ -99,6 +101,7 @@ Meteor.methods({
         },
 
         job: function () {
+          console.log('inside job');
           try{
             if(!this.haveDetails){
               this.firstEmailData = this.firstEmail();
@@ -108,6 +111,7 @@ Meteor.methods({
                 console.log(' no Emails found!! :( ');
                 return ;
               }else{
+                console.log('<<<<<<<<<<<-------firstEmail------->>>>>>>');
                 this.firstEmailData = this.firstEmailData.data;
                 this.imapEmail.cronDetail = {
                   "lastImapId": 0,
@@ -137,6 +141,7 @@ Meteor.methods({
               let lastEmailDate = '';
               let lastTimeStamp = '';
               const __SELF = this;
+              console.log('<<<<<<<<<<<-------newEmails------->>>>>>>',newEmails.length);
               _.forEach(newEmails, function( email, i ) {
                 console.log(i);
                 if( typeof email.email_id != 'undefined' ){
@@ -173,6 +178,7 @@ Meteor.methods({
                 }
 
                 */
+                console.log('email---------',typeof(email));
                 __SELF.SELF.unblock();
                 Meteor.call('insertNewEmail', __SELF.imapEmail.emailId, email, tagList );
               });
