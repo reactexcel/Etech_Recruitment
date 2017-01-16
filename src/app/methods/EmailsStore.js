@@ -253,7 +253,7 @@ Meteor.methods({
 			console.log("Error in insertNewEmail method ==>>",exception);
 		}
   },
-  getEmailsForInbox : function( emails_per_page, page_num ,tag){
+  getEmailsForInbox : function( emails_per_page, page_num ,tag){  	
 		var imapEmail = Config.find( {'_id': tag}).fetch();
   	var skip = emails_per_page * ( page_num - 1 )
 		var next_page = page_num + 1
@@ -326,6 +326,12 @@ Meteor.methods({
 		count_unread_emails : count_unread_emails,
 		tag: tag || "",
 		tagList:tagList,
+  	}
+  },
+  'UpdateUnreadStatus': function(){
+  	var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'unread' : true}).count()
+  	return{
+  		count_unread_emails : count_unread_emails,
   	}
   },
 	'addTags': function( tagList, emailData){

@@ -61,11 +61,9 @@ Meteor.methods({
     const settings = Config.find({}).fetch();
     let flag=true;
     let id='';
-    console.log('setting',setting);
     _.map(settings,(setting)=>{
     if(typeof setting.smtp != 'undefined' && setting.smtp.emailId == details.emailId){
       flag=false;
-      console.log('**************details******************',details);
       id=Config.update({"_id": setting._id},{$set:{"smtp":details}});
     }
     })

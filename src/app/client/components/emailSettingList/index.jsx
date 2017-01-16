@@ -35,7 +35,6 @@ export default class EmailSettingList extends React.Component {
       show:false,
       sOpen: false,
       snakMsg: '',
-      testStaus:0,
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -56,7 +55,6 @@ export default class EmailSettingList extends React.Component {
     this.setState({
       "open" : false,
       "title": "",
-      "testStaus":0,
     });
   };
 
@@ -65,25 +63,17 @@ export default class EmailSettingList extends React.Component {
   }
   checkMailServer( row, event ){
     event.stopPropagation();
-    this.handleOpen(row.emailId);
-    this.props.onTestDetails( row ).then(()=>{
-      this.setState({
-        testStaus: 1,
-      });
-    }).catch(()=>{
-      this.setState({
-        testStaus: -1,
-      });
-    });
+    this.handleOpen(row.emailId)
+    this.props.onTestDetails( row );
   }
   removeMailServer( row, event ){
     event.stopPropagation();
     this.props.onRemoveDetails( row._id );
   }
   componentWillUpdate () {
-    // if(this.props.uiLoading && this.state.open){
-    //   this.handleClose () ;
-    // }
+    if(this.props.uiLoading && this.state.open){
+      this.handleClose () ;
+    }
   }
   onStartCron( _id ){
     this.props.onStartCron( _id )
@@ -102,6 +92,13 @@ export default class EmailSettingList extends React.Component {
           rowdata.push(row)
         }
       })
+    const actions = [
+      <RaisedButton
+        label="Stop"
+        primary={true}
+        onTouchTap={this.handleClose}
+      />
+    ];
     return (
       <div>
         <div className="row">
@@ -183,27 +180,14 @@ export default class EmailSettingList extends React.Component {
             <div>
               <Dialog
                 title={this.state.title}
-                actions={this.state.testStaus == 0 ?
-                  [<RaisedButton label="Stop" primary={true} onTouchTap={this.handleClose} />]
-                  :
-                  [<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} />]
-                }
+                actions={actions}
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
                 children={
-                  this.state.testStaus == 0 ? <CircularProgress size={1} /> :
-                  <IconButton iconClassName={
-                      classNames("fa" ,"fa-2x",
-                                  {"fa-check": (this.state.testStaus == 1)},
-                                  {"fa-times": (this.state.testStaus == -1)},
-                                 )
-                   }
-                   style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
-                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
-                   />
+                  <CircularProgress size={1} />
                 }
-                bodyStyle={{textAlign:'center', borderRadius: " 100px", border:"1px solid transparent"}}
+                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}

@@ -4,7 +4,6 @@ import Toggle from 'material-ui/Toggle';
 import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
 const classNames = require('classnames');
@@ -31,7 +30,6 @@ export default class SendEmailSettingList extends React.Component {
       "title": "",
       "snackbar":false,
       "msg":'',
-      testStaus:0,
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -41,10 +39,10 @@ export default class SendEmailSettingList extends React.Component {
     this.flag = 0;
   }
     componentWillUpdate () {
-    // if (this.flag % 4 == 0) {
-    //   this.handleClose();
-    //   this.flag = 0 ;
-    // }
+    if (this.flag % 4 == 0) {
+      this.handleClose();
+      this.flag = 0 ;
+    }
   }
   delete(row_id, event){
     event.stopPropagation();
@@ -72,7 +70,6 @@ export default class SendEmailSettingList extends React.Component {
     this.setState({
       "open" : false,
       "title": "",
-      "testStaus":0,
     });
   };
 
@@ -83,26 +80,23 @@ checkMailServer( row, event ){
     event.stopPropagation();
     this.handleOpen(row.smtp.emailId);
     this.props.onTestDetails( row ).then( (response) => {
-      //this.handleClose()
+      this.handleClose()
       if(response){
       this.setState({
         snackbar:true,
         msg:'Email server test completed successfully',
-        testStaus: 1,
       })
       }else{
        this.setState({
         snackbar:true,
         msg:'Email server test failed',
-        testStaus: -1,
-      })
+      }) 
       }
     }).catch((err)=>{
-      //this.handleClose()
+      this.handleClose()
       this.setState({
       snackbar:true,
       msg:'Email server setting test failed. Please correct your data',
-      testStaus: -1,
       })
     });
   }
@@ -112,10 +106,10 @@ checkMailServer( row, event ){
     this.flag++;
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
-      if(typeof row.smtp != 'undefined'){
-       rowdata.push(row)
-      }
-    })
+                    if(typeof row.smtp != 'undefined'){
+                     rowdata.push(row)
+                    }
+                    })
     return (
       <div>
         <div className="row">
@@ -170,7 +164,7 @@ checkMailServer( row, event ){
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn>
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn> 
                     </TableRow>
                     ))}
                 </TableBody>
@@ -179,27 +173,13 @@ checkMailServer( row, event ){
             <div>
               <Dialog
                 title={this.state.title}
-                actions={this.state.testStaus == 0 ?
-                  [<RaisedButton label="Stop" primary={true} onTouchTap={this.handleClose} />]
-                  :
-                  [<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} />]
-                }
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
-                children={
-                  this.state.testStaus == 0 ? <CircularProgress size={1} /> :
-                  <IconButton iconClassName={
-                      classNames("fa" ,"fa-2x",
-                                  {"fa-check": (this.state.testStaus == 1)},
-                                  {"fa-times": (this.state.testStaus == -1)},
-                                 )
-                   }
-                   style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
-                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
-                   />
+                children={ 
+                  <CircularProgress size={1} />
                 }
-                bodyStyle={{textAlign:'center',borderRadius: " 100px", border:"1px solid transparent"}}
+                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
