@@ -4,6 +4,8 @@ import * as _ from 'lodash'
 export const ACTION_SUCCESS_INBOX = "ACTION_SUCCESS_INBOX"
 export const ACTION_EMPTY_INBOX = "ACTION_EMPTY_INBOX"
 export const ACTION_ERROR_INBOX = "ACTION_ERROR_INBOX"
+export const ACTION_ERROR_UNREAD_STATUS = "ACTION_ERROR_UNREAD_STATUS"
+export const ACTION_SUCCESS_UNREAD_STATUS = "ACTION_SUCCESS_UNREAD_STATUS"
 
 export function success_inbox( data ){
 	return createAction( ACTION_SUCCESS_INBOX )( data )
@@ -13,6 +15,12 @@ export function empty_inbox( data ){
 }
 export function error_inbox( data ){
 	return createAction( ACTION_ERROR_INBOX )( data )
+}
+export function error_unread_status( data ){
+	return createAction( ACTION_ERROR_UNREAD_STATUS )( data )
+}
+export function success_unread_status(data){
+	return createAction( ACTION_SUCCESS_UNREAD_STATUS )( data )
 }
 export function onRead( _id ){
 	return createAction( "ON_READ_EMAIL" )( _id )
@@ -40,6 +48,24 @@ export function getInboxData( emails_per_page, page_num, tag ){
 				}
 			})
 
+		})
+	}
+}
+
+//-------------UpdateUnreadStatus-----------------------------
+export function UpdateUnreadStatus(){
+	return ( dispatch, getState ) => {
+		return new Promise( ( resolve, reject ) => {
+			dispatch(loading(true));
+			Meteor.call('UpdateUnreadStatus',  (err, data) => {
+				if(err){
+					dispatch ( error_unread_status( err ) )
+					dispatch(loading(false));
+				}else{
+					dispatch ( success_unread_status( data  ) )
+					dispatch(loading(false));
+				}
+			})
 		})
 	}
 }

@@ -328,6 +328,12 @@ Meteor.methods({
 		tagList:tagList,
   	}
   },
+  'UpdateUnreadStatus': function(){
+  	var count_unread_emails = EmailsStore.find({tags:{$size:0}, 'unread' : true}).count()
+  	return{
+  		count_unread_emails : count_unread_emails,
+  	}
+  },
 	'addTags': function( tagList, emailData){
 		_.forEach(tagList, function ( tag ) {
 				if(tag.automatic){

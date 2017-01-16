@@ -29,6 +29,16 @@ export function inbox( state = Immutable.Map(initialState), action ){
 
         return state.set('status_inbox', action.payload)
 
+    }
+    else if( action.type == 'ACTION_ERROR_UNREAD_STATUS' ){
+
+        return state.set('status_inbox', action.payload)
+
+    }
+    else if( action.type == 'ACTION_SUCCESS_UNREAD_STATUS' ){
+
+        return state.set('count_unread_emails', action.payload.count_unread_emails )
+
     }else if( action.type == 'ACTION_SUCCESS_EMAILS_FETCH_STATUS' ){
 
         return state.set('emails_fetch_status', action.payload)
@@ -50,10 +60,13 @@ export function inbox( state = Immutable.Map(initialState), action ){
               })
               _.map(tagList,(tag)=>{
                 if(tag.tagId === action.payload.tagId && assign.m_read_status !== 1 ){
-                  tag.count++
+                  tag.total++
                   if(tagUnreadCount){
                     count_unread_emails--
                   }
+                }
+                if(tag.tagId === action.payload.tagId && assign.unread == true ){
+                  tag.count++
                 }
               })
             })
