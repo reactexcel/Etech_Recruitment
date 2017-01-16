@@ -2,11 +2,15 @@ import React, {PropTypes} from 'react';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import CircularProgress from 'material-ui/CircularProgress';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
+
+const classNames = require('classnames');
 
 const style={
   "formInput":{
@@ -36,7 +40,7 @@ export default class SendEmailSettingForm extends React.Component {
       disable: false,
       "open" : false,
       "title": "",
-      
+      "testStaus":0,
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -96,6 +100,7 @@ export default class SendEmailSettingForm extends React.Component {
     this.setState({
       "open" : false,
       "title": "",
+      "testStaus":0,
     });
   };
   callSaveSetting(row){
@@ -125,17 +130,21 @@ export default class SendEmailSettingForm extends React.Component {
       }
     this.handleOpen(row.emailId);
     this.props.onTestDetails( {"_id":row._id,"smtp":row} ).then( (response) => {
-      this.handleClose()
      if(response){
       row.status=1
       this.callSaveSetting(row)
-      alert('Email server setting saved & tested successfully. \n Test mail sent to your email id ')
+      this.setState({
+        testStaus: 1,
+      });
      }else{
-      alert('Email server setting test failed. Please correct your data')
+       this.setState({
+         testStaus: -1,
+       });
      }
     }).catch((err)=>{
-      this.handleClose()
-      alert('Email server setting test failed. Please correct your data')
+      this.setState({
+        testStaus: -1,
+      });
     });
     }
   }
@@ -270,18 +279,32 @@ export default class SendEmailSettingForm extends React.Component {
           </Paper>
           <Dialog
                 title={this.state.title}
+                actions={this.state.testStaus == 0 ?
+                  [<RaisedButton label="Stop" primary={true} onTouchTap={this.handleClose} />]
+                  :
+                  [<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} />]
+                }
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
                 children={
-                  <CircularProgress size={1} />
+                  this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <IconButton iconClassName={
+                      classNames("fa" ,"fa-2x",
+                                  {"fa-check": (this.state.testStaus == 1)},
+                                  {"fa-times": (this.state.testStaus == -1)},
+                                 )
+                   }
+                   style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
+                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
+                   />
                 }
-                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+                bodyStyle={{textAlign:'center',borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
                 ></Dialog>
-                
+
         </div>
       </div>
     );
