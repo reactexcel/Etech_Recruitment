@@ -41,9 +41,7 @@ export default class SendEmailSettingList extends React.Component {
     this.delete = this.delete.bind(this);
     this.flag = 0;
   }
-  componentWillUpdate () {
 
-  }
   delete(row_id, event){
     event.stopPropagation();
     this.props.onDeleteRow(row_id).then((responce)=>{
@@ -84,20 +82,17 @@ checkMailServer( row, event ){
     this.props.onTestDetails( row ).then( (response) => {
       if(response){
       this.setState({
-        snackbar:true,
-        msg:'Email server test completed successfully',
-        testStaus: 1,
+        errTestFails:"",
+        testStaus:1
       })
       }else{
        this.setState({
-        snackbar:true,
         errTestFails:"SMTP setting fails due to incorrect data, Please correct the details and try again",
         testStaus: -1,
       })
       }
     }).catch((err)=>{
       this.setState({
-      snackbar:true,
       errTestFails:"Error in test SMTP function",
       testStaus: -1,
       })
@@ -112,7 +107,7 @@ checkMailServer( row, event ){
       if(typeof row.smtp != 'undefined'){
        rowdata.push(row)
       }
-    })
+    });
     let color = "#424242", icon = "";
     if(this.state.testStaus == 1){
       color = "#8BC34A";

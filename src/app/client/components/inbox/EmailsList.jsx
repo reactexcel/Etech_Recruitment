@@ -262,6 +262,7 @@ class EmailsList extends React.Component {
                 <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
                   <div className="row">
                     <div className="col-xs-12" >
+                      {this.props.setting_status ? "" : <div className="alert alert-danger text-center" style={{position:"absolute",width:"60%",left:"14%",zIndex:'9999',margin:'5px'}}><b>IMAP/SMTP</b> settings are not working, System is not usable without that<b> !!!!</b></div>}
                         <nav aria-label="Page navigation">
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
@@ -360,5 +361,3 @@ class EmailsList extends React.Component {
 }
 
 export default withRouter(EmailsList)
-
-

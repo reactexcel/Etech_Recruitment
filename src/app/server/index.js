@@ -43,7 +43,7 @@ Meteor.startup(function () {
         _.forEach(imapEmails, (imap) =>{
           try{
             if(typeof imap.smtp  !== 'object' && imap.active){
-                Meteor.call('doUpdateEmailsStore', imap._id);
+              Meteor.call('doUpdateEmailsStore', imap._id);
             }
           }catch(ex){
             console.log('EmailfetchingCronJob ->>exceptipn->>', ex);

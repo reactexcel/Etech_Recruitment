@@ -44,7 +44,6 @@ export function getLogData(){
 					if( data.logs.length == 0 ){
 						dispatch ( empty_log( 'No more logs' ) )
 					}else{
-						console.log(data,"in action")
 						dispatch ( log_found( data  ) ) 
 					}
 				}

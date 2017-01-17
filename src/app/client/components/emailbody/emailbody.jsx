@@ -82,11 +82,12 @@ componentWillMount(){
 componentWillReceiveProps(props){
     let id = props.params.id
     let data;
+
     _.map(props.email,(email)=>{
         if(email._id == id){
           this.setState({
             data:email,
-          })
+          });
         }
     })
 
@@ -158,7 +159,7 @@ openPopUp(action){
             <TimePicker floatingLabelText={val} onChange={(evt,time)=>{
                           this.setState({
                             scheduledTime:moment(time).format("hh:mm:ss a")
-                          })  
+                          })
             }}/>
             </div>
             )
@@ -179,13 +180,11 @@ openPopUp(action){
             />
           </div>
           )
-          
+
         }
       })
-      
+
     }
-   console.log(this.match_value,"000000")
-   console.log(this.state.popUpContent,"popup content")
    this.setState({
      popUpContentOpen:true,
      actionId:action._id
@@ -220,7 +219,7 @@ openPopUp(action){
         }
       }else{
         time=true
-      } 
+      }
       if(date==true && time==true){
         this.setState({
             popUpContentOpen:false,
@@ -231,8 +230,6 @@ openPopUp(action){
           key.push(val)
           value.push(this.match_value[val])
         })
-        console.log(key,"key")
-        console.log(value,"value")
         this.props.onCandidateAction(actionId, emailId, key,value).then((data)=>{
              this.setState({
                popUpContent:[],
@@ -245,14 +242,8 @@ openPopUp(action){
                SnackbarMessage:err.toString()
           });
          })
-        console.log(actionId)
-        console.log("actionId")
-        console.log(emailId)
-        console.log("emailId")
-        console.log(this.match_value)
-        console.log("this.match_value")
       }
-    
+
     /*this.props.onCandidateAction(actionId, emailId).then((data)=>{
       this.setState({
       SnackbarOpen: true,
@@ -372,8 +363,8 @@ render(){
         _.map(inboxTags,(tag)=>{
           if(_.includes(data.tags,tag._id)==true){
             candidateTags.push(<Chip onRequestDelete={()=>{this.handleRequestDelete(data._id,tag._id)}}
-              style={{border:'5px',margin:'2px'}} 
-              labelStyle={{fontSize:'12px',marginTop:'0px'}} 
+              style={{border:'5px',margin:'2px'}}
+              labelStyle={{fontSize:'12px',marginTop:'0px'}}
               backgroundColor={tag.color}>{tag.name}</Chip>)
           }
         })
@@ -404,7 +395,7 @@ render(){
     title="Email"
     iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={
-      <IconMenu 
+      <IconMenu
         iconButtonElement={
           <IconButton><MoreVertIcon /></IconButton>
         }
@@ -483,9 +474,9 @@ render(){
               {_.map(more_email,( email, i) => (
                   <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} candidateTags={candidateTags} />
               ))}
-              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0} 
-              progresStatus={data.progresStatus} 
-              index={typeof data.more_emails !== 'undefined'?"more":"done"} 
+              <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0}
+              progresStatus={data.progresStatus}
+              index={typeof data.more_emails !== 'undefined'?"more":"done"}
               candidateTags={candidateTags} />
           </div>
         </div>

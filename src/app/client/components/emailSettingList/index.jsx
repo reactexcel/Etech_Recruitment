@@ -96,8 +96,7 @@ export default class EmailSettingList extends React.Component {
     event.stopPropagation();
     this.props.onRemoveDetails( row._id );
   }
-  componentWillUpdate () {
-  }
+  
   onStartCron( _id ){
     this.props.onStartCron( _id )
     .then( (data) => {

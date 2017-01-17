@@ -142,7 +142,7 @@ export default class SendEmailSettingForm extends React.Component {
      }else{
        this.setState({
          testStaus: -1,
-         errTestFails:"SMTP setting fails due to incorrect data, Please correct the details and try again",
+         errTestFails:"SMTP setting test failed & not saved due to incorrect data, Please correct the details and try again",
        });
      }
     }).catch((err)=>{
@@ -165,6 +165,7 @@ export default class SendEmailSettingForm extends React.Component {
     }else{
       color = "#424242"
     }
+    console.log('this.state.testStaus',this.state.testStaus);
     return (
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
