@@ -28,8 +28,6 @@ import ScheduleCandidate from './ScheduleCandidate'
 import Subheader from 'material-ui/Subheader'
 import DefaultPage from './defaultPage'
 
-let SelectableList = makeSelectable(List);
-
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
