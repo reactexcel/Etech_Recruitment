@@ -44,7 +44,7 @@ Meteor.methods({
       let json = JSON.parse( result.content );
       if( typeof json.data == "undefined"){
         Config.update({"_id": detail._id},{$set:{"status": -1}});
-        return(-1);
+        return(0);
       }
       else if( typeof json.data != 'undefined' && json.data.length > 0 ){
         Config.update({"_id": detail._id},{$set:{"status": 1}});
@@ -102,7 +102,6 @@ Meteor.methods({
         Config.update({"_id": detail._id},{$set:{"smtp.status": 1}});
       }
       return 1;
-
  },
  'activeIMAPEmail': function ( _id ) {
    try{

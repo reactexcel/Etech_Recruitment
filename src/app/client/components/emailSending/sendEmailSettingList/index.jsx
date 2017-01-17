@@ -31,7 +31,8 @@ export default class SendEmailSettingList extends React.Component {
       "title": "",
       "snackbar":false,
       "msg":'',
-      testStaus:0,
+      "testStaus":0,
+      "errTestFails":""
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -40,11 +41,8 @@ export default class SendEmailSettingList extends React.Component {
     this.delete = this.delete.bind(this);
     this.flag = 0;
   }
-    componentWillUpdate () {
-    // if (this.flag % 4 == 0) {
-    //   this.handleClose();
-    //   this.flag = 0 ;
-    // }
+  componentWillUpdate () {
+
   }
   delete(row_id, event){
     event.stopPropagation();
@@ -73,6 +71,7 @@ export default class SendEmailSettingList extends React.Component {
       "open" : false,
       "title": "",
       "testStaus":0,
+      "errTestFails":"",
     });
   };
 
@@ -83,7 +82,6 @@ checkMailServer( row, event ){
     event.stopPropagation();
     this.handleOpen(row.smtp.emailId);
     this.props.onTestDetails( row ).then( (response) => {
-      //this.handleClose()
       if(response){
       this.setState({
         snackbar:true,
@@ -93,15 +91,14 @@ checkMailServer( row, event ){
       }else{
        this.setState({
         snackbar:true,
-        msg:'Email server test failed',
+        errTestFails:"SMTP setting fails due to incorrect data, Please correct the details and try again",
         testStaus: -1,
       })
       }
     }).catch((err)=>{
-      //this.handleClose()
       this.setState({
       snackbar:true,
-      msg:'Email server setting test failed. Please correct your data',
+      errTestFails:"Error in test SMTP function",
       testStaus: -1,
       })
     });
@@ -116,6 +113,16 @@ checkMailServer( row, event ){
        rowdata.push(row)
       }
     })
+    let color = "#424242", icon = "";
+    if(this.state.testStaus == 1){
+      color = "#8BC34A";
+      icon = "fa-check";
+    }else if(this.state.testStaus == -1){
+      color = "#B71C1C";
+      icon = "fa-times";
+    }else{
+      color = "#424242"
+    }
     return (
       <div>
         <div className="row">
@@ -189,15 +196,15 @@ checkMailServer( row, event ){
                 onRequestClose={this.handleClose}
                 children={
                   this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <span style={{display:"block"}}>
                   <IconButton iconClassName={
-                      classNames("fa" ,"fa-2x",
-                                  {"fa-check": (this.state.testStaus == 1)},
-                                  {"fa-times": (this.state.testStaus == -1)},
-                                 )
+                      classNames("fa" ,"fa-2x",icon)
                    }
                    style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
-                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
+                   iconStyle={{color:color, fontSize:"100px" }}
                    />
+                 <span style={{color:"rgba(255, 62, 0, 0.88)",fontSize:"13px",textAlign:"center"}}>{this.state.errTestFails}</span>
+                  </span>
                 }
                 bodyStyle={{textAlign:'center',borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
@@ -205,11 +212,11 @@ checkMailServer( row, event ){
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
                 ></Dialog>
                 <Snackbar
-          open={this.state.snackbar}
-          message={this.state.msg}
-          autoHideDuration={4000}
-          onRequestClose={this.handleRequestClose}
-        />
+                  open={this.state.snackbar}
+                  message={this.state.msg}
+                  autoHideDuration={4000}
+                  onRequestClose={this.handleRequestClose}
+                />
             </div>
           </div>
         </div>

@@ -36,6 +36,7 @@ export default class EmailSettingList extends React.Component {
       sOpen: false,
       snakMsg: '',
       testStaus:0,
+      errTestFails:"",
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -57,6 +58,7 @@ export default class EmailSettingList extends React.Component {
       "open" : false,
       "title": "",
       "testStaus":0,
+      "errTestFails":"",
     });
   };
 
@@ -66,13 +68,27 @@ export default class EmailSettingList extends React.Component {
   checkMailServer( row, event ){
     event.stopPropagation();
     this.handleOpen(row.emailId);
-    this.props.onTestDetails( row ).then(()=>{
-      this.setState({
-        testStaus: 1,
-      });
+    this.props.onTestDetails( row ).then((status)=>{
+      if(status == 1){
+        this.setState({
+          testStaus: 1,
+          errTestFails:"",
+        });
+      }else if(status == 0){
+        this.setState({
+          testStaus: -1,
+          errTestFails:"Email setting fails due to incorrect data, Please correct the details and try again",
+        });
+      }else if(status == -1){
+        this.setState({
+          testStaus: -1,
+          errTestFails:"Error in checkMailServer function, exception found",
+        });
+      }
     }).catch(()=>{
       this.setState({
         testStaus: -1,
+        errTestFails:"Error in checkMailServer function",
       });
     });
   }
@@ -81,9 +97,6 @@ export default class EmailSettingList extends React.Component {
     this.props.onRemoveDetails( row._id );
   }
   componentWillUpdate () {
-    // if(this.props.uiLoading && this.state.open){
-    //   this.handleClose () ;
-    // }
   }
   onStartCron( _id ){
     this.props.onStartCron( _id )
@@ -101,7 +114,18 @@ export default class EmailSettingList extends React.Component {
         if(typeof row.smtp == 'undefined' &&  row.emailId != ''){
           rowdata.push(row)
         }
-      })
+      });
+
+      let color = "#424242", icon = "";
+      if(this.state.testStaus == 1){
+        color = "#8BC34A";
+        icon = "fa-check";
+      }else if(this.state.testStaus == -1){
+        color = "#B71C1C";
+        icon = "fa-times";
+      }else{
+        color = "#424242"
+      }
     return (
       <div>
         <div className="row">
@@ -193,15 +217,15 @@ export default class EmailSettingList extends React.Component {
                 onRequestClose={this.handleClose}
                 children={
                   this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <span>
                   <IconButton iconClassName={
-                      classNames("fa" ,"fa-2x",
-                                  {"fa-check": (this.state.testStaus == 1)},
-                                  {"fa-times": (this.state.testStaus == -1)},
-                                 )
+                      classNames("fa" ,"fa-2x",icon)
                    }
                    style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
-                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
+                   iconStyle={{"color":color, fontSize:"100px" }}
                    />
+                 <span style={{color:"rgba(255, 62, 0, 0.88)",fontSize:"13px",textAlign:"center"}}>{this.state.errTestFails}</span>
+                  </span>
                 }
                 bodyStyle={{textAlign:'center', borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"

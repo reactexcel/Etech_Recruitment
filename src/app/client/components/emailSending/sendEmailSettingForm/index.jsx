@@ -41,6 +41,7 @@ export default class SendEmailSettingForm extends React.Component {
       "open" : false,
       "title": "",
       "testStaus":0,
+      "errTestFails":"",
     }
     this.error = [];
     this.saveSettings = this.saveSettings.bind(this);
@@ -101,6 +102,7 @@ export default class SendEmailSettingForm extends React.Component {
       "open" : false,
       "title": "",
       "testStaus":0,
+      "errTestFails":"",
     });
   };
   callSaveSetting(row){
@@ -135,21 +137,34 @@ export default class SendEmailSettingForm extends React.Component {
       this.callSaveSetting(row)
       this.setState({
         testStaus: 1,
+        errTestFails:"",
       });
      }else{
        this.setState({
          testStaus: -1,
+         errTestFails:"SMTP setting fails due to incorrect data, Please correct the details and try again",
        });
      }
     }).catch((err)=>{
       this.setState({
         testStaus: -1,
+        errTestFails:"Error in test SMTP function",
       });
     });
     }
   }
 
   render() {
+    let color = "#424242", icon = "";
+    if(this.state.testStaus == 1){
+      color = "#8BC34A";
+      icon = "fa-check";
+    }else if(this.state.testStaus == -1){
+      color = "#B71C1C";
+      icon = "fa-times";
+    }else{
+      color = "#424242"
+    }
     return (
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
@@ -289,15 +304,15 @@ export default class SendEmailSettingForm extends React.Component {
                 onRequestClose={this.handleClose}
                 children={
                   this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <span>
                   <IconButton iconClassName={
-                      classNames("fa" ,"fa-2x",
-                                  {"fa-check": (this.state.testStaus == 1)},
-                                  {"fa-times": (this.state.testStaus == -1)},
-                                 )
+                      classNames("fa" ,"fa-2x",icon)
                    }
                    style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
-                   iconStyle={{"color":(this.state.testStaus == 1?"#8BC34A":((this.state.testStaus == -1)?"#B71C1C":"#424242")), fontSize:"100px" }}
+                   iconStyle={{"color":color, fontSize:"100px" }}
                    />
+                 <span style={{color:"rgba(255, 62, 0, 0.88)",fontSize:"13px",textAlign:"center"}}>{this.state.errTestFails}</span>
+                  </span>
                 }
                 bodyStyle={{textAlign:'center',borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
