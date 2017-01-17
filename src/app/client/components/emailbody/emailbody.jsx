@@ -185,8 +185,6 @@ openPopUp(action){
       })
 
     }
-   console.log(this.match_value,"000000")
-   console.log(this.state.popUpContent,"popup content")
    this.setState({
      popUpContentOpen:true,
      actionId:action._id
@@ -232,8 +230,6 @@ openPopUp(action){
           key.push(val)
           value.push(this.match_value[val])
         })
-        console.log(key,"key")
-        console.log(value,"value")
         this.props.onCandidateAction(actionId, emailId, key,value).then((data)=>{
              this.setState({
                popUpContent:[],
@@ -246,12 +242,6 @@ openPopUp(action){
                SnackbarMessage:err.toString()
           });
          })
-        console.log(actionId)
-        console.log("actionId")
-        console.log(emailId)
-        console.log("emailId")
-        console.log(this.match_value)
-        console.log("this.match_value")
       }
 
     /*this.props.onCandidateAction(actionId, emailId).then((data)=>{

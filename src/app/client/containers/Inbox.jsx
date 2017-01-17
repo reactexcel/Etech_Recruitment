@@ -32,6 +32,9 @@ class Inbox extends React.Component {
         this.props.onFetchSettings()
         this.props.onFetchTag()
         this.props.onFetchTamplets()
+        }else{
+            //this.props.onInboxData( this.state.emails_per_page, 1 ,'')
+            this.props.onUpdateUnreadStatus()
         }
     }
     componentWillReceiveProps( props ){
@@ -120,6 +123,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
      	  onInboxData : ( emails_per_page, page_num, tag ) => {
             return dispatch( actions_inbox.getInboxData( emails_per_page, page_num, tag ) )
+        },
+        onUpdateUnreadStatus:()=>{
+            return dispatch(actions_inbox.UpdateUnreadStatus())
         },
         onFetchSettings : () => {
             return dispatch( actions_emailSetting.onFetchSettingsFromDB());
