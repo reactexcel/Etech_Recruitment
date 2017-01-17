@@ -112,7 +112,6 @@ Meteor.methods({
 		    	var result = HTTP.call("GET", API_URL );
 					if( typeof result.content != 'undefined' ){
 		    		var json = JSON.parse( result.content )
-						console.log("<<-Email Length ->>", json.data.length);
 						if(json.data.length > 0 ){
 							TYPE = "SUCCESS"
 							if( json.data.length > 0 ){
@@ -204,7 +203,6 @@ Meteor.methods({
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
 	var dulicate = false;
-	console.log('-------------insertNewEmail email to store---------------------',);
 	// console.log(source_email_id, emailData, tagList);
   	emailData.m_source_email_id = source_email_id
 		emailData.m_insert_time = currentDateTime
@@ -252,14 +250,12 @@ Meteor.methods({
 				_.forEach(tagList, function ( tag ) {
 					matchTag( emailData, tag);
 				});
-				console.log('-------------insertNewEmail email to more mails---------------------',);
 				EmailsStore.update( existingEmail_mongoid, { $set: dataToUpdate, $push : { 'more_emails' : emailData } });
 			}else{
 				//Insert new mail with tags
 				_.forEach(tagList, function ( tag ) {
 					matchTag( emailData, tag);
 				});
-				console.log('-------------insertNewEmail email as new mails---------------------',);
 		  	EmailsStore.insert( emailData );
 			}
 			return duplicate
