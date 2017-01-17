@@ -27,7 +27,7 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
-
+      console.log('----------email uniq id -----------',email.email_id);
       //---progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
@@ -59,8 +59,9 @@ export default class MyCard extends React.Component {
           zDepth={2}
           children={
             <CardHeader
-            style={{paddingBottom:'0px'}}
-              title={<div> <span>{this.props.progresHide}</span>{typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:<div>{email.subject} <br/> From: {email.from}</div>} </div>}
+              style={{paddingBottom:'0px'}}
+              title={<div> <span>{this.props.progresHide}</span>{typeof email.from == 'undefined'?<LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px"}} />:
+              <div>{email.subject}<span style={{display:'inline-block',position:'absolute',fontSize:'12px',right:'20px',color:'rgb(39, 63, 127)',border:'1px solid',borderRadius:'4px',padding:'3px'}}>Uniq Id: {email.email_id}</span> <br/> From: {email.from}</div>} </div>}
               subtitle={<div> {typeof email.sender_mail == 'undefined'?
                 <div>
                   <LinearProgress mode="indeterminate" color="gray" style={{"height":"9px", width:"100px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
