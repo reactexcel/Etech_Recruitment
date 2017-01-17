@@ -97,12 +97,30 @@ class Inbox extends React.Component {
         }
     }
     render(){
+      let setting_status = true, i = false;
+      if( typeof this.props.emailSetting != 'undefined' && this.props.emailSetting.length > 0 ){
+          _.map( this.props.emailSetting, ( setting ) => {
+              if(typeof setting.smtp !== "undefined"){
+                if(setting.smtp.status == 1){
+                  i = true;
+                }
+              }else{
+                if( setting.active == true && setting.status == 1){
+                  i = true;
+                }
+              }
+          });
+          if(i){
+            setting_status = i;
+          }
+      }
         return(
         	<div className='show'>
                 <Header {...this.props} position={1}/>
                 <EmailsList  doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}
                  emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
                  route={this.props.router}
+                 setting_status = {setting_status}
                  {...this.props}
                 />
         	</div>

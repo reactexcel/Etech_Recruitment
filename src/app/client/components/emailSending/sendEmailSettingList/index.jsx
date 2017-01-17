@@ -4,6 +4,7 @@ import Toggle from 'material-ui/Toggle';
 import React, { PropTypes } from 'react';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}from 'material-ui/Table';
 const classNames = require('classnames');
@@ -30,6 +31,8 @@ export default class SendEmailSettingList extends React.Component {
       "title": "",
       "snackbar":false,
       "msg":'',
+      "testStaus":0,
+      "errTestFails":""
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -38,12 +41,7 @@ export default class SendEmailSettingList extends React.Component {
     this.delete = this.delete.bind(this);
     this.flag = 0;
   }
-    componentWillUpdate () {
-    if (this.flag % 4 == 0) {
-      this.handleClose();
-      this.flag = 0 ;
-    }
-  }
+
   delete(row_id, event){
     event.stopPropagation();
     this.props.onDeleteRow(row_id).then((responce)=>{
@@ -70,6 +68,8 @@ export default class SendEmailSettingList extends React.Component {
     this.setState({
       "open" : false,
       "title": "",
+      "testStaus":0,
+      "errTestFails":"",
     });
   };
 
@@ -80,23 +80,21 @@ checkMailServer( row, event ){
     event.stopPropagation();
     this.handleOpen(row.smtp.emailId);
     this.props.onTestDetails( row ).then( (response) => {
-      this.handleClose()
       if(response){
       this.setState({
-        snackbar:true,
-        msg:'Email server test completed successfully',
+        errTestFails:"",
+        testStaus:1
       })
       }else{
        this.setState({
-        snackbar:true,
-        msg:'Email server test failed',
-      }) 
+        errTestFails:"SMTP setting fails due to incorrect data, Please correct the details and try again",
+        testStaus: -1,
+      })
       }
     }).catch((err)=>{
-      this.handleClose()
       this.setState({
-      snackbar:true,
-      msg:'Email server setting test failed. Please correct your data',
+      errTestFails:"Error in test SMTP function",
+      testStaus: -1,
       })
     });
   }
@@ -106,10 +104,20 @@ checkMailServer( row, event ){
     this.flag++;
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
-                    if(typeof row.smtp != 'undefined'){
-                     rowdata.push(row)
-                    }
-                    })
+      if(typeof row.smtp != 'undefined'){
+       rowdata.push(row)
+      }
+    });
+    let color = "#424242", icon = "";
+    if(this.state.testStaus == 1){
+      color = "#8BC34A";
+      icon = "fa-check";
+    }else if(this.state.testStaus == -1){
+      color = "#B71C1C";
+      icon = "fa-times";
+    }else{
+      color = "#424242"
+    }
     return (
       <div>
         <div className="row">
@@ -164,7 +172,7 @@ checkMailServer( row, event ){
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn> 
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
                 </TableBody>
@@ -173,23 +181,37 @@ checkMailServer( row, event ){
             <div>
               <Dialog
                 title={this.state.title}
+                actions={this.state.testStaus == 0 ?
+                  [<RaisedButton label="Stop" primary={true} onTouchTap={this.handleClose} />]
+                  :
+                  [<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} />]
+                }
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
-                children={ 
-                  <CircularProgress size={1} />
+                children={
+                  this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <span style={{display:"block"}}>
+                  <IconButton iconClassName={
+                      classNames("fa" ,"fa-2x",icon)
+                   }
+                   style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
+                   iconStyle={{color:color, fontSize:"100px" }}
+                   />
+                 <span style={{color:"rgba(255, 62, 0, 0.88)",fontSize:"13px",textAlign:"center"}}>{this.state.errTestFails}</span>
+                  </span>
                 }
-                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+                bodyStyle={{textAlign:'center',borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
                 ></Dialog>
                 <Snackbar
-          open={this.state.snackbar}
-          message={this.state.msg}
-          autoHideDuration={4000}
-          onRequestClose={this.handleRequestClose}
-        />
+                  open={this.state.snackbar}
+                  message={this.state.msg}
+                  autoHideDuration={4000}
+                  onRequestClose={this.handleRequestClose}
+                />
             </div>
           </div>
         </div>

@@ -83,7 +83,6 @@ Meteor.methods({
 
         getEmails: function(){
           try{
-            console.log(this.API_URL());
             this.SELF.unblock();
             let response = HTTP.call("GET", this.API_URL() );
             let responseData = response.content

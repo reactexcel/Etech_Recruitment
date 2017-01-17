@@ -185,6 +185,7 @@ export function onTestDetailsSMTP (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
         Meteor.call('checkSMTPMailServer',detail,(err,resp) => {
+          console.log(resp);
           if(err){
             reject(err)
           }else{

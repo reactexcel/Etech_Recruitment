@@ -112,7 +112,6 @@ Meteor.methods({
 		    	var result = HTTP.call("GET", API_URL );
 					if( typeof result.content != 'undefined' ){
 		    		var json = JSON.parse( result.content )
-						console.log("<<-Email Length ->>", json.data.length);
 						if(json.data.length > 0 ){
 							TYPE = "SUCCESS"
 							if( json.data.length > 0 ){
@@ -204,7 +203,7 @@ Meteor.methods({
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
 	var dulicate = false;
-
+	// console.log(source_email_id, emailData, tagList);
   	emailData.m_source_email_id = source_email_id
 		emailData.m_insert_time = currentDateTime
    	emailData.m_insert_timestamp = currentTimeStamp
@@ -216,12 +215,23 @@ Meteor.methods({
 			var duplicate = false;
 			if( checkExistingSenderEmail.length > 0 ){
 				_.forEach(checkExistingSenderEmail, function( Ex_email ){
-					if(source_email_id == Ex_email.m_source_email_id && emailData.email_id !== Ex_email.email_id){
+					// if(source_email_id == Ex_email.m_source_email_id && emailData.email_id !== Ex_email.email_id){
+					// 	_.forEach(Ex_email.more_emails, function(m_email){
+					// 		if(m_email.email_id == emailData.email_id && source_email_id == m_email.m_source_email_id){
+					// 			duplicate = true;
+					// 		}
+					// 	});
+					// }
+					if(source_email_id == Ex_email.m_source_email_id){
+						if(emailData.email_id == Ex_email.email_id){
+							duplicate = true;
+						}else{
 						_.forEach(Ex_email.more_emails, function(m_email){
 							if(m_email.email_id == emailData.email_id && source_email_id == m_email.m_source_email_id){
 								duplicate = true;
-							}
+						}
 						});
+					}
 					}
 				});
 				if ( duplicate ) {
@@ -253,7 +263,7 @@ Meteor.methods({
 			console.log("Error in insertNewEmail method ==>>",exception);
 		}
   },
-  getEmailsForInbox : function( emails_per_page, page_num ,tag){  	
+  getEmailsForInbox : function( emails_per_page, page_num ,tag){
 		var imapEmail = Config.find( {'_id': tag}).fetch();
   	var skip = emails_per_page * ( page_num - 1 )
 		var next_page = page_num + 1
