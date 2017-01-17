@@ -105,7 +105,6 @@ checkMailServer( row, event ){
   render() {
     this.flag++;
     let rowdata = [];
-    console.log('this.props.emailSetting',this.props.emailSetting);
     _.map(this.props.emailSetting, (row) => {
       if(typeof row.smtp != 'undefined'){
        rowdata.push(row)
