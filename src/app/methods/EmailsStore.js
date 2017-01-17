@@ -203,7 +203,6 @@ Meteor.methods({
   	var currentDateTime = new Date()
   	var currentTimeStamp = currentDateTime.getTime()*1
 	var dulicate = false;
-	// console.log(source_email_id, emailData, tagList);
   	emailData.m_source_email_id = source_email_id
 		emailData.m_insert_time = currentDateTime
    	emailData.m_insert_timestamp = currentTimeStamp

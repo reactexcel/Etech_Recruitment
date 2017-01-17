@@ -9,7 +9,6 @@ Meteor.methods({
     return Config.find({}).fetch();
   },
   "saveSettings": function(details){
-    console.log(details)
     const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
       details.active = false;

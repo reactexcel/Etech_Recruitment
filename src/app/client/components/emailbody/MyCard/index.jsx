@@ -27,7 +27,6 @@ export default class MyCard extends React.Component {
   render() {
       let email = this.props.email;
       let i = this.props.i;
-      console.log('----------email uniq id -----------',email.email_id);
       //---progress status
       let progresColor = '#038503';
       let progresStatus = typeof this.props.progresStatus !== 'undefined'?this.props.progresStatus:0
