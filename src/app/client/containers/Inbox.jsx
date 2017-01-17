@@ -97,19 +97,22 @@ class Inbox extends React.Component {
         }
     }
     render(){
-      let setting_status = false;
+      let setting_status = true, i = false;
       if( typeof this.props.emailSetting != 'undefined' && this.props.emailSetting.length > 0 ){
           _.map( this.props.emailSetting, ( setting ) => {
               if(typeof setting.smtp !== "undefined"){
                 if(setting.smtp.status == 1){
-                  setting_status = true;
+                  i = true;
                 }
               }else{
                 if( setting.active == true && setting.status == 1){
-                  setting_status = true;
+                  i = true;
                 }
               }
           });
+          if(i){
+            setting_status = i;
+          }
       }
         return(
         	<div className='show'>
