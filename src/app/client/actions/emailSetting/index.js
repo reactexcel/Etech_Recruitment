@@ -144,7 +144,7 @@ export function saveSendSettings (detail) {
       });
     });
   }
-}
+} 
 
 const actionFetchSMTPSettings = (Data) => {
   return createAction(FETCH_SMTP_SETTINGS)(Data);

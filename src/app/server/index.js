@@ -33,9 +33,6 @@ Meteor.startup(function () {
   var i = 0;
 
   try{
-    // console.log('removed----before');
-    // SyncedCron.remove("excellenceseo@gmail.com");
-    // console.log('removed----afetr');
     SyncedCron.add({
       name: 'inbox_mail',
       schedule: function(parser) {

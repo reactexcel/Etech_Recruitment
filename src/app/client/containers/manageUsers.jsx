@@ -43,7 +43,6 @@ const mapDispatchToProps = (dispatch) => {
             return dispatch(addLogs(action, id , detail));
         },
         onSaveUser: (id,userDetail) =>{
-            console.log(id,userDetail,"in dispatch--------")
             return dispatch(addUsers(id,userDetail))
         },
         onDeleteUser: (id)=>{

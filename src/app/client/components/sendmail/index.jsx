@@ -136,7 +136,6 @@ class SendEmail extends React.Component {
       })
     }
     editTemplate(data,evt){
-      console.log(data,"editttttt")
         this.setState({
             openDialog:true,
             dialogTitle:'Edit Template',
@@ -161,7 +160,6 @@ class SendEmail extends React.Component {
         _.map(actualContent,(val)=>{
           content=_.replace(content, val, actualContent[val]);
         })
-        console.log(content,"actual content----------")
         let id=this.state.tmpid
         if(name!=''){
             this.setState({errName:''})

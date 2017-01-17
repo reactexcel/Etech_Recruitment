@@ -95,10 +95,11 @@ export default class MyCard extends React.Component {
                       <div className={typeof email.attachments == 'undefined'?"hidden":"col-sm-7"} style={{height: '100vh'}}>
                         {this.state.show?<LinearProgress mode="indeterminate" />:""}
                           <iframe
-                            src={typeof email.attachments == 'undefined'?'':email.attachments[0].link}
+                            src={typeof email.attachments == 'undefined' ? '' : email.attachments[0].link}
                             style={{height: '100%',width: '100%',border: 'none'}}
                             scrolling="no"
-                            onLoad={(e) => this.setState({show:false})}
+                            onLoad={(e) => {
+                              this.setState({show:false})}}
                             ></iframe>
                       </div>
                   </div>

@@ -9,7 +9,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 class candidateHistoryContainer extends React.Component{
   constructor(props) {
     super(props);
-    console.log(props);
   }
   componentWillMount( ){
     if (!Meteor.userId()) {
