@@ -90,7 +90,7 @@ checkMailServer( row, event ){
        this.setState({
         snackbar:true,
         msg:'Email server test failed',
-      }) 
+      })
       }
     }).catch((err)=>{
       this.handleClose()
@@ -105,11 +105,12 @@ checkMailServer( row, event ){
   render() {
     this.flag++;
     let rowdata = [];
+    console.log('this.props.emailSetting',this.props.emailSetting);
     _.map(this.props.emailSetting, (row) => {
-                    if(typeof row.smtp != 'undefined'){
-                     rowdata.push(row)
-                    }
-                    })
+      if(typeof row.smtp != 'undefined'){
+       rowdata.push(row)
+      }
+    });
     return (
       <div>
         <div className="row">
@@ -164,7 +165,7 @@ checkMailServer( row, event ){
                                      )
                        } iconStyle={{"color":(row.smtp.status == 1?"#8BC34A":((row.smtp.status == -1)?"#B71C1C":"#424242"))}}/></TableRowColumn>
                      <TableRowColumn><FlatButton label="Test" secondary={true} onClick={(evt) => this.checkMailServer(row, evt)}/></TableRowColumn>
-                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn> 
+                     <TableRowColumn><FlatButton label="Remove" secondary={true} onClick={(evt) => this.delete(row._id, evt)}/></TableRowColumn>
                     </TableRow>
                     ))}
                 </TableBody>
@@ -176,7 +177,7 @@ checkMailServer( row, event ){
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
-                children={ 
+                children={
                   <CircularProgress size={1} />
                 }
                 bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
