@@ -2,8 +2,13 @@ import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
 const classNames = require('classnames');
-import List from 'material-ui/List'
-
+import {List, ListItem, makeSelectable} from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import CommunicationEmail from 'material-ui/svg-icons/communication/email';
+import ActionAssignment from 'material-ui/svg-icons/action/assignment';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import {blue500, yellow600, indigo500, pinkA200} from 'material-ui/styles/colors';
 import EmailsListItem from './EmailsListItem'
 import ImapAccountsList from './ImapAccountsList'
 import Dialog from 'material-ui/Dialog';
@@ -22,6 +27,8 @@ import CircularProgress from 'material-ui/CircularProgress';
 import ScheduleCandidate from './ScheduleCandidate'
 import Subheader from 'material-ui/Subheader'
 import DefaultPage from './defaultPage'
+
+let SelectableList = makeSelectable(List);
 
 class EmailsList extends React.Component {
     constructor( props ){
@@ -202,11 +209,68 @@ class EmailsList extends React.Component {
         if( next_page_num == '' ){
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
+        let inboxItems = [<ListItem
+                              key={0}
+                              primaryText={"Mails " + count_unread_emails}
+                              leftIcon={<CommunicationEmail color={indigo500} />}
+                              onTouchTap= { () => this.onClick( {t_id : ''}) }
+                            />]
+        let jobItems = []
+        let candidateItems = []
+        if(this.props.tags.length != 0){
+          _.map(this.props.tags, (t,key) => {
+            let unread_mail = 0;
+            let total_mail = 0;
+            _.forEach(this.props.inbox.tagList, (list) => {
+              if(list.tagId == t._id){
+                unread_mail=list.count
+                total_mail=list.total
+              }
+            })
+            if(t.automatic == undefined){
+              inboxItems.push(<ListItem
+                              key={key+1}
+                              primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
+                              leftIcon={<Avatar
+                                      backgroundColor={t.color}
+                                      style={{color:"#fff"}}
+                                      size={20}>
+                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      </Avatar>}
+                              onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
+                            />)
+            }else if(t.automatic == true){
+              jobItems.push(<ListItem
+                              key={key+1}
+                              primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
+                              leftIcon={<Avatar
+                                      backgroundColor={t.color}
+                                      style={{color:"#fff"}}
+                                      size={20}>
+                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      </Avatar>}
+                              onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
+                            />)
+            }else if(t.automatic == false){
+              candidateItems.push(<ListItem
+                              key={key+1}
+                              primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
+                              leftIcon={<Avatar
+                                      backgroundColor={t.color}
+                                      style={{color:"#fff"}}
+                                      size={20}>
+                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      </Avatar>}
+                              onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
+                            />)
+            }
+          })
+        }                    
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
                 <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
 
-                    <Menu>
+                    {/*<Menu>
 
                       {this.props.tags.length === 0 ?
                         <div style={{'marginLeft':"10%"}}>
@@ -256,7 +320,37 @@ class EmailsList extends React.Component {
                         })
                        }
                      </div>}
-                    </Menu>
+                    </Menu>*/""}
+                      <List>
+                        {this.props.tags.length === 0 ?
+                        <div style={{'marginLeft':"10%"}}>
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
+                        </div>
+                        :<div>
+                          <ListItem
+                          primaryText="Inbox"
+                          leftIcon={<ContentInbox />}
+                          initiallyOpen={true}
+                          primaryTogglesNestedList={true}
+                          nestedItems={inboxItems}
+                          />
+                          <ListItem
+                          primaryText="Jobs"
+                          leftIcon={<ActionAssignment color={blue500}/>}
+                          primaryTogglesNestedList={true}
+                          nestedItems={jobItems}
+                          />
+                          <ListItem
+                          primaryText="Candidates"
+                          leftIcon={<ContentDrafts color={pinkA200}/>}
+                          primaryTogglesNestedList={true}
+                          nestedItems={candidateItems}
+                          />
+                        </div>}
+                      </List>
+                        
 
                 </div>
                 <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
