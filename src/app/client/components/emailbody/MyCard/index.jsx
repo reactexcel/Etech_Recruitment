@@ -21,7 +21,7 @@ export default class MyCard extends React.Component {
     }
   }
   componentWillReceiveProps( props ){
-   
+
   }
 
   render() {
@@ -38,7 +38,7 @@ export default class MyCard extends React.Component {
         if(typeof this.props.progresStatus !== 'undefined' && this.props.progresStatus!==0){
           prog={marginTop:'7px'}
         }else{
-          prog={marginTop:'7px',opacity:'-1'} 
+          prog={marginTop:'7px',opacity:'-1'}
         }
         wrapper = {display: 'flex',flexWrap: 'wrap',float:'left'}
       }else{
@@ -94,10 +94,11 @@ export default class MyCard extends React.Component {
                       <div className={typeof email.attachments == 'undefined'?"hidden":"col-sm-7"} style={{height: '100vh'}}>
                         {this.state.show?<LinearProgress mode="indeterminate" />:""}
                           <iframe
-                            src={typeof email.attachments == 'undefined'?'':email.attachments[0].link}
+                            src={typeof email.attachments == 'undefined' ? '' : email.attachments[0].link}
                             style={{height: '100%',width: '100%',border: 'none'}}
                             scrolling="no"
-                            onLoad={(e) => this.setState({show:false})}
+                            onLoad={(e) => {
+                              this.setState({show:false})}}
                             ></iframe>
                       </div>
                   </div>

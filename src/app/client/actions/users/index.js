@@ -32,10 +32,10 @@ export function loginUser(email,password,rememberme){
                     try{
                          if(rememberme){
                          	Accounts.config({loginExpirationInDays: 3650})
-                         } 
+                         }
                          else{
                          	Accounts.config({loginExpirationInDays: null})
-                         } 
+                         }
                         }catch(ex){
                           console.log(ex)
                         }
