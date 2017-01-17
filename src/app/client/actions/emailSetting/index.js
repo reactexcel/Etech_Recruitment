@@ -110,7 +110,7 @@ export function onRemoveDetails (m_id) {
 export function onStartCron (_id) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
-      Meteor.call('fetchAllEmail',_id,(err,status) => { 
+      Meteor.call('fetchAllEmail',_id,(err,status) => {
           if(err){
             reject(err);
           }else{
@@ -144,7 +144,7 @@ export function saveSendSettings (detail) {
       });
     });
   }
-} 
+}
 
 const actionFetchSMTPSettings = (Data) => {
   return createAction(FETCH_SMTP_SETTINGS)(Data);
@@ -185,6 +185,7 @@ export function onTestDetailsSMTP (detail) {
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
         Meteor.call('checkSMTPMailServer',detail,(err,resp) => {
+          console.log(resp);
           if(err){
             reject(err)
           }else{

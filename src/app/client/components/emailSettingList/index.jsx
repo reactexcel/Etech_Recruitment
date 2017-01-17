@@ -35,6 +35,8 @@ export default class EmailSettingList extends React.Component {
       show:false,
       sOpen: false,
       snakMsg: '',
+      testStaus:0,
+      errTestFails:"",
      };
     this.select = this.select.bind(this);
     this.checkMailServer = this.checkMailServer.bind(this);
@@ -55,6 +57,8 @@ export default class EmailSettingList extends React.Component {
     this.setState({
       "open" : false,
       "title": "",
+      "testStaus":0,
+      "errTestFails":"",
     });
   };
 
@@ -63,18 +67,36 @@ export default class EmailSettingList extends React.Component {
   }
   checkMailServer( row, event ){
     event.stopPropagation();
-    this.handleOpen(row.emailId)
-    this.props.onTestDetails( row );
+    this.handleOpen(row.emailId);
+    this.props.onTestDetails( row ).then((status)=>{
+      if(status == 1){
+        this.setState({
+          testStaus: 1,
+          errTestFails:"",
+        });
+      }else if(status == 0){
+        this.setState({
+          testStaus: -1,
+          errTestFails:"Email setting fails due to incorrect data, Please correct the details and try again",
+        });
+      }else if(status == -1){
+        this.setState({
+          testStaus: -1,
+          errTestFails:"Error in checkMailServer function, exception found",
+        });
+      }
+    }).catch(()=>{
+      this.setState({
+        testStaus: -1,
+        errTestFails:"Error in checkMailServer function",
+      });
+    });
   }
   removeMailServer( row, event ){
     event.stopPropagation();
     this.props.onRemoveDetails( row._id );
   }
-  componentWillUpdate () {
-    if(this.props.uiLoading && this.state.open){
-      this.handleClose () ;
-    }
-  }
+  
   onStartCron( _id ){
     this.props.onStartCron( _id )
     .then( (data) => {
@@ -91,14 +113,18 @@ export default class EmailSettingList extends React.Component {
         if(typeof row.smtp == 'undefined' &&  row.emailId != ''){
           rowdata.push(row)
         }
-      })
-    const actions = [
-      <RaisedButton
-        label="Stop"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />
-    ];
+      });
+
+      let color = "#424242", icon = "";
+      if(this.state.testStaus == 1){
+        color = "#8BC34A";
+        icon = "fa-check";
+      }else if(this.state.testStaus == -1){
+        color = "#B71C1C";
+        icon = "fa-times";
+      }else{
+        color = "#424242"
+      }
     return (
       <div>
         <div className="row">
@@ -180,14 +206,27 @@ export default class EmailSettingList extends React.Component {
             <div>
               <Dialog
                 title={this.state.title}
-                actions={actions}
+                actions={this.state.testStaus == 0 ?
+                  [<RaisedButton label="Stop" primary={true} onTouchTap={this.handleClose} />]
+                  :
+                  [<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} />]
+                }
                 modal={true}
                 open={this.state.open}
                 onRequestClose={this.handleClose}
                 children={
-                  <CircularProgress size={1} />
+                  this.state.testStaus == 0 ? <CircularProgress size={1} /> :
+                  <span>
+                  <IconButton iconClassName={
+                      classNames("fa" ,"fa-2x",icon)
+                   }
+                   style={{textAlign:'center',height:'100%', width:'100%',marginTop:'-17px',padding:'0px'}}
+                   iconStyle={{"color":color, fontSize:"100px" }}
+                   />
+                 <span style={{color:"rgba(255, 62, 0, 0.88)",fontSize:"13px",textAlign:"center"}}>{this.state.errTestFails}</span>
+                  </span>
                 }
-                bodyStyle={{marginLeft: "35%",borderRadius: " 100px", border:"1px solid transparent"}}
+                bodyStyle={{textAlign:'center', borderRadius: " 100px", border:"1px solid transparent"}}
                 titleClassName = "text-center text-muted"
                 titleStyle={{"color": "#666"}}
                 contentStyle={{width: "30%", borderRadius: "100px", border:"1px solid transparent" }}
