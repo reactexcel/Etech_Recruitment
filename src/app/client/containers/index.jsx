@@ -1,4 +1,4 @@
-export {default as RegisterContainer} from './registerContainer';
+//export {default as RegisterContainer} from './registerContainer';
 import React, {PropTypes} from 'react';
 import { withRouter } from 'react-router';
 

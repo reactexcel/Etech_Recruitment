@@ -50,7 +50,7 @@ export const config_ENV = {
   },
   "host":{
     "server_host": ip.address(),//Get IP address of host server
-    "server_port": 3000,//process.env.PORT || 3000,
+    "server_port": process.env.PORT || 3000,
     "_url": function(){
       return (
         'http://'+this.server_host+':'+this.server_port
