@@ -105,6 +105,8 @@ Meteor.methods({
                 }
               }catch(err){
                 console.log("ERR in method firstEmail -->> ",err);
+                SyncedCron.remove(this.name);
+                console.log("cron removed--->>>", this.name);
               }
             }
           });

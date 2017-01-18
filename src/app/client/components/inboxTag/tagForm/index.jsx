@@ -8,9 +8,9 @@ const classNames = require('classnames');
 
 const style={
   "formInput":{
-    "marginLeft": "5%",
-    "marginRight": "5%",
-    "width": "50%"
+    // "marginLeft": "5%",
+    // "marginRight": "5%",
+    // "width": "50%"
   },
   "formButton":{
     position:"absolute",
@@ -77,9 +77,9 @@ export default class TagForm extends React.Component {
 
   render() {
     return (
-      <div>
-        <form className="form-inline" onSubmit={(e) => e.preventDefault()}>
-          <div className="form-group" style={style.formInput}>
+      <div className="col-xs-12">
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div style={style.formInput}>
             <TextField
               type="text"
               floatingLabelText="Tag Title"
@@ -101,7 +101,7 @@ export default class TagForm extends React.Component {
               value={this.state.tagName}
             />
           </div>
-          <div className = "form-group" style={style.formInput}>
+          <div style={style.formInput}>
             <RadioButtonGroup name="encrypt" labelPosition="right"
               defaultSelected={'automatic'}
               style={{maxWidth: 250}}
@@ -126,10 +126,10 @@ export default class TagForm extends React.Component {
             </RadioButtonGroup>
           </div>
           <div className={classNames({"hidden": this.state.type != "automatic"})}>
-            <div className="form-group" style={style.formInput}>
+            <div style={style.formInput}>
               <TextField
                 type="text"
-                floatingLabelText="Filter Email"
+                floatingLabelText="Match Email"
                 hintText="Enter email "
                 fullWidth={true}
                 onChange={
@@ -148,10 +148,10 @@ export default class TagForm extends React.Component {
                 value={this.state.email}
                 />
             </div>
-            <div className="form-group" style={style.formInput}>
+            <div style={style.formInput}>
               <TextField
                 type="text"
-                floatingLabelText="Filter subject"
+                floatingLabelText="Match subject"
                 hintText="Enter Subject "
                 fullWidth={true}
                 onChange={
@@ -170,7 +170,7 @@ export default class TagForm extends React.Component {
                 value={this.state.subject}
                 />
             </div>
-            <div className="form-group" style={style.formInput}>
+            <div style={style.formInput}>
               <DatePicker
                 floatingLabelText="From"
                 onChange={
@@ -188,7 +188,7 @@ export default class TagForm extends React.Component {
                 }
               />
             </div>
-            <div className="form-group" style={style.formInput}>
+            <div style={style.formInput}>
               <div style={style.block}>
                     <Toggle
                       label="Show on Report"

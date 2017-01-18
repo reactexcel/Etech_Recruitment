@@ -165,7 +165,6 @@ export default class SendEmailSettingForm extends React.Component {
     }else{
       color = "#424242"
     }
-    console.log('this.state.testStaus',this.state.testStaus);
     return (
       <div className="row">
         <div className="col-sm-12 col-xs-12 col-md-12 col-lg-12" >
