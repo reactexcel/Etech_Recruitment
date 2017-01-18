@@ -22,12 +22,14 @@ export default class InboxTag extends React.Component {
       color: '#3882b8',
       applyToAll: false,
       sOpen:false,
+      showCheckBox:'show'
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleColorOpen = this.handleColorOpen.bind(this);
     this.handleColorClose = this.handleColorClose.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.callToSetState = this.callToSetState.bind(this);
     this.props.toggle(this);
     this.error=[];
   }
@@ -48,6 +50,19 @@ export default class InboxTag extends React.Component {
 
   onChange (color) {
     this.setState({color: color.hex});
+  }
+
+  callToSetState(value){
+    if(value == "automatic"){
+      this.setState({
+        showCheckBox:'show'
+      })
+    }else{
+      this.setState({
+        showCheckBox:'hidden',
+        applyToAll:false
+      })
+    }
   }
 
   render() {
@@ -91,7 +106,7 @@ export default class InboxTag extends React.Component {
          children={
            <div className="row">
              <div className="col-xs-6">
-            <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
+              <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
              <Dialog
                modal={false}
                open={this.state.colorOpen}
@@ -137,7 +152,7 @@ export default class InboxTag extends React.Component {
                    inputStyle={{"color": this.state.color}}
                  />
                </div>
-               <div style={{"marginLeft": "5%", "marginRight": "5%",}}>
+               <div className={this.state.showCheckBox} style={{"marginLeft": "5%", "marginRight": "5%",}}>
                  <Checkbox
                    labelStyle={{fontWeight: 'normal'}}
                    label="Apply this tag on all previous emails"
@@ -165,7 +180,7 @@ export default class InboxTag extends React.Component {
                   />
               </div>
              </div>
-             </div>
+            </div>
          }
          contentStyle={{padding:"0px" ,width: "50%"}}
          bodyStyle={{padding:"0px 0px"}}
