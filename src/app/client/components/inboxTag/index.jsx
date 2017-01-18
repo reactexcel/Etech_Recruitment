@@ -6,7 +6,7 @@ import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import TagForm from './tagForm'
 import InboxTagList from './inboxTagList'
-import { SketchPicker } from 'react-color';
+import { SketchPicker, CirclePicker, Circle } from 'react-color';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
 import ActionCheckCircle from 'material-ui/svg-icons/action/check-circle'
@@ -104,8 +104,9 @@ export default class InboxTag extends React.Component {
            />
           ]}
          children={
-           <div>
-            <TagForm color={() => (this.state.color)} callToSetState ={this.callToSetState} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
+           <div className="row">
+             <div className="col-xs-6">
+              <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
              <Dialog
                modal={false}
                open={this.state.colorOpen}
@@ -124,10 +125,9 @@ export default class InboxTag extends React.Component {
                contentClassName= "row"
                bodyClassName= " col-sm-offset-4 col-sm-12 col-xs-12"
                />
-               <div className="form-group" style={{
+             <div className="col-xs-12" style={{
                  "marginLeft": "5%",
                  "marginRight": "5%",
-                 "width": "50%"
                }}>
                  <TextField
                    type="text"
@@ -168,9 +168,22 @@ export default class InboxTag extends React.Component {
                    />
                </div>
              </div>
+             <div className="col-xs-6" >
+               <div style={{"marginLeft": "5%", "marginRight": "5%",'marginTop':'60%',textAlign:'center'}}>
+                 <label>Selected color</label>
+                 <div  className="text-center" style={{backgroundColor:this.state.color, height:'70px',width:'150px',margin:'5px auto 50px'}}></div>
+                 <hr />
+                 <label>Select a color</label>
+                 <CirclePicker
+                   color={ this.state.color }
+                   onChangeComplete={ this.onChange }
+                  />
+              </div>
+             </div>
+            </div>
          }
-         contentStyle={{padding:"0px" ,width: "40%"}}
-         bodyStyle={{padding:"0px opx"}}
+         contentStyle={{padding:"0px" ,width: "50%"}}
+         bodyStyle={{padding:"0px 0px"}}
          />
          <Snackbar
             open={this.state.sOpen}
