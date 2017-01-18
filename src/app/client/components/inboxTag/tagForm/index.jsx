@@ -108,6 +108,7 @@ export default class TagForm extends React.Component {
                 onChange={
                   (evt, value) =>{
                     this.setState({"type": value});
+                    this.props.callToSetState(value);
                     if ( typeof value == "undefined" ) {
                       this.error.type = "encrypt is required";
                     }else{
