@@ -38,6 +38,8 @@ export default class TagForm extends React.Component {
       color: this.props.color,
       type: "automatic",
       showReportToggle:this.props.toggle,
+      errEmail:"",
+      errSubject:"",
     }
     this.error=[];
     this.add = this.add.bind(this);
@@ -136,16 +138,26 @@ export default class TagForm extends React.Component {
                 onChange={
                   (evt) =>{
                     this.setState({"email": evt.target.value});
+                  }
+                }
+                onBlur={
+                  (evt) =>{
                     if (!evt.target.value.length > 0 ) {
-                      this.error.email = "Enter tag email";
+                      this.setState({
+                        errEmail:"Enter tag email",
+                      });
                     }else if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(evt.target.value)) {
-                      this.error.email = "Invalid email";
+                      this.setState({
+                        errEmail:"Invalid email",
+                      });
                     }else{
-                      this.error.email = "";
+                      this.setState({
+                        errEmail:"",
+                      });
                     }
                   }
                 }
-                errorText={this.error.email}
+                errorText={this.state.errEmail}
                 value={this.state.email}
                 />
             </div>
@@ -158,16 +170,26 @@ export default class TagForm extends React.Component {
                 onChange={
                   (evt) =>{
                     this.setState({"subject": evt.target.value});
+                  }
+                }
+                onBlur={
+                  (evt) =>{
                     if (!evt.target.value.length > 0 ) {
-                      this.error.subject = "Enter subject";
+                      this.setState({
+                        errSubject:"Enter subject",
+                      });
                     }else if (/^[a-zA-Z0-9 !@#$%^&*()_+=-`~}:"|<>?';,. ]$/.test(evt.target.value)) {
-                      this.error.subject = "Invalid subject";
+                      this.setState({
+                        errSubject:"Invalid subject",
+                      });
                     }else{
-                      this.error.subject = "";
+                      this.setState({
+                        errSubject:"",
+                      });
                     }
                   }
                 }
-                errorText={this.error.subject}
+                errorText={this.state.errSubject}
                 value={this.state.subject}
                 />
             </div>

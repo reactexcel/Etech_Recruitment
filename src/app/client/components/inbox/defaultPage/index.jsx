@@ -7,12 +7,12 @@ export default class DefaultPage extends React.Component {
   }
 
   render() {
-   // console.log(this.props);
     let bolt = [];
     let left = 35;
     _.times(3 , (i) => {
       left += 5;
-      bolt.push(<span key={i}
+      bolt.push(
+        <span key={i}
          style={
           {
             color:"#999",
@@ -25,7 +25,7 @@ export default class DefaultPage extends React.Component {
         >
         <i className="fa fa-bolt" aria-hidden="true"></i>
       </span>)
-    })
+    });
     return (
       <div
         className=" col-sm-12 col-xs-12"

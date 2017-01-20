@@ -172,6 +172,9 @@ const mapDispatchToProps = (dispatch) => {
         onRead : ( _id ) => {
             return dispatch( actions_inbox.getInboxData( _id ) )
         },
+        onDeleteMultipleEmails : (idList) => {
+          return dispatch(actions_inbox.deleteInboxMails(idList))
+        }
     }
 }
 
