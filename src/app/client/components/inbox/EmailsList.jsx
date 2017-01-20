@@ -155,7 +155,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e)=>{this.setState({schedulePop:e})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -167,7 +167,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e)=>{this.setState({schedulePop:e})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )
@@ -263,7 +263,7 @@ class EmailsList extends React.Component {
                             />)
             }
           })
-        }                    
+        }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
                 <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
@@ -348,7 +348,7 @@ class EmailsList extends React.Component {
                           />
                         </div>}
                       </List>
-                        
+
 
                 </div>
                 <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
@@ -376,9 +376,26 @@ class EmailsList extends React.Component {
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                    this.setState({rejectpop:true})
                              }}><span aria-hidden="true" >Reject</span></li>
+                            {//  <li style={{cursor:'pointer'}} onClick={ () => {
+                            //         this.setState({schedulePop:true})
+                            //  }}><span aria-hidden="true" >Schedule</span></li>
+                            }
                              <li style={{cursor:'pointer'}} onClick={ () => {
-                                    this.setState({schedulePop:true})
-                             }}><span aria-hidden="true" >Schedule</span></li>
+                               this.props.onDeleteMultipleEmails(this.state.emailIdList).then(()=>{
+                                this.props.doPageChange(next_page_num-1)
+                                this.setState({
+                                  "SnackbarOpen":true,
+                                  "SnackbarMessage":"All mails deleted ",
+                                  "emailIdList":[]
+                                })
+                               this.refs.actionList.className = classNames("pagination","pull-left","hidden");
+                              }).catch((err)=>{
+                                this.setState({
+                                "SnackbarOpen":true,
+                                "SnackbarMessage":err.toString()
+                               })
+                              })
+                             }}><span aria-hidden="true" >Delete</span></li>
                             </ul>
                             {      }
                             <ul className="pagination pull-right">

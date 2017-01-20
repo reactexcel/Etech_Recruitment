@@ -67,6 +67,12 @@ class ConfigurationContainer extends React.Component {
       }
       this.props.router.push("/config/email-server-setting")
   }
+  componentWillReceiveProps(props){
+    let route = props.routes;
+    if(route.length < 3 && route[route.length-1].path == "/config"){
+      this.props.router.push("/config/email-server-setting")
+    }
+  }
   handleToggel(){
     this.setState({open: !this.state.open});
   }
@@ -80,7 +86,7 @@ class ConfigurationContainer extends React.Component {
   }
 
   render() {
-    return ( 
+    return (
         <div>
         <Header {...this.props} position={2} altr="Settings" />
           <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
@@ -120,7 +126,7 @@ class ConfigurationContainer extends React.Component {
             primaryText="Manage Users"
             onTouchTap={()=>{this.props.router.push("/config/manageUsers");}}
           />:""}
-          
+
           </SelectableList>
           </div>
           <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
