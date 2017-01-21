@@ -147,3 +147,20 @@ export function fetchNewEmails( imapEmails ){
 		}
 	}
 }
+
+
+//--------------deleteInboxMails-----------------
+
+export function deleteInboxMails(idList){
+	return (dispatch, getState) =>{
+		return new Promise((resolve, reject)=>{
+			Meteor.call('deleteMailsFromDB', idList, (err, res)=>{
+				if(err){
+					reject(err);
+				}else{
+					resolve(res);
+				}
+			});
+		});
+	}
+}

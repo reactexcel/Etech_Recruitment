@@ -361,4 +361,11 @@ Meteor.methods({
 		);
 		return emailData;
 	},
+	'deleteMailsFromDB': function(idList){
+		_.map(idList,(id)=>{
+			let a = EmailsStore.remove({"_id":id});
+			console.log('res', a);
+		})
+
+	}
 });

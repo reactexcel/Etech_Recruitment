@@ -25,29 +25,32 @@ class TagMenu extends React.Component {
               tagMenu.push(typeof this.props.email.tags != 'undefined'?
                 (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem
-                  primaryText={<Avatar
+                  primaryText={<span><Avatar
                     backgroundColor={v.color}
                     size={30}
+                    style={{marginRight:'10px'}}
                     children={
-                      _.upperCase(v.name[0])
-                    }></Avatar>}
-                  secondaryText={v.name}
+                      _.upperCase((v.name.trim()[0]))
+                    }></Avatar>
+                  <span>{v.name.trim()}</span></span>}
                   key={v._id}
                   value={v._id+"-"+v.name}
                   onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
                   />:<div></div>):
                   <MenuItem
-                    primaryText={<Avatar
+                    primaryText={<span><Avatar
                       backgroundColor={v.color}
                       size={30}
+                      style={{marginRight:'10px'}}
                       children={
-                        _.upperCase(v.name[0])
-                      }></Avatar>}
+                        _.upperCase((v.name.trim()[0]))
+                      }></Avatar>
+                    <span>{v.name.trim()}</span></span>}
                     secondaryText={v.name}
                     key={v._id}
                     value={v._id+"-"+v.name}
                     onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
-                    
+
                     />)
                   }
               })
@@ -59,11 +62,17 @@ class TagMenu extends React.Component {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           >
           <MenuItem
-            primaryText="Tags"
-            insetChildren={true}
-            rightIcon={<ArrowDropRight />}
-            menuItems={tagMenu}
+            primaryText={<span><Avatar
+              backgroundColor={"#198E63"}
+              style={{marginRight:'10px'}}
+              size={30}
+              children={
+                _.upperCase('s')
+              }></Avatar>
+              <span>Schedule</span></span>}
+            onTouchTap={() => this.props.onSchedule(true)}
             />
+          {tagMenu}
         </IconMenu>
       </div>
     );
