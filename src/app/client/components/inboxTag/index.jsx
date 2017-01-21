@@ -106,7 +106,7 @@ export default class InboxTag extends React.Component {
          children={
            <div className="row">
              <div className="col-xs-6">
-              <TagForm color={() => (this.state.color)} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
+              <TagForm color={() => (this.state.color)} callToSetState={this.callToSetState} onAddTag={this.props.onAddTag} handleToggle={this.handleClose} ref='tagForm' toggle={false}/>
              <Dialog
                modal={false}
                open={this.state.colorOpen}

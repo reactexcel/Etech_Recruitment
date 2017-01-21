@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react'
 import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
-
-// import List from 'material-ui/List'
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -18,16 +16,14 @@ import {pink100} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import {cyan100,cyan50,grey50,red700,green500,grey200} from 'material-ui/styles/colors';
+import Delete from 'material-ui/svg-icons/action/delete';
+import Edit from 'material-ui/svg-icons/editor/mode-edit';
 const classNames = require('classnames');
 import _ from 'lodash'
  import verge from 'verge';
-// //import EditableDiv from 'react-wysiwyg-editor';
-// import FroalaEditor from 'react-froala-editor';
-// //import ReactQuill from 'react-quill';
-// //var ReactQuill = require('react-quill');
-// //import CkEditor from 'ckeditor';
-// import {Editor, EditorState} from 'draft-js';
-import MyEditor from './editor'
+import RichTextEditor from 'react-rte';
 
 
 const style = {
@@ -42,23 +38,32 @@ const style = {
     position: 'relative',
   },
   formInput:{
-    "marginLeft": "0%",
-    "marginRight": "0%",
-    //"width": "50%"
+    "marginLeft": "5%",
+    "marginRight": "5%",
+    "width": "90%"
   },
+  editorStyle :{
+      overflow: 'auto',
+      display: 'block',
+      width: '100%',
+      height: '300px',
+      maxHeight: '300px',
+      background:'rgba(204,204,204,.51)',
+    }
 };
 
 class SendEmail extends React.Component {
     constructor( props ){
         super( props );
         this.state={
+            tmpid:'',
             tempName:'',
             sub:'',
             openDialog:false,
             dialogTitle:'',
             paper:'show',
             tmpid:'',
-            content:'',
+            content:RichTextEditor.createEmptyValue(),
             errName:'',
             errSub:'',
             snackbarOpen:false,
@@ -71,6 +76,7 @@ class SendEmail extends React.Component {
         this.openCreatetemplate  = this.openCreatetemplate.bind( this )
         this.deleteTemplate = this.deleteTemplate.bind(this)
         this.editTemplate = this.editTemplate.bind( this )
+        this.onChange = this.onChange.bind(this);
     }
     componentWillMount(){
         if (!Meteor.userId()) {
@@ -98,13 +104,14 @@ class SendEmail extends React.Component {
     }
     openCreatetemplate(){
         this.setState({
-            tempName:'',
-            sub:'',
-            tmppage:'hidden',
-            tmpcreat:'row',
+            //tempName:'',
+            //sub:'',
+            //tmppage:'hidden',
+            //tmpcreat:'row',
             openDialog:true,
-            dialogTitle:'Create Template',
-            content:''
+            tmpid:'',
+            //dialogTitle:'Create Template',
+            content:RichTextEditor.createEmptyValue(),
         })
     }
     gotoTmppage(){
@@ -116,19 +123,19 @@ class SendEmail extends React.Component {
             tmppage:'row',
             tmpcreat:'hidden',
             tmpid:'',
-            content:'',
+            content:RichTextEditor.createEmptyValue(),
             openDialog:false,
             dialogTitle:''
         })
     }
-    deleteTemplate(data){
-    this.props.onDeleteTemplate(data._id).then( (msg) => {console.log(msg)
+    deleteTemplate(data,evt){
+    this.props.onDeleteTemplate(data._id).then( (msg) => {
       this.props.logging("Email template deleted",Meteor.userId(),"Template name : "+data.name)
         this.setState({
           snackbarOpen:true,
           snackbarmsg:msg.toString(),
         })
-      }).catch( (error) => {console.log(error,'error')
+      }).catch( (error) => {
         this.setState({
           snackbarOpen:true,
           snackbarmsg:error.toString(),
@@ -143,63 +150,58 @@ class SendEmail extends React.Component {
             sub:data.subject,
             tmppage:'hidden',
             tmpcreat:'row',
-            content:data.content,
+            content:RichTextEditor.createValueFromString(data.content, 'html'),
             tmpid:data._id,
         })
     }
 
     saveTemplate() {
-        let name=this.state.tempName.trim()
-        let subject=this.state.sub.trim()
-        let content=this.state.content
-        let actualContent=[]
-        actualContent=content.match(/#{1}[a-zA-Z_]+/ig)
-        _.map(actualContent,(val)=>{
-          actualContent[val]=val.toLowerCase()
-        })
-        _.map(actualContent,(val)=>{
-          content=_.replace(content, val, actualContent[val]);
-        })
-        let id=this.state.tmpid
-        if(name!=''){
-            this.setState({errName:''})
-        }else{
-            this.setState({errName:'Required'})
-        }
-        if(subject!=''){
-            this.setState({errSub:''})
-        }else{
-            this.setState({errSub:'Required'})
-        }
-        if(name!='' && subject!=''){
-            let template={name:name, subject:subject,content:content}
-            this.props.onSaveTemplate(id, template).then( () => {
-        this.setState({
-          tempName:'',
-          sub:'',
-          content:'',
-          snackbarOpen:true,
-          snackbarmsg:"Template saved successfully",
-        })
-        if(id==""){
-            this.props.logging("New email template added",Meteor.userId(),"Template name : "+name)
-        }else{
-            this.props.logging("Email template edited",Meteor.userId(),"Template name : "+name)
-        }
-        this.gotoTmppage()
-      }).catch( (error) => {
-        this.setState({
-          snackbarOpen:true,
-          snackbarmsg:error.toString(),
-        })
-      })
-        }
+        let tmpid = this.state.tmpid.trim(),
+            name=this.state.tempName.trim(),
+            subject=this.state.sub.trim(),
+            content=this.state.content.toString('html'),
+            errName = "",
+            errSubject = "";
+            if(_.isEmpty(name)){
+              errName = "Required"
+            }
+            if(_.isEmpty(subject)){
+              errSubject = "Required"
+            }
+            this.setState({
+              errName: errName,
+              errSub: errSubject
+            })
+            if(!_.isEmpty(name) && !_.isEmpty(subject) && !_.isEmpty(content)){
+              let template={'name':name, 'subject':subject,'content':content}
+              this.props.onSaveTemplate(tmpid, template).then((succ)=>{
+                console.log(succ,"succc")
+                this.setState({
+                  snackbarOpen:true,
+                  snackbarmsg:"Template saved successfully",
+                })
+                if(tmpid==""){
+                  this.props.logging("New email template added",Meteor.userId(),"Template name : "+name)
+                }else{
+                  this.props.logging("Email template edited",Meteor.userId(),"Template name : "+name)
+                }
+                this.gotoTmppage();
+              }).catch((err)=>{
+                this.setState({
+                  snackbarOpen:true,
+                  snackbarmsg:err.toString(),
+                })
+              })
+            }
     }
     handleRequestClose = () => {
         this.setState({
             snackbarOpen: false,
         });
     };
+    onChange(value) {
+      this.setState({ content:value });
+    }
     render(){
       const actions = [
       <FlatButton
@@ -209,7 +211,7 @@ class SendEmail extends React.Component {
               style={{marginRight:5}}
             />,
             <RaisedButton
-              label="SAVE"
+              label={_.isEmpty(this.state.tmpid) ? "SAVE" : "Update"}
               primary={true}
               onClick={this.saveTemplate}
             />,
@@ -218,97 +220,94 @@ class SendEmail extends React.Component {
         if( typeof this.props.inbox.count_unread_emails != 'undefined' && this.props.inbox.count_unread_emails > 0 ){
             count_unread_emails  = "(" + this.props.inbox.count_unread_emails + ")"
         }
-         
         return(
                 <div className="col-md-12 col-xs-12 col-sm-12" style={{ "float":"right"}}>
                 <Dialog
-                  title={this.state.dialogTitle}
+                  title={_.isEmpty(this.state.tmpid) ? "Create Template" : "Edit Template"}
                   actions={actions}
                   modal={false}
+                  bodyStyle={{minHeight:'70vh'}}
                   open={this.state.openDialog}
                   onRequestClose={this.gotoTmppage.bind(this)}
                   autoScrollBodyContent={true}
-                  contentStyle={{'width':'90%','maxWidth':'none'}}
+                  contentStyle={{maxWidth:'90%',width:"90%",transform: 'translate(0px, 0px)'}}
                 >
-                <div className="row">
-                <div className="col-md-7 col-xs-7 col-sm-7">
-                 <div style={style.formInput}>
-                  <TextField
-                            ref='Name'
-                            floatingLabelText="Template Name"
-                            fullWidth={true}
-                            errorText={this.state.errName}
-                            floatingLabelFixed={true}
-                            value={this.state.tempName}
-                            onChange={(e)=>{
-                               this.setState({
-                                  tempName: e.target.value,
-                               });
-                            }}
-                  />
-               </div>
-               <div style={style.formInput}>
-                  <TextField
-                            ref='subject'
-                            floatingLabelText="Subject"
-                            fullWidth={true}
-                            errorText={this.state.errSub}
-                            floatingLabelFixed={true}
-                            value={this.state.sub}
-                            onChange={(e)=>{
-                               this.setState({
-                                  sub: e.target.value,
-                               });
-                            }}
-                            />
-               </div>
-               <div style={style.formInput}>
-                  <MyEditor data={this.state.content} content={(mail)=>{
-                              this.setState({content:mail})
-                            }}/>
-               </div>
-               </div>
-               <div className="col-md-5 col-xs-5 col-sm-5" style={{'alignContent':'center'}}>
-               
-                <List style={{'marginTop':'3%','marginRight':'2%','marginLeft':'2%','alignContent':'center'}}>
-                <Subheader style={{'backgroundColor':'#00E5FF'}}>Email Template Variables</Subheader>
-                <Divider />
-                <ListItem
-                  primaryText="#candidate_name"
-                  style={{'backgroundColor':'#E0F7FA'}}
-                />
-                <Divider />
-                 <ListItem
-                  primaryText="#candidate_email"
-                  style={{'backgroundColor':'#E0F7FA'}}
-                />
-                <Divider />
-                 <ListItem
-                  primaryText="#current_date"
-                  style={{'backgroundColor':'#E0F7FA'}}
-                />
-                <Divider />
-                <ListItem
-                  primaryText="#schedule_date"
-                  style={{'backgroundColor':'#E0F7FA'}}
-                />
-                <Divider />
-                <ListItem
-                  primaryText="#schedule_time"
-                  style={{'backgroundColor':'#E0F7FA'}}
-                />
-                <Divider />
-                {this.props.variables.length > 0?_.map(this.props.variables, (vari) => (
-                  <div>
-                          <ListItem
-                            primaryText={vari.varCode}
-                            style={{'backgroundColor':'#E0F7FA'}}
-                          />
-                          <Divider />
-                          </div>
-                          )):""}
-                </List>
-               </div>
+                <div className="col-xs-9" style={{borderRight:'1px solid gainsboro'}}>
+                  <form className="form-inline">
+                    <div className="form-group" style={style.formInput}>
+                      <TextField
+                        ref='Name'
+                        floatingLabelText="Template Name"
+                        hintText="Template Name"
+                        fullWidth={true}
+                        errorText={this.state.errName}
+                        floatingLabelFixed={true}
+                        value={this.state.tempName}
+                        onChange={(e)=>{
+                          this.setState({
+                            tempName: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="form-group" style={style.formInput}>
+                      <TextField
+                        ref='subject'
+                        floatingLabelText="Subject"
+                        fullWidth={true}
+                        hintText="Subject"
+                        errorText={this.state.errSub}
+                        floatingLabelFixed={true}
+                        value={this.state.sub}
+                        onChange={(e)=>{
+                          this.setState({
+                            sub: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div style={style.formInput}>
+                      <RichTextEditor
+                        style={style.editorStyle}
+                        value={this.state.content}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="col-xs-3" style={{'alignContent':'center'}}>
+                  <List style={{'marginTop':'3%','marginRight':'2%','marginLeft':'2%','alignContent':'center'}}>
+                    <Subheader style={{textAlign:'center','backgroundColor':'#00E5FF'}}>System Variables</Subheader>
+                    <Divider />
+                {this.props.variables.length > 0?_.map(this.props.variables, (vari,k) => {
+                  if(vari.variable_type === 'system'){
+                    return(
+                    <div key={vari.k}>
+                      <ListItem
+                        primaryText={vari.varCode}
+                        style={{'backgroundColor':'#E0F7FA'}}
+                      />
+                      <Divider />
+                    </div>)
+                  }
+                  }):""}
+                  </List>
+                  <List style={{'marginTop':'3%','marginRight':'2%','marginLeft':'2%','alignContent':'center'}}>
+                    <Subheader style={{textAlign:'center','backgroundColor':'#00E5FF'}}>User Variables</Subheader>
+                    <Divider />
+                {this.props.variables.length > 0?_.map(this.props.variables, (vari,k) => {
+                  if(vari.variable_type === 'user'){
+                    return(
+                    <div key={vari.k}>
+                      <ListItem
+                        primaryText={vari.varCode}
+                        style={{'backgroundColor':'#E0F7FA'}}
+                      />
+                      <Divider />
+                    </div>)
+                  }
+                  }):""}
+                  </List>
                 </div>
                 </Dialog>
                     
@@ -327,39 +326,48 @@ class SendEmail extends React.Component {
                           <CircularProgress size={1.5} />
                         </div>
                         <div className={this.state.paper} style={{"marginTop":"8%"}}>
-                        <Paper  zDepth={2} style={{"padding": "1%"}}>
-              <h4 className="h4">Template(s)</h4>
-              <Divider />
-              <div style={
-                {
-                  "marginTop": "2%",
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                }
-              }>
-                {_.map(this.props.emailTemplates, (data, key) => {
-                  return  <Chip
-                      key={data._id}
-                      backgroundColor={pink100}
-                      onRequestDelete={(evt) => {
-                        evt.stopPropagation();
-                        this.deleteTemplate(data)
-                      }}
-                      onTouchTap={(evt) => this.editTemplate(data, evt)}
-                      style={{ margin: 4}}>
-                      <Avatar
-                        backgroundColor={pink100}
-                        children={
-                          _.upperCase(_.trim(data.name)[0])
-                        }
-                        >
-                      </Avatar>
-                      {data.name}
-                    </Chip>
-                  })}
-              </div>
-            </Paper>
-            </div>
+                          {_.map(this.props.emailTemplates,(data,key)=>{
+                            return <div className="col-xs-6" key={data._id} style={{marginBottom:'20px'}}>
+                            <Card style={{'marginBottom':'10px'}}>
+                            <Paper
+                              style={{marginTop:"5px",paddingBottom: "0px"}}
+                              actAsExpander={true}
+                              zDepth={1}
+                              children={<CardHeader
+                              title={data.name}
+                              subtitle={"Subject: "+data.subject}
+                              actAsExpander={true}
+                              showExpandableButton={true}
+                              style={{'backgroundColor':cyan100}}
+                              />}
+                            />
+                            <CardText expandable={true}>
+                              {<div className="col-xs-12 m-b"><span style={{display: 'inline-flex'}}><b>Body: </b><div className="p-l" dangerouslySetInnerHTML={{__html:data.content}}></div></span></div>}
+                            </CardText>
+                            <CardActions>
+                              <FlatButton 
+                                backgroundColor={grey200} 
+                                labelColor={grey50} 
+                                label="Edit" 
+                                labelPosition="before" 
+                                icon={<Edit color="black"/>} 
+                                style={{'margin':2,'padding':-1}}
+                                onTouchTap={(evt) => this.editTemplate(data, evt)}
+                              />
+                              <RaisedButton 
+                                backgroundColor={red700} 
+                                labelColor={grey50} 
+                                label="Delete" 
+                                labelPosition="before" 
+                                icon={<Delete color={grey50}/>} 
+                                style={{'margin':2,'padding':-1}}
+                                onTouchTap={(evt) => this.deleteTemplate(data,evt)}
+                              />
+                            </CardActions>
+                            </Card>
+                            </div>
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>

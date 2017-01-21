@@ -12,10 +12,10 @@ Meteor.methods({
   },
   savetemplate : function(id,template){
     if(id != ''){
-      let _id = EmailTemplates.update(id,{$set: template})
+      let _id = EmailTemplates.update({"_id":id},{$set: template})
       return _id;
     }else{
-      let _id=EmailTemplates.insert( template )
+      let _id = EmailTemplates.insert( template )
       return _id;
     }
   },

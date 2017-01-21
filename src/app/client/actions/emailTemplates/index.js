@@ -12,7 +12,7 @@ export function saveTemplate( id, template ){
 				if(err){
 					reject(err)
 				}else{
-					dispatch ( fetchTemplate(data) )
+					dispatch ( fetchTemplate() )
 					resolve(data)
 				}
 			})
