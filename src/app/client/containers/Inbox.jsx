@@ -10,6 +10,7 @@ import EmailsList from './../components/inbox/EmailsList'
 import {addLogs} from '../actions/logs'
 import { onFetchTag, onAddTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate,sendMailToCandidate} from '../actions/tags'
 import {fetchTemplate} from '../actions/emailTemplates'
+import {fetchVariable} from '../actions/variable'
 
 class Inbox extends React.Component {
     constructor( props ){
@@ -32,6 +33,7 @@ class Inbox extends React.Component {
         this.props.onFetchSettings()
         this.props.onFetchTag()
         this.props.onFetchTamplets()
+        this.props.onFetchVariables()
         }else{
             //this.props.onInboxData( this.state.emails_per_page, 1 ,'')
             this.props.onUpdateUnreadStatus()
@@ -134,6 +136,7 @@ function mapStateToProps( state ){
         emailSetting : state.entities.emailSetting,
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
         emailTemplates : state.entities.emailTemplates,
+        variables:state.entities.variables,
         uiLoading: state.ui.loading
     }
 }
@@ -174,7 +177,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         onDeleteMultipleEmails : (idList) => {
           return dispatch(actions_inbox.deleteInboxMails(idList))
-        }
+        },
+        onFetchVariables:()=>{
+            return dispatch(fetchVariable())
+        },
     }
 }
 

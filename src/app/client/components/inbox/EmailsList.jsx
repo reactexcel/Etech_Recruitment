@@ -38,6 +38,7 @@ class EmailsList extends React.Component {
           scheduleTagId:'',
           rejectpop:false,
           schedulePop:false,
+          currentEmail:'',
           scheduledDate:moment().format("DD-MM-YYYY"),
           scheduledTime:moment().format("hh:mm:ss a"),
           errortxt:'',
@@ -155,7 +156,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e)=>{this.setState({schedulePop:e})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -167,7 +168,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e)=>{this.setState({schedulePop:e})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )
@@ -385,7 +386,7 @@ class EmailsList extends React.Component {
                                 this.props.doPageChange(next_page_num-1)
                                 this.setState({
                                   "SnackbarOpen":true,
-                                  "SnackbarMessage":"All mails deleted ",
+                                  "SnackbarMessage":"Mail deleted ",
                                   "emailIdList":[]
                                 })
                                this.refs.actionList.className = classNames("pagination","pull-left","hidden");
@@ -427,6 +428,7 @@ class EmailsList extends React.Component {
                     <ScheduleCandidate
                     scheduleTagId={this.state.scheduleTagId}
                     showPopUp={this.state.schedulePop}
+                    currentEmail={this.state.currentEmail}
                     emailIdList={this.state.emailIdList}
                     emailTemplates={this.props.emailTemplates}
                     {...this.props}
