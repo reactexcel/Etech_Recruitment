@@ -52,6 +52,22 @@ class TagMenu extends React.Component {
                     onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
 
                     />)
+                  }else if(v.name == "Schedule"){
+                    tagMenu.push(typeof this.props.email.tags != 'undefined'?
+                    (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
+                      <MenuItem
+                        primaryText={<span><Avatar
+                        backgroundColor={v.color}
+                        style={{marginRight:'10px'}}
+                        size={30}
+                        children={
+                          _.upperCase((v.name.trim()[0]))
+                        }></Avatar>
+                        <span>{v.name.trim()}</span></span>}
+                        key={v._id}
+                        value={v._id+"-"+v.name}
+                        onTouchTap={() => this.props.onSchedule(true,this.props.email)}
+                      />:<div></div>):<div></div>)
                   }
               })
     return (
@@ -61,17 +77,6 @@ class TagMenu extends React.Component {
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
           >
-          <MenuItem
-            primaryText={<span><Avatar
-              backgroundColor={"#198E63"}
-              style={{marginRight:'10px'}}
-              size={30}
-              children={
-                _.upperCase('s')
-              }></Avatar>
-              <span>Schedule</span></span>}
-            onTouchTap={() => this.props.onSchedule(true)}
-            />
           {tagMenu}
         </IconMenu>
       </div>

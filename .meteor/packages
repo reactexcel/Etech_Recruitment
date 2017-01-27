@@ -34,3 +34,4 @@ percolate:synced-cron
 anti:methods
 alanning:roles
 dispatch:login-token
+meteorhacks:npm

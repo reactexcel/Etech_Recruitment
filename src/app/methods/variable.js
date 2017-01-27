@@ -12,13 +12,15 @@ Meteor.methods({
     if(id != ''){
       let _id = Variables.update({"_id":id},{$set:{
         varCode:variable.varCode,
-        varValue:variable.varValue
+        varValue:variable.varValue,
+        variable_type:variable.varType
       }})
       return _id;
     }else{
            let _id = Variables.insert( {
               varCode:variable.varCode,
-              varValue:variable.varValue
+              varValue:variable.varValue,
+              variable_type:variable.varType
             } )
             return _id;
     }
