@@ -268,58 +268,6 @@ class EmailsList extends React.Component {
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
                 <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
-
-                    {/*<Menu>
-
-                      {this.props.tags.length === 0 ?
-                        <div style={{'marginLeft':"10%"}}>
-                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                          <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
-                        </div>
-                        :<div >
-                        <MenuItem  primaryText={
-                              <FlatButton
-                                style={{ backgroundColor: 'transparent'}}
-                                label={'Inbox ' + count_unread_emails}
-                                onTouchTap= { () => this.onClick( {t_id : ''}) }
-                                ></FlatButton>
-                        }/>
-
-
-                       {
-                        _.map(this.props.tags, (t) => {
-                          let unread_mail = 0;
-                          let total_mail = 0;
-                          _.forEach(this.props.inbox.tagList, (list) => {
-                            if(list.tagId == t._id){
-                               unread_mail=list.count
-                               total_mail=list.total
-                            }
-                          })
-                          return <MenuItem
-                            key={t._id}
-                            primaryText={
-                                <FlatButton
-                                  style={{textDecoration: this.selectedTag == t._id?'underline':'none',backgroundColor: 'transparent'}}
-                                  icon={
-                                    <Avatar
-                                      backgroundColor={t.color}
-                                      style={{color:"#fff"}}
-                                      size={20}
-                                      children={
-                                        _.upperCase(_.trim(t.name)[0])
-                                      }></Avatar>
-                                  }
-                                  label={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
-                                  ></FlatButton>
-                            }
-                            onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
-                           />
-                        })
-                       }
-                     </div>}
-                    </Menu>*/""}
                       <List>
                         {this.props.tags.length === 0 ?
                         <div style={{'marginLeft':"10%"}}>

@@ -17,7 +17,7 @@ import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import {cyan100,cyan50,grey50,red700,green500,grey200} from 'material-ui/styles/colors';
+import {cyan100,cyan50,grey50,red700,green500,grey200,green900,pinkA200,grey900} from 'material-ui/styles/colors';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
 const classNames = require('classnames');
@@ -175,7 +175,6 @@ class SendEmail extends React.Component {
             if(!_.isEmpty(name) && !_.isEmpty(subject) && !_.isEmpty(content)){
               let template={'name':name, 'subject':subject,'content':content}
               this.props.onSaveTemplate(tmpid, template).then((succ)=>{
-                console.log(succ,"succc")
                 this.setState({
                   snackbarOpen:true,
                   snackbarmsg:"Template saved successfully",
@@ -344,22 +343,20 @@ class SendEmail extends React.Component {
                             <CardText expandable={true}>
                               {<div className="col-xs-12 m-b"><span style={{display: 'inline-flex'}}><b>Body: </b><div className="p-l" dangerouslySetInnerHTML={{__html:data.content}}></div></span></div>}
                             </CardText>
-                            <CardActions>
+                            <CardActions style={{'textAlign':'right'}}>
                               <FlatButton 
-                                backgroundColor={grey200} 
-                                labelColor={grey50} 
+                                labelColor={grey900} 
                                 label="Edit" 
                                 labelPosition="before" 
-                                icon={<Edit color="black"/>} 
+                                icon={<Edit color={grey900}/>} 
                                 style={{'margin':2,'padding':-1}}
                                 onTouchTap={(evt) => this.editTemplate(data, evt)}
                               />
-                              <RaisedButton 
-                                backgroundColor={red700} 
-                                labelColor={grey50} 
+                              <FlatButton 
+                                labelColor={pinkA200} 
                                 label="Delete" 
                                 labelPosition="before" 
-                                icon={<Delete color={grey50}/>} 
+                                icon={<Delete color={pinkA200}/>} 
                                 style={{'margin':2,'padding':-1}}
                                 onTouchTap={(evt) => this.deleteTemplate(data,evt)}
                               />

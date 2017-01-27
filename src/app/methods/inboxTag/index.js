@@ -7,6 +7,8 @@ import Logs from 'app/collections/index';
 import CandidateHistory from 'app/collections/candidateHistory';
 import { Email } from 'meteor/email';
 import DynamicActions from 'app/collections/dynamicAction'
+import MailComposer from 'mailcomposer'
+var nodemailer = require('nodemailer');
 
 Meteor.methods({
   "fetchTag": function(){
@@ -197,7 +199,7 @@ Meteor.methods({
      })
      return {email:ignrReturn,tagId:tagId};
   },
-  "sendMailToCandidate" : function(candidateIdList,name,sub,body,tagId,userId){
+  "sendMailToCandidate" : function(candidateIdList,name,sub,body,tagId,attachment,userId){
     let username=Meteor.users.findOne({"_id": userId})
     var mail;
     var email_id;
@@ -207,8 +209,8 @@ Meteor.methods({
        email_id = CandidateHistory.find({"email_id":id}).fetch()
        mail = EmailsStore.find({"_id": id}).fetch();
        /*----------------------------Send email start---------------------------*/
-      //if (Meteor.isServer) {
-      Email.send({
+
+      /*Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
@@ -217,9 +219,26 @@ Meteor.methods({
         //"from": mail[0].m_source_email_id,
         "from": 'abhishek@excellencetechnologies.in',
         "subject": sub,
-        'text': body
-      });
-    //}
+        'text': body,
+        'attachments':[{
+          fileName: 'license.pdf',
+          filePath: 'http://www.pdf995.com/samples/pdf.pdf'
+        }]
+      });*/
+        var transporter = nodemailer.createTransport('smtps://abhishek@excellencetechnologies.in:nKR9ENcoWmAtGZL@smtp-pulse.com:465');
+        var mailOptions = {
+          from: 'abhishek@excellencetechnologies.in',
+          to: 'excellenceseo@gmail.com',
+          subject: sub,
+          html: body,
+          attachments: attachment
+          };
+          transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+              return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
+          });
       /*------------------------------Send email end----------------------------*/
       if(mail[0].tags != 'undefined'){
           if(_.includes(mail[0].tags,tagId)==false){

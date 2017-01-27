@@ -169,8 +169,9 @@ const mapDispatchToProps = (dispatch) => {
         onFetchTamplets:()=>{
             return dispatch(fetchTemplate())
         },
-        onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
-            return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
+        onSendMailToCandidate:(candidateIdList,name,sub,body,tagId,attachment)=>{
+            console.log(attachment,"dispatch")
+            return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId,attachment))
         },
         onRead : ( _id ) => {
             return dispatch( actions_inbox.getInboxData( _id ) )

@@ -58,5 +58,8 @@ export const config_ENV = {
     },
   },
   'IMAP_API_BASE_URL' : 'http://excellencetechnologies.co.in/imap/?',
-  '_BASE_URL' : 'http://excellencetechnologies.co.in/imap/email.php?'
+  '_BASE_URL' : 'http://excellencetechnologies.co.in/imap/email.php?',
+  'upload_email_attachment':'http://excellencetechnologies.co.in/imap/attachment/upload_file_attachment.php',
+  'create_pdf':'http://excellencetechnologies.co.in/imap/attachment/upload.php',
+  'pdf_url':'http://excellencetechnologies.co.in/imap/attachment/attach_file/'
 }

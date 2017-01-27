@@ -460,6 +460,7 @@ render(){
       <ScheduleCandidate
                     scheduleTagId={this.scheduleTagId}
                     showPopUp={this.state.schedulePop}
+                    currentEmail={this.state.data}
                     emailIdList={[data._id]}
                     emailTemplates={this.props.emailTemplates}
                     {...this.props}

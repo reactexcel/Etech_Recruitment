@@ -47,6 +47,8 @@ localstorage@1.0.11
 logging@1.1.15
 meteor@1.2.17
 meteor-base@1.0.4
+meteorhacks:async@1.0.0
+meteorhacks:npm@1.5.0
 minifier-css@1.2.14
 minifier-js@1.2.14
 minimongo@1.0.17

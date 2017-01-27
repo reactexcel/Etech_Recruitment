@@ -10,12 +10,16 @@ import {pinkA100} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Badge from 'material-ui/Badge';
-import MyEditor from '../sendmail/editor'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {cyan100,cyan50,grey50,red700,green500,grey200} from 'material-ui/styles/colors';
 import Select from 'material-ui/svg-icons/action/done';
+import PdfIcon from 'material-ui/svg-icons/file/attachment';
 import Paper from 'material-ui/Paper';
+import Snackbar from 'material-ui/Snackbar';
 import RichTextEditor from 'react-rte';
+import LinearProgress from 'material-ui/LinearProgress';
+import {config_ENV} from './../../../config';
+var FormData = require('form-data');
 
 const styles = {
   wrapper: {
@@ -36,6 +40,42 @@ const styles = {
     maxHeight: '300px',
     background:'rgba(204,204,204,.51)',
   },
+  uploadButton:{
+    'position':'relative',
+    'overflow':'hidden',
+    'margin':'10px 10px 10px 54px',
+    'cursor':'pointer',
+  },
+  uploadInput:{
+    'color':'transparent',
+    'position':'absolute',
+    'top':0,
+    'right':0,
+    'margin':0,
+    'padding':0,
+    'fontSize':'20px',
+    'cursor':'pointer',
+    'opacity':0,
+  },
+  uploadedPdfBlock:{
+      'boxShadow': '0px 0px 5px #888888',
+      'height':'30px',
+      'padding':'5px',
+      'textAlign':'left',
+      'marginLeft':'54px',
+      'marginTop':'10px',
+      'width':'350px',
+      'display':'block',
+      'fontStyle':'italic',
+      'fontWeight':'bold',
+      'color':'#0099cc'
+    },
+    crossButton:{
+      'color':'red',
+      'float':'right',
+      'marginTop':'3px',
+      'cursor':'pointer'
+    },
 };
 
 class ScheduleCandidate extends React.Component {
@@ -58,6 +98,13 @@ class ScheduleCandidate extends React.Component {
           templateBody:RichTextEditor.createEmptyValue(),
           openSendMailDialog:false,
           mailSendTo:'',
+          SnackbarOpen:false,
+          SnackbarMessage:'',
+          upload_file:[],
+          uploadedPDF:[],
+          LinearProgressBar:[],
+          pageHeader:'',
+          pageFooter:''
         }
         this.handleCloseScheduleDialog=this.handleCloseScheduleDialog.bind(this);
         this.forwardTemplate=this.forwardTemplate.bind(this);
@@ -70,6 +117,9 @@ class ScheduleCandidate extends React.Component {
         this.sendMail = this.sendMail.bind(this);
         this.handleClose = this.handleClose.bind(this)
         this.closeMailPreview = this.closeMailPreview.bind(this)
+        this.uploadPDF=this.uploadPDF.bind(this)
+        this.deleteAttachment = this.deleteAttachment.bind(this)
+        this.download_mail_preview = this.download_mail_preview.bind(this)
         //this.handleCloseTemplateDialog=this.handleCloseTemplateDialog.bind(this);
     }
     handleCloseScheduleDialog(){
@@ -86,7 +136,9 @@ class ScheduleCandidate extends React.Component {
         templateSubject: '',
         templateBody: '',
         uploadedPDF:[],
-        upload_file:[]
+        upload_file:[],
+        LinearProgressBar:[],
+        openPreview:false
       });
       this.handleCloseScheduleDialog();
     }
@@ -176,7 +228,7 @@ class ScheduleCandidate extends React.Component {
                 })
               }else if(variable.varCode == '#candidate_email_id'){
                 value = recipient.sender_mail
-              }else if(variable.name == '#page_break'){
+              }else if(variable.varCode == '#page_break'){
                 value = "<div style='page-break-after:always;'></div>"
               }
               if(dateVariable === false){
@@ -196,6 +248,15 @@ class ScheduleCandidate extends React.Component {
     }
 
     openMailPreview(){
+      let pageHeader = '', pageFooter = ''
+      _.map(this.props.variables, (variable, i)=>{
+        if(variable.varCode == "#page_header"){
+          pageHeader = variable.varValue
+        }
+        if(variable.varCode == "#page_footer"){
+          pageFooter = variable.varValue
+        }
+      });
       let recipient = this.props.currentEmail,
           templateName = this.state.templateName.trim(),
           templateSubject = this.state.templateSubject.trim(),
@@ -204,7 +265,7 @@ class ScheduleCandidate extends React.Component {
           error = '';
           if(state){
             let string = templateName.concat(" ",templateSubject," ", templateBody);
-            let regx = /#[\w-]+\|[\w -\.,@$%&*!%^\\\/]+\||#[\w-]+/ig;
+            let regx = /#[\w-]+\|[\w -\.,@$%&*!:%^\\\/]+\||#[\w-]+/ig;
             let result = string.match(regx);
             let pendingVariables = [];
             if(result !== null && result.length > 0){
@@ -225,14 +286,16 @@ class ScheduleCandidate extends React.Component {
            }
            if(state){
             let email = [{
-                email_id: recipient.sender_mail,
+                _id: recipient._id,
                 name: recipient.from,
                 subject: templateSubject,
                 body: templateBody,
               }]
               this.setState({
                 openPreview:true,
-                sentMail:{status:state, email:email}
+                sentMail:{status:state, email:email},
+                pageHeader:pageHeader,
+                pageFooter:pageFooter
               })
            }
     }
@@ -285,32 +348,159 @@ class ScheduleCandidate extends React.Component {
         sentMail:{},
       });
     }
-    /*submitMail(idList){
-      let name=this.state.currentTemplatName.trim()
-      let subject=this.state.currentSubject.trim()
-      let content=this.state.currentContent
-      this.props.onSendMailToCandidate(idList,name,subject,content,this.props.scheduleTagId)
-      //this.handleCloseTemplateDialog()
-    }*/
     sendMail(){
-      this.closeMailPreview();
       let sentMail = this.state.sentMail;
       let idList = [];
-      let name = sentMail.email.name
-      let subject = sendMail.email.subject
-      let body = sendMail.email.body
+      let name = sentMail.email[0].name
+      let subject = sentMail.email[0].subject
+      let body = sentMail.email[0].body
       let scheduledTagId = this.props.scheduleTagId
-      idList.push(sendMail.email.email_id)
+      let fileName = this.state.uploadedPDF
+      let filePath = this.state.upload_file
+      let attachment = []
+      _.map(fileName,(name, key)=>{
+        attachment.push({'filename':fileName[key],'path':filePath[key]})
+      })
+      idList.push(sentMail.email[0]._id)
       if(sentMail.status){
-        this.props.onSendMailToCandidate(idList,name,subject,body,scheduledTagId).then(()=>{
+        this.props.onSendMailToCandidate(idList,name,subject,body,scheduledTagId,attachment).then(()=>{
           this.handleCloseSendMailDialog();
-          //this.showError('mailsentsuccessfully','Mail sent successfully.');
+          this.setState({
+            SnackbarOpen: true,
+            SnackbarMessage:'Mail sent successfully.'
+          });
         }).catch(()=>{
-          //this.showError('previewalert','Mail not sent. try again')
+          this.setState({
+            SnackbarOpen: true,
+            SnackbarMessage:'Error in sending mail'
+          });
         })
       }
     }
+    handleRequestClose = () => {
+      this.setState({
+        SnackbarOpen: false,
+      });
+    };
+    uploadPDF(e){
+      let self = this
+      var file_data = $("#file_image").prop("files");
+      var form_data = new FormData();
+        var LinearProgressBar = [];
+        for( var i in file_data){
+          if(typeof file_data[i] == 'object'){
+            let ext = file_data[i].name.substring(file_data[i].name.lastIndexOf('.') + 1);
+            if(ext == "pdf" || ext == "PDF"){
+              form_data.append(i.toString(), file_data[i])
+            }else{
+              this.setState({
+                SnackbarOpen: true,
+                SnackbarMessage:'Please upload the document in correct format.'
+              });
+            }
+          }
+        }
+        for(i=0;i<file_data['length'];i++){
+          LinearProgressBar.push(<div key={i} className="row" style={styles.uploadedPdfBlock  }>
+            <div className="col-xs-7">
+              {file_data[i].name}
+            </div>
+            <div className="col-xs-5">
+              <LinearProgress mode="indeterminate"/>
+            </div>
+            </div>)
+        }
+        self.setState({
+          LinearProgressBar:LinearProgressBar
+        })
+        /*form_data.forEach(function(d,i){
+          console.log({d,i})
+        })*/
+      $.ajax({
+          url: config_ENV.upload_email_attachment,
+          contentType: false,
+          processData: false,
+          data: form_data,
+          type: 'post',
+          success: function(data) {
+            let obj = JSON.parse(data);
+            let uploadedPDF = self.state.uploadedPDF;
+            let upload_file_path = self.state.upload_file;
+            let preKey = uploadedPDF.length
+             if(obj.error == 0){
+               let data = obj.data
+               _.map(data,(file, key)=>{
+                   uploadedPDF.push(file.name);
+                   upload_file_path.push(file.path)
+                 })
+             }
+             self.setState({
+              uploadedPDF:uploadedPDF,
+              upload_file:upload_file_path,
+              LinearProgressBar:[]
+             })
+          },
+          error: function(error) {
+            //console.log(error,"error")
+          }
+        });
+    }
+    deleteAttachment(filekey){
+      let uploadedPDF = this.state.uploadedPDF;
+      let newuploadedPDF = []
+      let upload_file_path = this.state.upload_file;
+      let newupload_file_path = []
+      _.map(uploadedPDF,(file, k)=>{
+       if(filekey != k){
+         newuploadedPDF.push(uploadedPDF[k])
+         newupload_file_path.push(upload_file_path[k])
+       }
+     })
+      this.setState({
+        uploadedPDF:newuploadedPDF,
+        upload_file:newupload_file_path
+      })
+    }
+    download_mail_preview(e){
+      let currentTimeStamp = moment().unix()
+      let fileName = 'mail-preview'
+      let htmlFile = $('#dialogContent').html();
+      var form_data = new FormData();
+      form_data.append('html', htmlFile);
+      form_data.append('header', this.state.pageHeader);
+      form_data.append('footer', this.state.pageFooter);
+      form_data.append('file_name', fileName);
+      $.ajax({
+          url: config_ENV.create_pdf,
+          contentType: false,
+          processData: false,
+          data: form_data,
+          type: 'post',
+          success: function(suc) {
+            let response = JSON.parse(suc)
+            var link = document.createElement('a');
+            link.href = config_ENV.pdf_url+response.data.message+'?'+currentTimeStamp;
+            link.target = "_blank";
+            document.body.appendChild(link);
+            link.click();
+          },
+          error: function(error) {
+          }
+        });
+    }
     render(){
+      let fileList = []
+      _.map(this.state.uploadedPDF,(name, key)=>{
+          fileList.push(
+            <div key={key} style={styles.uploadedPdfBlock}>
+              {name}
+              <span
+                onClick={()=>{this.deleteAttachment(key)}}
+                style={styles.crossButton}
+                className="glyphicon glyphicon-remove">
+              </span>
+          </div>)
+      })
     let templates=[];
     const actions = [
           <RaisedButton
@@ -322,18 +512,6 @@ class ScheduleCandidate extends React.Component {
             <FlatButton label="Close" primary={true} onTouchTap={this.handleCloseSendMailDialog} style={{marginRight:5}} />,
             <RaisedButton label={"Preview"} primary={true} onClick={this.openMailPreview} />
           ];
-    /*const templateAction =  [
-          <FlatButton
-           label="Cancel"
-           primary={true}
-           onTouchTap={this.handleCloseTemplateDialog}
-          />,
-          <FlatButton
-           label="Send"
-           primary={true}
-           onTouchTap={()=>{this.submitMail(this.props.emailIdList)}}
-          />,
-    ];*/
     _.map(this.props.emailTemplates,(template, key)=>{
       templates.push(
         <div className="col-xs-6" key={template._id} style={{marginBottom:'20px'}}>
@@ -428,7 +606,8 @@ class ScheduleCandidate extends React.Component {
                 title={"Mail Preview"}
                 titleStyle={{padding:'5px 24px 0px',textAlign:'center',fontSize:'18px',fontWeight:'500'}}
                 actions={[<FlatButton label="Cancel" primary={true} onTouchTap={this.closeMailPreview} style={{marginRight:5}} />,
-                            <RaisedButton label={"Continue"} primary={true} onClick={this.sendMail}/>]}
+                            <RaisedButton label={"Continue"} primary={true} onClick={this.sendMail}/>,
+                            <FlatButton label={"Download Preview"} primary={true} style={{"float":'left'}} onClick={(e)=>{this.download_mail_preview(e)}}/>]}
                 modal={false}
                 bodyStyle={{minHeight:'70vh'}}
                 contentStyle={{maxWidth:'90%',width:"70%",transform: 'translate(0px, 0px)'}}
@@ -493,12 +672,33 @@ class ScheduleCandidate extends React.Component {
                     />
                   </div>
                 </form>
+                <div className="row">
+                  <div className="col-md-2">
+                    {this.state.LinearProgressBar}
+                    {fileList}
+                  </div>
+                </div>
+
+                <form action={''} method="POST" encType="multipart/form-data">
+                  <div className="form-group" style={{'cursor':'pointer'}}>
+                    <button style={styles.uploadButton} className="btn btn-blue" >
+                      <input onChange={(e)=>{this.uploadPDF(e)}} style={styles.uploadInput} id="file_image" type="file" name="image[]" ref="file" className="form-control" multiple={true}/>
+                      <span style={{'color':'black'}}>Attachment</span>
+                    </button>
+                  </div>
+                </form>
               </div>
             </Dialog>
             <div style={styles.wrapper}>
               {templates}
             </div>
           </Dialog>
+          <Snackbar
+            open={this.state.SnackbarOpen}
+            message={this.state.SnackbarMessage}
+            autoHideDuration={4000}
+            onRequestClose={this.handleRequestClose}
+          />
         </div>
         )
     }
