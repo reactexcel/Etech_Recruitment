@@ -340,21 +340,19 @@ render(){
         let dynamicActions = this.props.dynamicActions;
         let actionMenu = []
         _.map(dynamicActions,(action)=>{
-          let disable=0;
+          let disable=false;
           if(action.dependentActionId != ""){
              if(_.includes(data.candidateActions,action.dependentActionId)==true){
-              _.includes(data.candidateActions,action._id)?disable=1:disable=0
-              actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{
-                //this.candidateAction(action._id, [data._id])
+              _.includes(data.candidateActions,action._id)?disable=true:disable=false
+              actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
                 this.openPopUp(action)
-              }} />)
+              }}/>)
              }
           }else{
-            _.includes(data.candidateActions,action._id)?disable=1:disable=0
-            actionMenu.push(<MenuItem primaryText={action.name} disabled={disable} onTouchTap={()=>{
-              //this.candidateAction(action._id, [data._id])
-              this.openPopUp(action)
-            }} />)
+            _.includes(data.candidateActions,action._id)?disable=true:disable=false
+            actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
+                this.openPopUp(action)
+              }}/>)
           }
         })
         //-------candidate tags
@@ -394,25 +392,16 @@ render(){
  <AppBar
     title="Email"
     iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
-    iconElementRight={
-      <IconMenu
-        iconButtonElement={
-          <IconButton><MoreVertIcon /></IconButton>
-        }
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-      >
-        <MenuItem primaryText="Tags " rightIcon={<ArrowDropRight />} menuItems={[
-           <MenuItem primaryText={this.ignoreText} onTouchTap={()=>{
+    iconElementRight={<div style={{'display':'inline'}}>
+      <FlatButton style={{'marginRight':'5px'}} label={this.ignoreText} onTouchTap={()=>{
           this.ignoreCandidate(data,this.ignoreTagId)
-        }}/>,
-        <MenuItem primaryText={this.rejectText} onTouchTap={()=>{
+      }}/>
+      <FlatButton style={{'marginRight':'5px'}} label={this.rejectText} onTouchTap={()=>{
           this.rejectCandidate(data,this.rejectTagId)
-        }}/>,
-        <MenuItem primaryText="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>]
-        } />
-        <MenuItem primaryText="Actions &nbsp;&nbsp;&nbsp;" rightIcon={<ArrowDropRight />} menuItems={[actionMenu]} />
-      </IconMenu>
+      }}/>
+      <FlatButton style={{'marginRight':'5px'}} label="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+      {actionMenu}
+      </div>
     }
   />
   </div>

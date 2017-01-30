@@ -313,7 +313,7 @@ class Variables extends React.Component {
               />
               <RadioButton
                 value="richEditor"
-                label="Otherthen header/footer"
+                label="Other than header/footer"
                 style={styles.radioButton}
               />
               </RadioButtonGroup>

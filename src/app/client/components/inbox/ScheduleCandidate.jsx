@@ -57,18 +57,20 @@ const styles = {
     'cursor':'pointer',
     'opacity':0,
   },
-  uploadedPdfBlock:{
+    rows:{
       'boxShadow': '0px 0px 5px #888888',
       'height':'30px',
-      'padding':'5px',
-      'textAlign':'left',
-      'marginLeft':'54px',
-      'marginTop':'10px',
-      'width':'350px',
       'display':'block',
-      'fontStyle':'italic',
+      'color':'#0099cc',
       'fontWeight':'bold',
-      'color':'#0099cc'
+      'fontStyle':'italic',
+      'paddingTop':'1%',
+      'marginTop':'2%'
+    },
+    filename:{
+      'whiteSpace': 'nowrap',
+      'overflow':'hidden',
+      'textOverflow':'ellipsis',
     },
     crossButton:{
       'color':'red',
@@ -395,14 +397,14 @@ class ScheduleCandidate extends React.Component {
             }else{
               this.setState({
                 SnackbarOpen: true,
-                SnackbarMessage:'Please upload the document in correct format.'
+                SnackbarMessage:'Please upload the document in pdf format.'
               });
             }
           }
         }
         for(i=0;i<file_data['length'];i++){
-          LinearProgressBar.push(<div key={i} className="row" style={styles.uploadedPdfBlock  }>
-            <div className="col-xs-7">
+          LinearProgressBar.push(<div key={i} className="row" style={styles.rows}>
+            <div className="col-xs-7" style={styles.filename}>
               {file_data[i].name}
             </div>
             <div className="col-xs-5">
@@ -492,13 +494,17 @@ class ScheduleCandidate extends React.Component {
       let fileList = []
       _.map(this.state.uploadedPDF,(name, key)=>{
           fileList.push(
-            <div key={key} style={styles.uploadedPdfBlock}>
+            <div key={key} className="row" style={styles.rows}>
+            <div className="col-xs-10" style={styles.filename}>
               {name}
+            </div>
+            <div className="col-xs-2">
               <span
                 onClick={()=>{this.deleteAttachment(key)}}
                 style={styles.crossButton}
                 className="glyphicon glyphicon-remove">
               </span>
+            </div>
           </div>)
       })
     let templates=[];
@@ -510,7 +516,7 @@ class ScheduleCandidate extends React.Component {
           />]
     const actionsSendMail = [
             <FlatButton label="Close" primary={true} onTouchTap={this.handleCloseSendMailDialog} style={{marginRight:5}} />,
-            <RaisedButton label={"Preview"} primary={true} onClick={this.openMailPreview} />
+            <RaisedButton label={"Set Variables"} primary={true} onClick={this.openMailPreview} />
           ];
     _.map(this.props.emailTemplates,(template, key)=>{
       templates.push(
@@ -588,7 +594,7 @@ class ScheduleCandidate extends React.Component {
               <Dialog
                 title={"Enter values"}
                 actions={[<FlatButton label="Close" primary={true} onTouchTap={this.handleClose} style={{marginRight:5}} />,
-                          <RaisedButton label={"Set Variables"} primary={true} onClick={this.setVariable}/>]}
+                          <RaisedButton label={"Preview Mail"} primary={true} onClick={this.setVariable}/>]}
                 modal={false}
                 bodyStyle={{minHeight:'50vh'}}
                 contentStyle={{maxWidth:'90%',width:"50%",transform: 'translate(0px, 0px)'}}
@@ -606,7 +612,7 @@ class ScheduleCandidate extends React.Component {
                 title={"Mail Preview"}
                 titleStyle={{padding:'5px 24px 0px',textAlign:'center',fontSize:'18px',fontWeight:'500'}}
                 actions={[<FlatButton label="Cancel" primary={true} onTouchTap={this.closeMailPreview} style={{marginRight:5}} />,
-                            <RaisedButton label={"Continue"} primary={true} onClick={this.sendMail}/>,
+                            <RaisedButton label={"Send Mail"} primary={true} onClick={this.sendMail}/>,
                             <FlatButton label={"Download Preview"} primary={true} style={{"float":'left'}} onClick={(e)=>{this.download_mail_preview(e)}}/>]}
                 modal={false}
                 bodyStyle={{minHeight:'70vh'}}
@@ -672,13 +678,13 @@ class ScheduleCandidate extends React.Component {
                     />
                   </div>
                 </form>
-                <div className="row">
-                  <div className="col-md-2">
+                <div className="row" style={{'marginTop':'1%','marginRight':'0px','marginLeft':'5%'}}>
+                  <div className="col-xs-5">
                     {this.state.LinearProgressBar}
                     {fileList}
                   </div>
                 </div>
-
+                
                 <form action={''} method="POST" encType="multipart/form-data">
                   <div className="form-group" style={{'cursor':'pointer'}}>
                     <button style={styles.uploadButton} className="btn btn-blue" >
