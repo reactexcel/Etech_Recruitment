@@ -55,6 +55,7 @@ class EmailBody extends React.Component {
     this.handleCloseVariable=this.handleCloseVariable.bind(this)
     this.submitreason=this.submitreason.bind(this)
     this.ignoreCandidate=this.ignoreCandidate.bind(this)
+    this.scheduleCandidate=this.scheduleCandidate.bind(this)
     this.rejectCandidate=this.rejectCandidate.bind(this)
     this.candidateAction=this.candidateAction.bind(this)
     this.openPopUp=this.openPopUp.bind(this)
@@ -286,6 +287,25 @@ openPopUp(action){
             })
       }
   }
+  scheduleCandidate(data,scheduleTagId){
+    if(_.includes(data.tags,scheduleTagId)==false){
+            this.scheduleText="Scheduled";
+            this.props.onSchedule([data._id],this.scheduleTagId).then(()=>{
+              this.props.router.push('/inbox/b');
+            }).catch( (error) => {
+              this.setState({
+                SnackbarOpen:true,
+                SnackbarMessage:error.toString(),
+              })
+            })
+
+      }else{
+        this.setState({
+          "SnackbarOpen":true,
+          "SnackbarMessage":"Candidates is already scheduled"
+        })
+      }
+  }
   rejectCandidate(data,rejectTagId){
     if(_.includes(data.tags,rejectTagId)==false){
            this.setState({rejectpop:true})
@@ -374,6 +394,9 @@ render(){
         if(_.includes(data.tags,this.rejectTagId)==true){
                 this.rejectText="Rejected"
         }
+        if(_.includes(data.tags,this.scheduleTagId)==true){
+                this.rejectText="Scheduled"
+        }
            const actions = [
       <FlatButton
         label="Cancel"
@@ -400,7 +423,9 @@ render(){
       <FlatButton style={{'marginRight':'5px'}} label={this.rejectText} onTouchTap={()=>{
           this.rejectCandidate(data,this.rejectTagId)
       }}/>
-      <FlatButton style={{'marginRight':'5px'}} label="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+      <FlatButton style={{'marginRight':'5px'}} label={this.scheduleText} onTouchTap={()=>{
+        this.scheduleCandidate(data,this.scheduleTagId)
+      }}/>
       {actionMenu}
       </div>
     }

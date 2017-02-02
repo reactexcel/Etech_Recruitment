@@ -156,7 +156,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -168,7 +168,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )

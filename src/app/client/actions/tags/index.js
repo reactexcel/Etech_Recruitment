@@ -138,6 +138,21 @@ export function onIgnoreMultipleCandidate (idList, tagId){
   }
 }
 
+export function onScheduleMultipleCandidate (idList, tagId){
+  return (dispatch, getState) => {
+    return new Promise( (resolve, reject) => {
+      Meteor.call('scheduleMultipleCandidate',idList,tagId,Meteor.userId(),(err, mails) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(assignTag(mails));
+            resolve();
+          }
+      });
+    });
+  }
+}
+
 export function onRejectMultipleCandidate (idList, tagId, reason){
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
