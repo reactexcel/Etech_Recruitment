@@ -19,7 +19,9 @@ class Inbox extends React.Component {
             emails_per_page : 20,
             page_num : 1,
             imap_emails : [],
-            emails_fetch_status : 0
+            emails_fetch_status : 0,
+            is_imap:1,
+            is_smtp:1
         }
         this.doPageChange = this.doPageChange.bind(this)
         this.update = true;
@@ -34,12 +36,20 @@ class Inbox extends React.Component {
         this.props.onFetchTag()
         this.props.onFetchTamplets()
         this.props.onFetchVariables()
+        this.props.onCheckSmtpImap();
         }else{
             //this.props.onInboxData( this.state.emails_per_page, 1 ,'')
             this.props.onUpdateUnreadStatus()
+            this.props.onCheckSmtpImap();
         }
     }
     componentWillReceiveProps( props ){
+        if(props.checkSmtpImap.length > 0){
+            this.setState({
+                is_imap:props.checkSmtpImap[0].imap_active,
+                is_smtp:props.checkSmtpImap[0].smtp_active
+            })
+        }
         if( props.inbox.emails_fetch_status.length > 0 ){
             //this will run after fetching new emails
             let imap_email_with_fetch_response = _.map( props.emailSetting,( email )=>{
@@ -99,6 +109,14 @@ class Inbox extends React.Component {
         }
     }
     render(){
+        let errorMessage = "";
+            if(this.state.is_imap == 0 && this.state.is_smtp == 0){
+                errorMessage = "Imap and Smtp settings are not working, System is not usable without that"
+            }else if(this.state.is_imap == 0 && this.state.is_smtp != 0){
+                errorMessage = "Imap settings is not working, System is not usable without that"
+            }else if(this.state.is_imap != 0 && this.state.is_smtp == 0){
+                errorMessage = "Smtp settings is not working, System is not usable without that"
+            }
       let setting_status = true, i = false;
       if( typeof this.props.emailSetting != 'undefined' && this.props.emailSetting.length > 0 ){
           _.map( this.props.emailSetting, ( setting ) => {
@@ -122,7 +140,7 @@ class Inbox extends React.Component {
                 <EmailsList  doPageChange={this.doPageChange} imap_emails={this.state.imap_emails}
                  emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
                  route={this.props.router}
-                 setting_status = {setting_status}
+                 errorMessage = {errorMessage}
                  {...this.props}
                 />
         	</div>
@@ -137,7 +155,8 @@ function mapStateToProps( state ){
         tags : state.entities.inboxTag.sort(function(a, b){let x=a.name.localeCompare(b.name); if(x==1)return(1);if(x==-1)return(-1);return 0;}),
         emailTemplates : state.entities.emailTemplates,
         variables:state.entities.variables,
-        uiLoading: state.ui.loading
+        uiLoading: state.ui.loading,
+        checkSmtpImap: state.entities.checkSmtpImap,
     }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -170,7 +189,6 @@ const mapDispatchToProps = (dispatch) => {
             return dispatch(fetchTemplate())
         },
         onSendMailToCandidate:(candidateIdList,name,sub,body,tagId,attachment)=>{
-            console.log(attachment,"dispatch")
             return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId,attachment))
         },
         onRead : ( _id ) => {
@@ -182,6 +200,9 @@ const mapDispatchToProps = (dispatch) => {
         onFetchVariables:()=>{
             return dispatch(fetchVariable())
         },
+        onCheckSmtpImap: () =>{
+        dispatch(actions_emailSetting.onCheckSmtpImap());
+      }
     }
 }
 

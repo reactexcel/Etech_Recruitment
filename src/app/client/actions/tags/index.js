@@ -153,11 +153,10 @@ export function onRejectMultipleCandidate (idList, tagId, reason){
   }
 }
 
-export function sendMailToCandidate(candidateIdList,name,sub,body,tagId,attachment){
-  console.log(attachment,"action")
+export function sendMailToCandidate(candidateIdList,name,sub,body,action_id,attachment){
   return (dispatch,getState)=>{
     return new Promise((resolve,reject)=>{
-      Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,tagId,attachment,Meteor.userId(),(err,mails)=>{
+      Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,action_id,attachment,Meteor.userId(),(err,mails)=>{
         if(err){
           reject(err)
         }else{

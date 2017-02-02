@@ -45,6 +45,7 @@ class Header extends React.Component {
               showMenuIconButton={true}
               iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
               zDepth={2}
+              style={{'position':'fixed'}}
               />
             <MenuDrawer
               open={this.state.open}

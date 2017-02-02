@@ -39,7 +39,6 @@ class EmailBody extends React.Component {
     this.state={
         data:'',
         rejectpop:false,
-        schedulePop:false,
         reason:'',
         errortxt:'',
         SnackbarOpen:false,
@@ -48,7 +47,8 @@ class EmailBody extends React.Component {
         popUpContentOpen:false,
         scheduledDate:'',
         scheduledTime:'',
-        actionId:''
+        actionId:'',
+        currentAction:''
 
     }
     this.handleClose=this.handleClose.bind(this)
@@ -345,13 +345,13 @@ render(){
              if(_.includes(data.candidateActions,action.dependentActionId)==true){
               _.includes(data.candidateActions,action._id)?disable=true:disable=false
               actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
-                this.openPopUp(action)
+                this.setState({currentAction:action})
               }}/>)
              }
           }else{
             _.includes(data.candidateActions,action._id)?disable=true:disable=false
             actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
-                this.openPopUp(action)
+                this.setState({currentAction:action})
               }}/>)
           }
         })
@@ -391,6 +391,7 @@ render(){
   <div>
  <AppBar
     title="Email"
+    style={{'position':'fixed'}}
     iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={<div style={{'display':'inline'}}>
       <FlatButton style={{'marginRight':'5px'}} label={this.ignoreText} onTouchTap={()=>{
@@ -447,17 +448,16 @@ render(){
         {this.state.popUpContent}
       </Dialog>
       <ScheduleCandidate
-                    scheduleTagId={this.scheduleTagId}
-                    showPopUp={this.state.schedulePop}
-                    currentEmail={this.state.data}
-                    emailIdList={[data._id]}
-                    emailTemplates={this.props.emailTemplates}
-                    {...this.props}
-                    closeDialog={()=>{
-                      this.setState({
-                            schedulePop : false
-                      })
-                    }}
+        currentEmail={this.state.data}
+        currentAction={this.state.currentAction}
+        emailIdList={[data._id]}
+        emailTemplates={this.props.emailTemplates}
+        {...this.props}
+        closeDialog={()=>{
+          this.setState({
+            currentAction : ''
+          })
+        }}
         />
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">

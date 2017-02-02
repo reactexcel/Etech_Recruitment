@@ -13,6 +13,10 @@ import * as dashboardActions from '../actions/dashboard'
 class DashboardContainer extends React.Component {
     constructor( props ){
         super( props )
+        this.state = {
+          is_imap:1,
+          is_smtp:1
+        }
     }
     componentWillMount(){
         if (!Meteor.userId()) {
@@ -21,30 +25,30 @@ class DashboardContainer extends React.Component {
         //this.props.onFetchTag()
         this.props.onFetchTagForDashboard();
         this.props.onFetchSettings();
+        this.props.onCheckSmtpImap();
+    }
+    componentWillReceiveProps(props){
+      if(props.checkSmtpImap.length > 0){
+        this.setState({
+          is_imap:props.checkSmtpImap[0].imap_active,
+          is_smtp:props.checkSmtpImap[0].smtp_active
+        })
+      }
     }
 
     render(){
-      let setting_status = true, i = false;
-      if( typeof this.props.emailSetting != 'undefined' && this.props.emailSetting.length > 0 ){
-          _.map( this.props.emailSetting, ( setting ) => {
-              if(typeof setting.smtp !== "undefined"){
-                if(setting.smtp.status == 1){
-                  i = true;
-                }
-              }else{
-                if( setting.active == true && setting.status == 1){
-                  i = true;
-                }
-              }
-          });
-          if(i){
-            setting_status = i;
-          }
+      let errorMessage = "";
+      if(this.state.is_imap == 0 && this.state.is_smtp == 0){
+        errorMessage = "Imap and Smtp settings are not working, System is not usable without that"
+      }else if(this.state.is_imap == 0 && this.state.is_smtp != 0){
+        errorMessage = "Imap settings is not working, System is not usable without that"
+      }else if(this.state.is_imap != 0 && this.state.is_smtp == 0){
+        errorMessage = "Smtp settings is not working, System is not usable without that"
       }
         return(
         	<div>
                 <Header {...this.props} position={0} altr={"Dashboard"}/>
-                {setting_status ? "" : <div className="alert alert-danger text-center" style={{width:"99%",zIndex:'9999',margin:'5px'}}><b>IMAP/SMTP</b> settings are not working, System is not usable without that<b> !!!!</b></div>}
+                {errorMessage == "" ? "" : <div className="alert alert-danger text-center" style={{width:"99%",position:'relative',top:'12px',left:'0.4%'}}><b>{errorMessage}</b></div>}
                 <Dashboard {...this.props}/>
         	</div>
         )
@@ -55,6 +59,7 @@ function mapStateToProps( state ){
     return {
         //tags : state.entities.inboxTag,
         emailSetting : state.entities.emailSetting,
+        checkSmtpImap: state.entities.checkSmtpImap,
         dashboardData: state.entities.dashboard
        }
 }
@@ -69,6 +74,9 @@ const mapDispatchToProps = (dispatch) => {
       onFetchSettings: () =>{
         dispatch(actions_emailSetting.onFetchSettingsFromDB());
       },
+      onCheckSmtpImap: () =>{
+        dispatch(actions_emailSetting.onCheckSmtpImap());
+      }
     }
 }
 
