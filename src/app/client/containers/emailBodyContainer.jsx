@@ -7,7 +7,7 @@ import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
 import { fetchAction, candidateAction } from '../actions/dynamicActions'
 import * as candidateHistory_action from '../actions/candidateHistory'
-import {onFetchTag, onAssignTag, onIgnoreMultipleCandidate, onRejectMultipleCandidate, sendMailToCandidate, removeTagFromCandidate} from '../actions/tags'
+import {onFetchTag, onAssignTag,onScheduleMultipleCandidate, onIgnoreMultipleCandidate, onRejectMultipleCandidate, sendMailToCandidate, removeTagFromCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
 import {fetchTemplate} from '../actions/emailTemplates'
 import {fetchVariable} from '../actions/variable'
@@ -58,11 +58,12 @@ const mapDispatchToProps = (dispatch) => {
         return dispatch(getEmailData( email_id ))
       },
       onIgnore : (id, tagId) => {
-        //return dispatch(tagUpdateArchive( id,tagId))
         return dispatch(onIgnoreMultipleCandidate( id,tagId))
       },
+      onSchedule: (id, tagId) =>{
+        return dispatch(onScheduleMultipleCandidate( id,tagId))
+      },
       onReject : (id,tagId,reason) => {
-        //return dispatch(updateReject(id,tagId,reason))
         return dispatch(onRejectMultipleCandidate(id,tagId,reason))
       },
       onAddAction: (actiontype, id, details)=>{
@@ -77,8 +78,8 @@ const mapDispatchToProps = (dispatch) => {
       onFetchTag : () => {
         return dispatch(onFetchTag());
       },
-      onSendMailToCandidate:(candidateIdList,name,sub,body,tagId)=>{
-        return dispatch(sendMailToCandidate(candidateIdList,name,sub,body,tagId))
+      onSendMailToCandidate:(candidateIdList,name,sub,body,action_id,attachment)=>{
+        return dispatch(candidateAction(candidateIdList,name,sub,body,action_id,attachment))
       },
       onFetchActions:()=>{
         return dispatch(fetchAction())

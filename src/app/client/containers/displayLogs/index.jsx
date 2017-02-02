@@ -58,6 +58,7 @@ class DisplayContainer extends React.Component{
             }
       iconElementLeft={<IconButton onTouchTap={this.handleToggel}><NavigationMenu /></IconButton>}
       zDepth={2}
+      style={{'position':'fixed'}}
       />
       <div className="col-lg-11 col-sm-11 col-xs-11" style={{"height": "100%","marginTop":"20px","marginLeft":"4%"}}>
             {this.props.children}

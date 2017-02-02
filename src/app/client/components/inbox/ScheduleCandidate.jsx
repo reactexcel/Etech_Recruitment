@@ -108,7 +108,6 @@ class ScheduleCandidate extends React.Component {
           pageHeader:'',
           pageFooter:''
         }
-        this.handleCloseScheduleDialog=this.handleCloseScheduleDialog.bind(this);
         this.forwardTemplate=this.forwardTemplate.bind(this);
         this.handleCloseSendMailDialog = this.handleCloseSendMailDialog.bind(this);
         this.applyVariables = this.applyVariables.bind(this);
@@ -124,8 +123,14 @@ class ScheduleCandidate extends React.Component {
         this.download_mail_preview = this.download_mail_preview.bind(this)
         //this.handleCloseTemplateDialog=this.handleCloseTemplateDialog.bind(this);
     }
-    handleCloseScheduleDialog(){
-      this.props.closeDialog()
+    componentWillReceiveProps(props){
+      if(props.currentAction.template_id != ""){
+         _.map(this.props.emailTemplates,(template, key)=>{
+           if(template._id == props.currentAction.template_id){
+            this.forwardTemplate(template)
+           }
+         })
+      }
     }
     handleContentChange(value) {
       this.setState({templateBody: value});
@@ -142,14 +147,8 @@ class ScheduleCandidate extends React.Component {
         LinearProgressBar:[],
         openPreview:false
       });
-      this.handleCloseScheduleDialog();
+      this.props.closeDialog()
     }
-    /*handleCloseTemplateDialog(){
-      this.setState({
-        templatePop:false,
-        pickedTemplate:[]
-      })
-    }*/
     replaceVariablesWithValue(templ, str, value){
       if(value != undefined){
       if(value.indexOf("<p>") > -1){
@@ -303,28 +302,37 @@ class ScheduleCandidate extends React.Component {
     }
     setVariable(){
       let pValue = this.state.pValue,
+          flag = 1,
           template = {
             name:this.state.templateName.trim(),
             subject:this.state.templateSubject.trim(),
             body:this.state.templateBody.toString('html'),
           };
-
       _.map(pValue, (variable, i)=>{
-        if(typeof variable.value !== 'undefined'){
+        if(typeof variable.value !== 'undefined' && variable.value !== ''){
           template = this.replaceVariablesWithValue(template, variable.name, variable.value)
+        }else{
+          flag = 0
         }
       });
-
-     this.setState({
-       templateName: template.name,
-       templateSubject: template.subject,
-       templateBody: RichTextEditor.createValueFromString(template.body, 'html'),
-       pValue: null,
-     },
-     ()=>{
-       this.handleClose();
-       this.openMailPreview();
-     });
+      if(flag == 1){
+        this.setState({
+          templateName: template.name,
+          templateSubject: template.subject,
+          templateBody: RichTextEditor.createValueFromString(template.body, 'html'),
+          pValue: null,
+        },
+        ()=>{
+          this.handleClose();
+          this.openMailPreview();
+        });
+      }else{
+        this.setState({
+          SnackbarOpen:true,
+          SnackbarMessage:'Please put all variable`s value',
+        })
+      }
+     
     }
     handleClose(){
       this.setState({
@@ -356,7 +364,6 @@ class ScheduleCandidate extends React.Component {
       let name = sentMail.email[0].name
       let subject = sentMail.email[0].subject
       let body = sentMail.email[0].body
-      let scheduledTagId = this.props.scheduleTagId
       let fileName = this.state.uploadedPDF
       let filePath = this.state.upload_file
       let attachment = []
@@ -365,16 +372,16 @@ class ScheduleCandidate extends React.Component {
       })
       idList.push(sentMail.email[0]._id)
       if(sentMail.status){
-        this.props.onSendMailToCandidate(idList,name,subject,body,scheduledTagId,attachment).then(()=>{
+        this.props.onSendMailToCandidate(idList,name,subject,body,this.props.currentAction._id,attachment).then((data)=>{
           this.handleCloseSendMailDialog();
           this.setState({
             SnackbarOpen: true,
-            SnackbarMessage:'Mail sent successfully.'
+            SnackbarMessage:data
           });
-        }).catch(()=>{
+        }).catch((error)=>{
           this.setState({
             SnackbarOpen: true,
-            SnackbarMessage:'Error in sending mail'
+            SnackbarMessage:error
           });
         })
       }
@@ -433,7 +440,7 @@ class ScheduleCandidate extends React.Component {
                let data = obj.data
                _.map(data,(file, key)=>{
                    uploadedPDF.push(file.name);
-                   upload_file_path.push(file.path)
+                   upload_file_path.push(config_ENV.pdf_url+file.path)
                  })
              }
              self.setState({
@@ -508,50 +515,10 @@ class ScheduleCandidate extends React.Component {
           </div>)
       })
     let templates=[];
-    const actions = [
-          <RaisedButton
-            label="Cancel"
-            primary={true}
-            onTouchTap={this.handleCloseScheduleDialog}
-          />]
     const actionsSendMail = [
             <FlatButton label="Close" primary={true} onTouchTap={this.handleCloseSendMailDialog} style={{marginRight:5}} />,
             <RaisedButton label={"Set Variables"} primary={true} onClick={this.openMailPreview} />
           ];
-    _.map(this.props.emailTemplates,(template, key)=>{
-      templates.push(
-        <div className="col-xs-6" key={template._id} style={{marginBottom:'20px'}}>
-          <Card zDepth={2}>
-            <Paper
-              style={{marginTop:"5px",paddingBottom: "0px"}}
-              actAsExpander={true}
-              zDepth={1}
-              children={<CardHeader
-                title={template.name}
-                subtitle={"Subject: "+template.subject}
-                actAsExpander={true}
-                showExpandableButton={true}
-                style={{'backgroundColor':cyan100}}
-              />}
-            />
-            <CardText expandable={true}>
-              {<div className="col-xs-12 m-b"><span style={{display: 'inline-flex'}}><b>Body: </b><div className="p-l" dangerouslySetInnerHTML={{__html:template.content}}></div></span></div>}
-            </CardText>
-            <CardActions style={{'textAlign':'right'}}>
-              <RaisedButton 
-                secondary={true}
-                labelColor={grey50} 
-                label="Forward" 
-                labelPosition="before" 
-                icon={<Select color={grey50}/>} 
-                style={{'margin':4,'padding':-1}}
-                onTouchTap={() => {this.forwardTemplate(template)}}
-              />
-            </CardActions>
-          </Card>
-        </div>
-        )
-    })
     let pendingVar = [];
       _.map(this.state.pValue,(variable, i)=>{
         pendingVar.push(
@@ -569,17 +536,6 @@ class ScheduleCandidate extends React.Component {
         })
       return(
         <div>
-          <Dialog
-            title="Select Template"
-            modal={false}
-            bodyStyle={{minHeight:'70vh'}}
-            contentStyle={{maxWidth:'90%',width:"90%",transform: 'translate(0px, 0px)'}}
-            autoDetectWindowHeight={true}
-            open={this.props.showPopUp}
-            onRequestClose={this.handleCloseScheduleDialog}
-            autoScrollBodyContent={true}
-            actions={actions}
-          >
             <Dialog
               title={"Send Mail"}
               actions={actionsSendMail}
@@ -698,7 +654,6 @@ class ScheduleCandidate extends React.Component {
             <div style={styles.wrapper}>
               {templates}
             </div>
-          </Dialog>
           <Snackbar
             open={this.state.SnackbarOpen}
             message={this.state.SnackbarMessage}

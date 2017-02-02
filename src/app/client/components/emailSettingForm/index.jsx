@@ -159,7 +159,7 @@ export default class EmailSettingForm extends React.Component {
             "server": this.state.server ,
             "port": this.state.port ,
             "encrypt": this.state.encrypt,
-            "status": 0,
+            "status": 1,
             "_id": this.state._id || undefined
           })
           this.setState({status: data, testDetails: true})

@@ -29,7 +29,6 @@ Meteor.startup(function () {
   // Configure MAIL_URL
   // config_ENV.emailServer._url() generate MAIL_URL as per the given information in config file under emailServer.
   process.env.MAIL_URL = config_ENV.emailServer._url();
-
   var i = 0;
 
   try{
@@ -60,7 +59,7 @@ Meteor.startup(function () {
       console.log();
     }
 
-    SyncedCron.config({
+    SyncedCron.config({ 
       logger: MyLogger
     });
     SyncedCron.start();

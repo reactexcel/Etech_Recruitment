@@ -11,7 +11,7 @@ class AppContainer extends React.Component {
     return (
       <div className="container-fluid">
         <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{"padding": "0px 0px"}}>
+          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{"padding": "0px 0px",'top':'62px'}}>
             {this.props.children}
           </div>
         </div>

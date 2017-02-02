@@ -24,7 +24,7 @@ import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import LinearProgress from 'material-ui/LinearProgress';
 import CircularProgress from 'material-ui/CircularProgress';
-import ScheduleCandidate from './ScheduleCandidate'
+//import ScheduleCandidate from './ScheduleCandidate'
 import Subheader from 'material-ui/Subheader'
 import DefaultPage from './defaultPage'
 
@@ -156,7 +156,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -168,7 +168,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} onSchedule={(e,email)=>{this.setState({schedulePop:e,currentEmail:email})}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )
@@ -211,7 +211,7 @@ class EmailsList extends React.Component {
         let inboxItems = [<ListItem
                               key={0}
                               primaryText={"Mails " + count_unread_emails}
-                              leftIcon={<CommunicationEmail color={indigo500} />}
+                              leftIcon={<CommunicationEmail color={indigo500} style={{left:'7px'}}/>}
                               onTouchTap= { () => this.onClick( {t_id : ''}) }
                             />]
         let jobItems = []
@@ -232,9 +232,9 @@ class EmailsList extends React.Component {
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
                                       backgroundColor={t.color}
-                                      style={{color:"#fff"}}
+                                      style={{color:"#fff",height:'29px',width:'29px',fontSize:'20px',opacity:1,display:'inline-flex'}}
                                       size={20}>
-                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      <span >{_.upperCase(_.trim(t.name)[0])}</span>
                                       </Avatar>}
                               onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                             />)
@@ -244,9 +244,9 @@ class EmailsList extends React.Component {
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
                                       backgroundColor={t.color}
-                                      style={{color:"#fff"}}
+                                      style={{color:"#fff",height:'29px',width:'29px',fontSize:'20px',opacity:1,display:'inline-flex'}}
                                       size={20}>
-                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      <span>{_.upperCase(_.trim(t.name)[0])}</span>
                                       </Avatar>}
                               onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                             />)
@@ -256,9 +256,9 @@ class EmailsList extends React.Component {
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
                                       backgroundColor={t.color}
-                                      style={{color:"#fff"}}
+                                      style={{color:"#fff",height:'29px',width:'29px',fontSize:'20px',opacity:1,display:'inline-flex'}}
                                       size={20}>
-                                      <span style={{'paddingLeft':'10px'}}>{_.upperCase(_.trim(t.name)[0])}</span>
+                                      <span>{_.upperCase(_.trim(t.name)[0])}</span>
                                       </Avatar>}
                               onTouchTap={(e) => this.onClick({"t_id": t._id, t_name: t.name, t_color: t.color}, e)}
                             />)
@@ -267,7 +267,7 @@ class EmailsList extends React.Component {
         }
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
-                <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"100%",}}>
+                <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"90%",'position':'fixed','top':'62px','overflowY':'scroll'}}>
                       <List>
                         {this.props.tags.length === 0 ?
                         <div style={{'marginLeft':"10%"}}>
@@ -300,10 +300,10 @@ class EmailsList extends React.Component {
 
 
                 </div>
-                <div className="col-xs-9 col-sm-9" style={{width:'79%'}} >
+                <div className="col-xs-9 col-sm-9" style={{width:'79%','left':'21%'}} >
                   <div className="row">
                     <div className="col-xs-12" >
-                      {this.props.setting_status ? "" : <div className="alert alert-danger text-center" style={{position:"absolute",width:"60%",left:"14%",zIndex:'9999',margin:'5px'}}><b>IMAP/SMTP</b> settings are not working, System is not usable without that<b> !!!!</b></div>}
+                      {this.props.errorMessage == "" ? "" : <div className="alert alert-danger text-center" style={{width:"100%",position:'relative',top:'12px'}}><b>{this.props.errorMessage}</b></div>}
                         <nav aria-label="Page navigation">
                             <ul ref="actionList" className="pagination pull-left hidden">
                              <li style={{cursor:'pointer'}} onClick={ () => {
@@ -373,21 +373,6 @@ class EmailsList extends React.Component {
                      />
                      </div>
                     </Dialog>
-                    <ScheduleCandidate
-                    scheduleTagId={this.state.scheduleTagId}
-                    showPopUp={this.state.schedulePop}
-                    currentEmail={this.state.currentEmail}
-                    emailIdList={this.state.emailIdList}
-                    emailTemplates={this.props.emailTemplates}
-                    {...this.props}
-                    closeDialog={()=>{
-                      this.setState({
-                            schedulePop : false,
-                            emailIdList :[]
-                      })
-                      this.refs.actionList.className = classNames("pagination","pull-left","hidden");
-                    }}
-                    />
                   { this.props.uiLoading ?
                       <div style={{position:'relative', width:"100%",textAlign:"center"}}>
                         <div>

@@ -8,6 +8,16 @@ Meteor.methods({
   "fetchSettings": function(){
     return Config.find({}).fetch();
   },
+  "checkSmtpImap": function(){
+    let smtp_active=0,
+        imap_active=0
+        smtp_active = Config.find({"smtp.status":1}).count()
+        imap_active = Config.find({"status":1,"active":true}).count()
+        return {
+          "smtp_active":smtp_active,
+          "imap_active":imap_active
+        };
+  },
   "saveSettings": function(details){
     const settings = Config.find({ "emailId" : details.emailId }).fetch() || [];
     if(settings.length == 0){
@@ -77,14 +87,14 @@ Meteor.methods({
  "checkSMTPMailServer":function(detail){
   let setting = process.env.MAIL_URL
     process.env.MAIL_URL =  "smtp://"+detail.smtp.emailId+":"+detail.smtp.password+"@"+detail.smtp.server+":"+detail.smtp.port
-
   try{
     Email.send({
         "headers": {
           'Content-Type': 'text/html; charset=UTF-8'
         },
         "to": detail.smtp.emailId,
-        "from": detail.smtp.emailId,
+        //"from": detail.smtp.emailId,
+        "from":"abhishek@excellencetechnologies.in",
         "subject": 'This is test mail',
         'text':'SMTP mail server testing completed'
       });

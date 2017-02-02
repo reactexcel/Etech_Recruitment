@@ -62,10 +62,10 @@ export function deleteAction( id ){
 	}
 }
 
-export function candidateAction(A_id, email_ids, key,value){
+export function candidateAction(candidateIdList,name,sub,body,action_id,attachment){
 	return (dispatch,getState) => {
 		return new Promise( (resolve, reject) => {
-			Meteor.call('candidateActionTaken', A_id, email_ids, key,value, (err, data) =>{
+			Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,action_id,attachment,Meteor.userId(),(err, data) =>{
 				if(err){
 					reject(err)
 				}else{

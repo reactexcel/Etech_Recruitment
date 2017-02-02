@@ -39,7 +39,6 @@ class EmailBody extends React.Component {
     this.state={
         data:'',
         rejectpop:false,
-        schedulePop:false,
         reason:'',
         errortxt:'',
         SnackbarOpen:false,
@@ -48,13 +47,15 @@ class EmailBody extends React.Component {
         popUpContentOpen:false,
         scheduledDate:'',
         scheduledTime:'',
-        actionId:''
+        actionId:'',
+        currentAction:''
 
     }
     this.handleClose=this.handleClose.bind(this)
     this.handleCloseVariable=this.handleCloseVariable.bind(this)
     this.submitreason=this.submitreason.bind(this)
     this.ignoreCandidate=this.ignoreCandidate.bind(this)
+    this.scheduleCandidate=this.scheduleCandidate.bind(this)
     this.rejectCandidate=this.rejectCandidate.bind(this)
     this.candidateAction=this.candidateAction.bind(this)
     this.openPopUp=this.openPopUp.bind(this)
@@ -286,6 +287,25 @@ openPopUp(action){
             })
       }
   }
+  scheduleCandidate(data,scheduleTagId){
+    if(_.includes(data.tags,scheduleTagId)==false){
+            this.scheduleText="Scheduled";
+            this.props.onSchedule([data._id],this.scheduleTagId).then(()=>{
+              this.props.router.push('/inbox/b');
+            }).catch( (error) => {
+              this.setState({
+                SnackbarOpen:true,
+                SnackbarMessage:error.toString(),
+              })
+            })
+
+      }else{
+        this.setState({
+          "SnackbarOpen":true,
+          "SnackbarMessage":"Candidates is already scheduled"
+        })
+      }
+  }
   rejectCandidate(data,rejectTagId){
     if(_.includes(data.tags,rejectTagId)==false){
            this.setState({rejectpop:true})
@@ -345,13 +365,13 @@ render(){
              if(_.includes(data.candidateActions,action.dependentActionId)==true){
               _.includes(data.candidateActions,action._id)?disable=true:disable=false
               actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
-                this.openPopUp(action)
+                this.setState({currentAction:action})
               }}/>)
              }
           }else{
             _.includes(data.candidateActions,action._id)?disable=true:disable=false
             actionMenu.push(<FlatButton disabled={disable} style={{'marginRight':'5px'}} label={action.name} onTouchTap={()=>{
-                this.openPopUp(action)
+                this.setState({currentAction:action})
               }}/>)
           }
         })
@@ -374,6 +394,9 @@ render(){
         if(_.includes(data.tags,this.rejectTagId)==true){
                 this.rejectText="Rejected"
         }
+        if(_.includes(data.tags,this.scheduleTagId)==true){
+                this.rejectText="Scheduled"
+        }
            const actions = [
       <FlatButton
         label="Cancel"
@@ -391,6 +414,7 @@ render(){
   <div>
  <AppBar
     title="Email"
+    style={{'position':'fixed'}}
     iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={<div style={{'display':'inline'}}>
       <FlatButton style={{'marginRight':'5px'}} label={this.ignoreText} onTouchTap={()=>{
@@ -399,7 +423,9 @@ render(){
       <FlatButton style={{'marginRight':'5px'}} label={this.rejectText} onTouchTap={()=>{
           this.rejectCandidate(data,this.rejectTagId)
       }}/>
-      <FlatButton style={{'marginRight':'5px'}} label="Schedule" onTouchTap={()=>{this.setState({schedulePop:true})}}/>
+      <FlatButton style={{'marginRight':'5px'}} label={this.scheduleText} onTouchTap={()=>{
+        this.scheduleCandidate(data,this.scheduleTagId)
+      }}/>
       {actionMenu}
       </div>
     }
@@ -447,17 +473,16 @@ render(){
         {this.state.popUpContent}
       </Dialog>
       <ScheduleCandidate
-                    scheduleTagId={this.scheduleTagId}
-                    showPopUp={this.state.schedulePop}
-                    currentEmail={this.state.data}
-                    emailIdList={[data._id]}
-                    emailTemplates={this.props.emailTemplates}
-                    {...this.props}
-                    closeDialog={()=>{
-                      this.setState({
-                            schedulePop : false
-                      })
-                    }}
+        currentEmail={this.state.data}
+        currentAction={this.state.currentAction}
+        emailIdList={[data._id]}
+        emailTemplates={this.props.emailTemplates}
+        {...this.props}
+        closeDialog={()=>{
+          this.setState({
+            currentAction : ''
+          })
+        }}
         />
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">

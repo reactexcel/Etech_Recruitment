@@ -12,10 +12,32 @@ class TagMenu extends React.Component {
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
+    this.scheduleCandidate=this.scheduleCandidate.bind(this)
   }
 
   onClick ( obj ) {
     this.props.AssignTag([obj.m_id], obj.t_id)
+  }
+  scheduleCandidate(data,scheduleTagId){
+    if(_.includes(data.tags,scheduleTagId)==false){
+            this.props.onSchedule([data._id],scheduleTagId).then(()=>{
+              this.setState({
+                SnackbarOpen:true,
+                SnackbarMessage:"Candidate assign to scheduled tag",
+              })
+            }).catch( (error) => {
+              this.setState({
+                SnackbarOpen:true,
+                SnackbarMessage:error.toString(),
+              })
+            })
+
+      }else{
+        this.setState({
+          "SnackbarOpen":true,
+          "SnackbarMessage":"Candidates is already scheduled"
+        })
+      }
   }
 
   render() {
@@ -35,7 +57,13 @@ class TagMenu extends React.Component {
                   <span>{v.name.trim()}</span></span>}
                   key={v._id}
                   value={v._id+"-"+v.name}
-                  onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
+                  onTouchTap={() => {
+                    if(v.automatic==false){
+                      console.log("false")
+                    }else{
+                      this.onClick({"t_id": v._id, m_id: this.props.email._id})
+                    }
+                  }}
                   />:<div></div>):
                   <MenuItem
                     primaryText={<span><Avatar
@@ -49,7 +77,13 @@ class TagMenu extends React.Component {
                     secondaryText={v.name}
                     key={v._id}
                     value={v._id+"-"+v.name}
-                    onTouchTap={() => this.onClick({"t_id": v._id, m_id: this.props.email._id})}
+                    onTouchTap={() => {
+                      if(v.automatic==false){
+                        console.log("false")
+                      }else{
+                        this.onClick({"t_id": v._id, m_id: this.props.email._id})
+                      }
+                    }}
 
                     />)
                   }else if(v.name == "Schedule"){
@@ -66,7 +100,7 @@ class TagMenu extends React.Component {
                         <span>{v.name.trim()}</span></span>}
                         key={v._id}
                         value={v._id+"-"+v.name}
-                        onTouchTap={() => this.props.onSchedule(true,this.props.email)}
+                        onTouchTap={() => {this.scheduleCandidate(this.props.email,v._id)}}
                       />:<div></div>):<div></div>)
                   }
               })

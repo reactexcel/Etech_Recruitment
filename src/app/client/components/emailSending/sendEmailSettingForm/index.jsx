@@ -54,7 +54,7 @@ export default class SendEmailSettingForm extends React.Component {
       "port" : /^[0-9]+$/,
       "emailId": /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       "password": /^[a-zA-Z0-9\.-_!@#$%^&*]+$/,
-      "server": /^[a-z]+[.][a-z]+[.][a-z]+$/,
+      "server": /^[a-z]+(\.|-){1}[a-z]+[.][a-z]+$/,
       "encrypt": /^[a-z]+$/
     }
   }
@@ -121,20 +121,20 @@ export default class SendEmailSettingForm extends React.Component {
     if ((this.state.emailId.length && this.state.password.length
           && this.state.port.length && this.state.server.length
             && this.state.encrypt.length)){
-      let row={
-        "emailId": this.state.emailId ,
-        "password": this.state.password ,
-        "server": this.state.server ,
-        "port": this.state.port ,
-        "encrypt": this.state.encrypt,
-        "status": this.state.status,
-        "_id": this.state._id || undefined
-      }
+      let row={}
+      row.status=this.state.status
+      row.emailId=this.state.emailId
+      row.password=this.state.password
+      row.server=this.state.server
+      row.port=this.state.port
+      row.encrypt=this.state.encrypt
+      row._id=this.state._id || undefined
     this.handleOpen(row.emailId);
     this.props.onTestDetails( {"_id":row._id,"smtp":row} ).then( (response) => {
      if(response){
-      row.status=1
-      this.callSaveSetting(row)
+      let newRow = Object.assign({},row)
+      newRow.status = 1
+      this.callSaveSetting(newRow)
       this.setState({
         testStaus: 1,
         errTestFails:"",

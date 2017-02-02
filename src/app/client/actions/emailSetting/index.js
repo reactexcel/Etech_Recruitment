@@ -6,11 +6,16 @@ export const UPDATE_SETTINGS_TO_DB = "UPDATE_SETTINGS_TO_DB";
 export const TEST_DETAILS = "TEST_DETAILS";
 export const LOADING = "LOADING";
 export const REMOVE_DETAILS = "REMOVE_DETAILS";
+export const CHECK_SMTP_IMAP = "CHECK_SMTP_IMAP";
 
 export const FETCH_SMTP_SETTINGS = "FETCH_SMTP_SETTINGS";
 
 const fetchSettingsFromDB = (fetchedData) => {
   return createAction(FETCH_SETTINGS_FROM_DB)(fetchedData);
+}
+
+const checkSmtpImap = (data) =>{
+  return createAction(CHECK_SMTP_IMAP)(data);
 }
 
 const saveSettingsToDB = (details) => {
@@ -52,6 +57,21 @@ export function onFetchSettingsFromDB(){
           }
       });
     });
+  }
+}
+
+export function onCheckSmtpImap(){
+  return (dispatch,getState)=>{
+    return new Promise((resolve,reject)=>{
+      Meteor.call('checkSmtpImap',(err, fetchedData) => {
+          if(err){
+            reject(err);
+          }else{
+            dispatch(checkSmtpImap(fetchedData));
+            //resolve();
+          }
+      });
+    })
   }
 }
 
@@ -182,12 +202,15 @@ export function deleteSMTPRow(row_id){
 
 
 export function onTestDetailsSMTP (detail) {
+  console.log(detail,"in action")
   return (dispatch, getState) => {
     return new Promise( (resolve, reject) => {
         Meteor.call('checkSMTPMailServer',detail,(err,resp) => {
           if(err){
+            console.log(err,"in action 11111")
             reject(err)
           }else{
+            console.log(resp,"in action 2222")
             dispatch(fetchSMTPSettings());
             resolve(resp)
           }

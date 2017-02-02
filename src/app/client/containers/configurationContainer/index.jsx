@@ -89,7 +89,7 @@ class ConfigurationContainer extends React.Component {
     return (
         <div>
         <Header {...this.props} position={2} altr="Settings" />
-          <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff"}}>
+          <div className="col-lg-2 col-sm-2 col-xs-12" style={{"height": verge.viewportH()+"px", "padding":"0px", "backgroundColor":"#fff",'position':'fixed',top:'62px'}}>
           <SelectableList desktop={true} style={style.menu} defaultValue={1}>
           <ListItem
            value={1}
@@ -129,7 +129,7 @@ class ConfigurationContainer extends React.Component {
 
           </SelectableList>
           </div>
-          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%"}}>
+          <div className="col-lg-10 col-sm-10 col-xs-12" style={{"marginTop": "1%",'left':'17%'}}>
             {this.props.children}
           </div>
         </div>
