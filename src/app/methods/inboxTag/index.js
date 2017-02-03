@@ -357,7 +357,7 @@ Meteor.methods({
         failed.push(email[0].sender_mail)
         console.log(e)
       }
-    }) 
+    })
     return {
     successMail:successMail,
     failedMail:failed,
