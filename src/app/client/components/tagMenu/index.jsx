@@ -11,6 +11,9 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 class TagMenu extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      currentAction:''
+    }
     this.onClick = this.onClick.bind(this);
     this.scheduleCandidate=this.scheduleCandidate.bind(this)
   }
@@ -42,8 +45,10 @@ class TagMenu extends React.Component {
 
   render() {
     let tagMenu=[];
+    let tag_with_color = [];
+    let dynamicActions = this.props.dynamicActions;
      _.map(this.props.tags, ( v ) =>{
-      if(!v.default){
+      if(v.automatic == true){
               tagMenu.push(typeof this.props.email.tags != 'undefined'?
                 (_.indexOf(this.props.email.tags, v._id.toString()) < 0?
                 <MenuItem
@@ -58,11 +63,7 @@ class TagMenu extends React.Component {
                   key={v._id}
                   value={v._id+"-"+v.name}
                   onTouchTap={() => {
-                    if(v.automatic==false){
-                      console.log("false")
-                    }else{
                       this.onClick({"t_id": v._id, m_id: this.props.email._id})
-                    }
                   }}
                   />:<div></div>):
                   <MenuItem
@@ -78,11 +79,7 @@ class TagMenu extends React.Component {
                     key={v._id}
                     value={v._id+"-"+v.name}
                     onTouchTap={() => {
-                      if(v.automatic==false){
-                        console.log("false")
-                      }else{
                         this.onClick({"t_id": v._id, m_id: this.props.email._id})
-                      }
                     }}
 
                     />)
@@ -102,8 +99,10 @@ class TagMenu extends React.Component {
                         value={v._id+"-"+v.name}
                         onTouchTap={() => {this.scheduleCandidate(this.props.email,v._id)}}
                       />:<div></div>):<div></div>)
+                  }else if(v.automatic==false){
+                    tag_with_color.push({"tagId":v._id,"color":v.color})
                   }
-              })
+              })     
     return (
       <div>
         <IconMenu
