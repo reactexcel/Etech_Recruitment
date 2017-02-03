@@ -49,7 +49,7 @@ export default class EmailSettingList extends React.Component {
   handleOpen (email) {
     this.setState({
       "open" : true,
-      "title": "Testing for Email: "+ email,
+      "title": "Checking IMAP Connection",
     });
   };
 
@@ -108,6 +108,21 @@ export default class EmailSettingList extends React.Component {
   }
 
   render() {
+    let last_email_fetch_time = ''
+    let last_old_email_fetch_time = ''
+    if(this.state.imapEmail != undefined){
+      if(this.state.imapEmail.status_last_fetch_details != undefined){
+        last_email_fetch_time = moment(this.state.imapEmail.status_last_fetch_details.time, 'HH:mm:ss')
+        last_email_fetch_time=last_email_fetch_time.toDate()
+        last_email_fetch_time = moment(last_email_fetch_time).format('LT')
+      }
+      if(this.state.imapEmail.cronDetail != undefined){
+        last_old_email_fetch_time = moment(this.state.imapEmail.cronDetail.time, 'HH:mm:ss')
+        last_old_email_fetch_time=last_old_email_fetch_time.toDate()
+        last_old_email_fetch_time=moment(last_old_email_fetch_time).format('LT')
+      }
+    }
+    
     let rowdata = [];
     _.map(this.props.emailSetting, (row) => {
         if(typeof row.smtp == 'undefined' &&  row.emailId != ''){
@@ -155,10 +170,10 @@ export default class EmailSettingList extends React.Component {
                     <TableRowColumn tooltip="Port" style={{"fontWeight": "bold", textAlign:'center'}}>Port</TableRowColumn>
                     <TableRowColumn tooltip="Encrypt" style={{"fontWeight": "bold", textAlign:'center'}}>Encrypt</TableRowColumn>
                     <TableRowColumn tooltip="status" style={{"fontWeight": "bold"}}>Status</TableRowColumn>
-                    <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Active</TableRowColumn>
+                    <TableRowColumn tooltip="Activate/Dactivate" style={{"fontWeight": "bold"}}>Active</TableRowColumn>
                     <TableRowColumn tooltip="Test" style={{"fontWeight": "bold"}}>Test</TableRowColumn>
                     <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold", textAlign:'center', padding:'0px'}}>Remove</TableRowColumn>
-                    <TableRowColumn tooltip="Remove" style={{"fontWeight": "bold"}}>Statics</TableRowColumn>
+                    <TableRowColumn tooltip="statistic" style={{"fontWeight": "bold"}}>statistic</TableRowColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody
@@ -234,7 +249,7 @@ export default class EmailSettingList extends React.Component {
             </div>
             <div>
               <Dialog
-                title={typeof this.state.imapEmail !== 'undefined'?'Statics of ' + this.state.imapEmail.emailId:''}
+                title={typeof this.state.imapEmail !== 'undefined'?'statistic of ' + this.state.imapEmail.emailId:''}
                 actions={<FlatButton primary={true} label='close' onTouchTap={(evt) => { this.setState({ stat: false})}}/>}
                 modal={false}
                 open={this.state.stat}
@@ -248,8 +263,8 @@ export default class EmailSettingList extends React.Component {
                       </h4>
                     <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
                       New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
-                      Last Update date: {this.state.imapEmail.status_last_fetch_details.last_email_fetch_date}<br/>
-                      Last Update time: {this.state.imapEmail.status_last_fetch_details.time}<br/>
+                      Last Update date: {moment(this.state.imapEmail.status_last_fetch_details.last_email_fetch_date).format("Do MMM YY") }<br/>
+                      Last Update time: {last_email_fetch_time}<br/>
                       Total emails fetched: {this.state.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
                     </p>
                     { typeof this.state.imapEmail.cronDetail !== 'undefined'?
@@ -259,8 +274,8 @@ export default class EmailSettingList extends React.Component {
                           Cron (old) e-mail fetching process details
                         </h4>
                         <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
-                          Last fetched email of date: {this.state.imapEmail.cronDetail.lastEmailDate}<br/>
-                          Last update time : {this.state.imapEmail.cronDetail.time}<br/>
+                          Last fetched email of date: {moment(this.state.imapEmail.cronDetail.lastEmailDate).format("Do MMM YY")}<br/>
+                          Last update time : {last_old_email_fetch_time}<br/>
                           Total emails fetched: {this.state.imapEmail.cronDetail.totalEmailFetched}<br/>
                           Total count of Inbox emails: {this.state.imapEmail.cronDetail.totalMailInInbox}<br/>
                         </p>
@@ -273,19 +288,19 @@ export default class EmailSettingList extends React.Component {
                     }
                     <br/>
                     <div>
-                      <Toggle
-                        label={this.state.imapEmail.croned?(this.state.imapEmail.cronDetail !== 'object'?("This email is being processed in background."):this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.")
-                          :"Start cron to fetch all email from the selected email"}
-                        disabled={this.state.imapEmail.croned}
-                        defaultToggled={this.state.imapEmail.croned}
-                        labelPosition="right"
-                        labelStyle={{fontWeight:'normal', color:'#555'}}
-                        onToggle={ () => {
-                          this.onStartCron( this.state.imapEmail._id)
-                          this.setState({ stat: false})
+                      { !this.state.imapEmail.croned?<Toggle
+                          label={"Start cron to fetch all email from the selected email"}
+                          disabled={this.state.imapEmail.croned}
+                          defaultToggled={this.state.imapEmail.croned}
+                          labelPosition="right"
+                          labelStyle={{fontWeight:'normal', color:'#555'}}
+                          onToggle={ () => {
+                            this.onStartCron( this.state.imapEmail._id)
+                            this.setState({ stat: false})
+                            }
                           }
-                        }
-                      />
+                        />:(this.state.imapEmail.croned?(this.state.imapEmail.cronDetail !== 'object'?("New Emails are being proceeded automatically in background"):this.state.imapEmail.cronDetail.totalEmailFetched==this.state.imapEmail.cronDetail.totalMailInInbox?"All emails has been featched":"This email is being processed in background.")
+                          :"") }
                     </div>
                   </div>:''
                 }
