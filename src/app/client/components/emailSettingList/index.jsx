@@ -263,7 +263,7 @@ export default class EmailSettingList extends React.Component {
                       </h4>
                     <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
                       New Emali(s): {this.state.imapEmail.status_last_fetch_details.newMailFound}<br/>
-                      Last Update date: {moment(this.state.imapEmail.status_last_fetch_details.last_email_fetch_date).format("Do MMM YY") }<br/>
+                      Last Update date: {moment(this.state.imapEmail.status_last_fetch_details.last_email_fetch_date).format("Do MMM YYYY") }<br/>
                       Last Update time: {last_email_fetch_time}<br/>
                       Total emails fetched: {this.state.imapEmail.status_last_fetch_details.totalEmailFetched}<br/>
                     </p>
@@ -274,7 +274,7 @@ export default class EmailSettingList extends React.Component {
                           Cron (old) e-mail fetching process details
                         </h4>
                         <p style={{ lineHeight: "120%", textAlign:'justify', marginLeft:'5%'}}>
-                          Last fetched email of date: {moment(this.state.imapEmail.cronDetail.lastEmailDate).format("Do MMM YY")}<br/>
+                          Last fetched email of date: {moment(this.state.imapEmail.cronDetail.lastEmailDate).format("Do MMM YYYY")}<br/>
                           Last update time : {last_old_email_fetch_time}<br/>
                           Total emails fetched: {this.state.imapEmail.cronDetail.totalEmailFetched}<br/>
                           Total count of Inbox emails: {this.state.imapEmail.cronDetail.totalMailInInbox}<br/>

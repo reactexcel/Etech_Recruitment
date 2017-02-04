@@ -1,14 +1,14 @@
-import React, {PropTypes} from 'react'
+import React, {Component,PropTypes} from 'react'
 import { Link } from 'react-router'
 import { withRouter, router } from 'react-router'
 const classNames = require('classnames');
-import {List, ListItem, makeSelectable} from 'material-ui/List';
+import {List, ListItem, MakeSelectable} from 'material-ui/List';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import CommunicationEmail from 'material-ui/svg-icons/communication/email';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
-import {blue500, yellow600, indigo500, pinkA200} from 'material-ui/styles/colors';
+import {lightBlue200,blue500, yellow600, indigo500, pinkA200} from 'material-ui/styles/colors';
 import EmailsListItem from './EmailsListItem'
 import ImapAccountsList from './ImapAccountsList'
 import Dialog from 'material-ui/Dialog';
@@ -28,6 +28,40 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Subheader from 'material-ui/Subheader'
 import DefaultPage from './defaultPage'
 
+let SelectableList = MakeSelectable(List);
+function wrapState(ComposedComponent) {
+  return class SelectableList extends Component {
+    static propTypes = {
+      children: PropTypes.node.isRequired,
+      defaultValue: PropTypes.number.isRequired,
+    };
+
+    componentWillMount() {
+      this.setState({
+        selectedIndex: this.props.defaultValue,
+      });
+    }
+
+    handleRequestChange = (event, index) => {
+      this.setState({
+        selectedIndex: index,
+      });
+    };
+
+    render() {
+      return (
+        <ComposedComponent
+          value={this.state.selectedIndex}
+          onChange={this.handleRequestChange}
+        >
+          {this.props.children}
+        </ComposedComponent>
+      );
+    }
+  };
+}
+SelectableList = wrapState(SelectableList);
+
 class EmailsList extends React.Component {
     constructor( props ){
         super( props );
@@ -43,7 +77,8 @@ class EmailsList extends React.Component {
           scheduledTime:moment().format("hh:mm:ss a"),
           errortxt:'',
           SnackbarOpen:false,
-          SnackbarMessage:''
+          SnackbarMessage:'',
+          currentSection:2
         }
         this.onClick = this.onClick.bind(this);
         this.handleClose=this.handleClose.bind(this);
@@ -55,6 +90,8 @@ class EmailsList extends React.Component {
         this.selectedTag = '';
     }
     componentDidMount(){
+    }
+    componentWillMount( props ){
     }
     componentWillReceiveProps( props ){
         _.map(props.tags,(tag)=>{
@@ -119,6 +156,15 @@ class EmailsList extends React.Component {
       this.tagName = obj.t_name;
       this.tagColor = obj.t_color;
       this.selectedTag = obj.t_id;
+      if(obj.t_id==""){
+        this.setState({
+          currentSection:2
+        })
+      }else{
+        this.setState({
+          currentSection:obj.t_id
+        })
+      }
       this.props.onInboxData( this.props.emails_per_page, this.props.page_num , obj.t_id);
     }
     updateEmailIdList(emailId,check){
@@ -142,6 +188,10 @@ class EmailsList extends React.Component {
 
     }
     render(){
+        let currentSection = localStorage.getItem('currentSection')
+        if(currentSection == null || currentSection == ""){
+          currentSection = 2
+        }
         let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
         let emailsList
@@ -156,7 +206,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem currentSection={this.state.currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -168,7 +218,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem currentSection={this.state.currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )
@@ -209,9 +259,10 @@ class EmailsList extends React.Component {
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
         let inboxItems = [<ListItem
+                              value={2}
                               key={0}
                               primaryText={"Mails " + count_unread_emails}
-                              leftIcon={<CommunicationEmail color={indigo500} style={{left:'7px'}}/>}
+                              leftIcon={<CommunicationEmail color={lightBlue200} style={{left:'7px'}}/>}
                               onTouchTap= { () => this.onClick( {t_id : ''}) }
                             />]
         let jobItems = []
@@ -228,6 +279,7 @@ class EmailsList extends React.Component {
             })
             if(t.automatic == undefined){
               inboxItems.push(<ListItem
+                              value={t._id}
                               key={key+1}
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
@@ -240,6 +292,7 @@ class EmailsList extends React.Component {
                             />)
             }else if(t.automatic == true){
               jobItems.push(<ListItem
+                              value={t._id}
                               key={key+1}
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
@@ -252,6 +305,7 @@ class EmailsList extends React.Component {
                             />)
             }else if(t.automatic == false){
               candidateItems.push(<ListItem
+                              value={t._id}
                               key={key+1}
                               primaryText={_.trim(t.name) + " ("+ unread_mail+"/"+total_mail+")"}
                               leftIcon={<Avatar
@@ -268,35 +322,38 @@ class EmailsList extends React.Component {
         return(
             <div className="row" style={{ "margin":"0px", "position" : "relative"}}>
                 <div className="col-xs-3 col-sm-3 " style={{ "padding":"0px", "backgroundColor":"#fff",width:'21%', "height":emails.length == 0?verge.viewportH()+200+"px":"90%",'position':'fixed','top':'62px','overflowY':'scroll'}}>
-                      <List>
+                      
                         {this.props.tags.length === 0 ?
                         <div style={{'marginLeft':"10%"}}>
                           <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"150px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
                           <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"130px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
                           <LinearProgress mode="indeterminate" color="#aaa" style={{"height":"9px", width:"160px", backgroundColor:"lightgray", borderRadius:"10px 10px","marginTop": "10px"}} />
                         </div>
-                        :<div>
+                        :<SelectableList desktop={true} defaultValue={currentSection}>
                           <ListItem
+                          value={1}
                           primaryText="Inbox"
                           leftIcon={<ContentInbox />}
-                          initiallyOpen={true}
+                          //initiallyOpen={true}
                           primaryTogglesNestedList={true}
                           nestedItems={inboxItems}
                           />
                           <ListItem
+                          value={3}
                           primaryText="Jobs"
                           leftIcon={<ActionAssignment color={blue500}/>}
                           primaryTogglesNestedList={true}
                           nestedItems={jobItems}
                           />
                           <ListItem
+                          value={4}
                           primaryText="Candidates"
                           leftIcon={<ContentDrafts color={pinkA200}/>}
                           primaryTogglesNestedList={true}
                           nestedItems={candidateItems}
                           />
-                        </div>}
-                      </List>
+                        </SelectableList>}
+                      
 
 
                 </div>
