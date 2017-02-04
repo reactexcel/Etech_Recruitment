@@ -158,7 +158,7 @@ class EmailsList extends React.Component {
       this.selectedTag = obj.t_id;
       if(obj.t_id==""){
         this.setState({
-          currentSection:2
+          currentSection:'2'
         })
       }else{
         this.setState({
@@ -190,7 +190,7 @@ class EmailsList extends React.Component {
     render(){
         let currentSection = this.state.currentSection
         if(currentSection == null || currentSection == ""){
-          currentSection = 2
+          currentSection = '2'
         }
         let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
@@ -259,7 +259,7 @@ class EmailsList extends React.Component {
             next_page_link = <li className="disabled" onClick={ () => this.props.doPageChange(next_page_num)} ><span aria-hidden="true">&raquo;</span></li>
         }
         let inboxItems = [<ListItem
-                              value={2}
+                              value={'2'}
                               key={0}
                               primaryText={"Mails " + count_unread_emails}
                               leftIcon={<CommunicationEmail color={lightBlue200} style={{left:'7px'}}/>}
@@ -331,7 +331,7 @@ class EmailsList extends React.Component {
                         </div>
                         :<SelectableList desktop={true} defaultValue={currentSection}>
                           <ListItem
-                          value={1}
+                          value={'1'}
                           primaryText="Inbox"
                           leftIcon={<ContentInbox />}
                           //initiallyOpen={true}
@@ -339,14 +339,14 @@ class EmailsList extends React.Component {
                           nestedItems={inboxItems}
                           />
                           <ListItem
-                          value={3}
+                          value={'3'}
                           primaryText="Jobs"
                           leftIcon={<ActionAssignment color={blue500}/>}
                           primaryTogglesNestedList={true}
                           nestedItems={jobItems}
                           />
                           <ListItem
-                          value={4}
+                          value={'4'}
                           primaryText="Candidates"
                           leftIcon={<ContentDrafts color={pinkA200}/>}
                           primaryTogglesNestedList={true}
