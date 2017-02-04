@@ -355,7 +355,6 @@ handleRequestDelete(emailId,TagId) {
   })
 }
 render(){
-  console.log(localStorage.getItem('currentSection'),"*******email body*****")
         let data = this.state.data;
         //---dynamic actions
         let dynamicActions = this.props.dynamicActions;
