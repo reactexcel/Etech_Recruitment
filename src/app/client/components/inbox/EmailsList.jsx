@@ -78,7 +78,7 @@ class EmailsList extends React.Component {
           errortxt:'',
           SnackbarOpen:false,
           SnackbarMessage:'',
-          currentSection:2
+          currentSection:this.props.current_sec
         }
         this.onClick = this.onClick.bind(this);
         this.handleClose=this.handleClose.bind(this);
@@ -188,7 +188,7 @@ class EmailsList extends React.Component {
 
     }
     render(){
-        let currentSection = localStorage.getItem('currentSection')
+        let currentSection = this.state.currentSection
         if(currentSection == null || currentSection == ""){
           currentSection = 2
         }
@@ -206,7 +206,7 @@ class EmailsList extends React.Component {
           if(_.includes(email.tags, tag) || (email !== '' )){
             return (
                 <div key={email._id}>
-                    <EmailsListItem currentSection={this.state.currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem currentSection={currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}
                       />
                 </div>
@@ -218,7 +218,7 @@ class EmailsList extends React.Component {
           if(_.isEmpty(email.tags)){
             return (
                 <div key={email._id}>
-                    <EmailsListItem currentSection={this.state.currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
+                    <EmailsListItem currentSection={currentSection} email={email} addEmailId={()=>{this.updateEmailIdList(email._id,true)}} removeEmailId={()=>{this.updateEmailIdList(email._id,false)}}
                       {...this.props}/>
                 </div>
             )

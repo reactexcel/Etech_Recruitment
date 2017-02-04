@@ -21,7 +21,8 @@ class Inbox extends React.Component {
             imap_emails : [],
             emails_fetch_status : 0,
             is_imap:1,
-            is_smtp:1
+            is_smtp:1,
+            current_sec:'',
         }
         this.doPageChange = this.doPageChange.bind(this)
         this.update = true;
@@ -30,8 +31,8 @@ class Inbox extends React.Component {
         if (!Meteor.userId()) {
             this.props.router.push('/login');
         }
-        if(typeof this.props.params.nav == 'undefined'){
-        localStorage.setItem( 'currentSection', '' );
+        let currentSection = localStorage.getItem('currentSection');
+        if(currentSection == null || currentSection == ""){
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,'')
         this.props.onFetchSettings()
         this.props.onFetchTag()
@@ -43,6 +44,11 @@ class Inbox extends React.Component {
             this.props.onUpdateUnreadStatus()
             this.props.onCheckSmtpImap();
         }
+        this.setState({
+            current_sec:currentSection
+        })
+        localStorage.setItem( 'currentSection', '' );
+
     }
     componentWillReceiveProps( props ){
         if(props.checkSmtpImap.length > 0){
@@ -142,6 +148,7 @@ class Inbox extends React.Component {
                  emails_per_page={this.state.emails_per_page} page_num={this.state.page_num}
                  route={this.props.router}
                  errorMessage = {errorMessage}
+                 current_sec = {this.state.current_sec}
                  {...this.props}
                 />
         	</div>
