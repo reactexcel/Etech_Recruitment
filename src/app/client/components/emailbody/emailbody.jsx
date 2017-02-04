@@ -355,6 +355,7 @@ handleRequestDelete(emailId,TagId) {
   })
 }
 render(){
+  console.log(localStorage.getItem('currentSection'),"*******email body*****")
         let data = this.state.data;
         //---dynamic actions
         let dynamicActions = this.props.dynamicActions;
@@ -415,7 +416,7 @@ render(){
  <AppBar
     title="Email"
     style={{'position':'fixed'}}
-    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox/b')}}><NavigationArrowBack /></IconButton>}
+    iconElementLeft={<IconButton onTouchTap={() => {this.props.router.push('/inbox')}}><NavigationArrowBack /></IconButton>}
     iconElementRight={<div style={{'display':'inline'}}>
       <FlatButton style={{'marginRight':'5px'}} label={this.ignoreText} onTouchTap={()=>{
           this.ignoreCandidate(data,this.ignoreTagId)
