@@ -21,6 +21,7 @@ export default class MenuDrawer extends React.Component {
     })
   }
   handleClose(path){
+    localStorage.setItem( 'currentSection', '' );
     this.setState({open: false});
     this.props.handleClose();
     if(path !== "")

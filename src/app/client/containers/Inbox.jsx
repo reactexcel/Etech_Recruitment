@@ -31,6 +31,7 @@ class Inbox extends React.Component {
             this.props.router.push('/login');
         }
         if(typeof this.props.params.nav == 'undefined'){
+        localStorage.setItem( 'currentSection', '' );
         this.props.onInboxData( this.state.emails_per_page, this.state.page_num ,'')
         this.props.onFetchSettings()
         this.props.onFetchTag()

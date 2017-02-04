@@ -8,7 +8,7 @@ import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
-import {grey400, darkBlack, lightBlack, greenA700, red200} from 'material-ui/styles/colors';
+import {lightBlue500,grey400, darkBlack, lightBlack, greenA700, red200} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
@@ -70,7 +70,7 @@ class EmailListItem extends React.Component {
 
       let m_read_status = this.props.email.unread
       let mail_bg_color = "#fff"
-      let mail_left_border_color = "#C6F7C6"
+      let mail_left_border_color = "#81D4FA"
       let unread_color = '#000000'
       if( m_read_status == false ){
         unread_color = '#808080'
@@ -159,7 +159,10 @@ class EmailListItem extends React.Component {
 
                 }
                 secondaryTextLines={2}
-                onClick={() => this.props.router.push(m_link)}
+                onClick={() => {
+                  localStorage.setItem( 'currentSection', this.props.currentSection );
+                  this.props.router.push(m_link)
+                }}
               />
 
               <Snackbar
