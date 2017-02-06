@@ -10,7 +10,6 @@ export default class MyCard extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      show: true,
       prog:'show',
       mag:{marginTop:'0px'},
        wrapper: {
@@ -21,7 +20,6 @@ export default class MyCard extends React.Component {
     }
   }
   componentWillReceiveProps( props ){
-
   }
 
   render() {
@@ -92,14 +90,13 @@ export default class MyCard extends React.Component {
                   <div className="row">
                       <div className={typeof email.attachments == 'undefined'?"col-sm-12":"col-sm-5"} dangerouslySetInnerHTML={{__html: email.body }}></div>
                       <div className={typeof email.attachments == 'undefined'?"hidden":"col-sm-7"} style={{height: '100vh'}}>
-                        {this.state.show?<LinearProgress mode="indeterminate" />:""}
+                      {typeof email.attachments == 'undefined'?"":(email.attachments[0].link == undefined?<div className="row"><div className="col-xs-12"><LinearProgress mode="indeterminate" /></div><div className="col-xs-12">Loading Attachment..</div></div>:"")}
                           <iframe
                             src={typeof email.attachments == 'undefined' ? '' : email.attachments[0].link}
                             style={{height: '100%',width: '100%',border: 'none'}}
                             scrolling="no"
-                            onLoad={(e) => {
-                              this.setState({show:false})}}
                             ></iframe>
+                      }
                       </div>
                   </div>
                 }
