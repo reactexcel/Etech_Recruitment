@@ -388,7 +388,7 @@ class EmailsList extends React.Component {
                             }
                              <li style={{cursor:'pointer'}} onClick={ () => {
                                this.props.onDeleteMultipleEmails(this.state.emailIdList).then(()=>{
-                                this.props.doPageChange(next_page_num-1)
+                                //this.props.doPageChange(next_page_num-1)
                                 this.setState({
                                   "SnackbarOpen":true,
                                   "SnackbarMessage":"Mail deleted ",

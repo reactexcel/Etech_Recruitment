@@ -29,6 +29,19 @@ export function inbox( state = Immutable.Map(initialState), action ){
 
         return state.set('status_inbox', action.payload)
 
+    }else if( action.type == 'ACTION_SUCCESS_DELETE_MAIL'){
+      let emailId = action.payload
+      let emails = state.get("emails");
+      let newStore = _.clone(emails);
+      _.map( emailId, ( _id ) => {
+        for (let i in emails){
+          if( newStore[i]._id == _id ) {
+            newStore.splice(i, 1)
+            break;
+          }
+        }
+      })
+      return state.set('emails', newStore)
     }
     else if( action.type == 'ACTION_ERROR_UNREAD_STATUS' ){
 

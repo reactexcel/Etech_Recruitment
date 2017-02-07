@@ -56,7 +56,7 @@ export function getInboxData( emails_per_page, page_num, tag ){
 export function UpdateUnreadStatus(){
 	return ( dispatch, getState ) => {
 		return new Promise( ( resolve, reject ) => {
-			dispatch(loading(true));
+			//dispatch(loading(true));
 			Meteor.call('UpdateUnreadStatus',  (err, data) => {
 				if(err){
 					dispatch ( error_unread_status( err ) )
@@ -150,6 +150,11 @@ export function fetchNewEmails( imapEmails ){
 
 
 //--------------deleteInboxMails-----------------
+export const ACTION_SUCCESS_DELETE_MAIL = "ACTION_SUCCESS_DELETE_MAIL"
+
+export function success_delete_mail( data ){
+	return createAction( ACTION_SUCCESS_DELETE_MAIL )( data )
+}
 
 export function deleteInboxMails(idList){
 	return (dispatch, getState) =>{
@@ -158,6 +163,8 @@ export function deleteInboxMails(idList){
 				if(err){
 					reject(err);
 				}else{
+					dispatch (UpdateUnreadStatus())
+					dispatch ( success_delete_mail( res  ) )
 					resolve(res);
 				}
 			});
