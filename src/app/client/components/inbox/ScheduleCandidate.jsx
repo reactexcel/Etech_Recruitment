@@ -125,9 +125,9 @@ class ScheduleCandidate extends React.Component {
     }
     componentWillReceiveProps(props){
       if(props.currentAction.template_id != ""){
-         _.map(this.props.emailTemplates,(template, key)=>{
+         _.map(props.emailTemplates,(template, key)=>{
            if(template._id == props.currentAction.template_id){
-            this.forwardTemplate(template)
+            this.forwardTemplate(template,props)
            }
          })
       }
@@ -173,14 +173,14 @@ class ScheduleCandidate extends React.Component {
       }
       return templ;
     }
-    applyVariables(templateId){
+    applyVariables(templateId,props){
       let _id = ''
       let name = ''
       let subject = ''
       let content = ''
       let templ = {}
-      let recipient = this.props.currentEmail;
-      _.map(this.props.emailTemplates, (tmp, i) =>{
+      let recipient = props.currentEmail;
+      _.map(props.emailTemplates, (tmp, i) =>{
         if(tmp._id === templateId){
           _id = _.clone(tmp._id);
           name = _.clone(tmp.name);
@@ -206,7 +206,7 @@ class ScheduleCandidate extends React.Component {
             str = res[0];
             format = res[1];
           }
-          let variable = _.find(this.props.variables, function(o) { return o.varCode == str });
+          let variable = _.find(props.variables, function(o) { return o.varCode == str });
           if(typeof variable !== 'undefined' &&  variable.varCode == str){
             if(variable.variable_type == 'user' || variable.varCode == '#logo'){
               templ = this.replaceVariablesWithValue(templ, str, variable.varValue);
@@ -340,7 +340,7 @@ class ScheduleCandidate extends React.Component {
         pValue: _.remove(this.state.pValue),
       });
     }
-    forwardTemplate(template){
+    forwardTemplate(template,props){
       this.setState({
         openSendMailDialog:true,
         templateId:template._id,
@@ -350,7 +350,7 @@ class ScheduleCandidate extends React.Component {
         uploadedPDF:[],
         upload_file:[]
       });
-      this.applyVariables(template._id);
+      this.applyVariables(template._id,props);
     }
     closeMailPreview(){
       this.setState({
@@ -372,7 +372,7 @@ class ScheduleCandidate extends React.Component {
       })
       idList.push(sentMail.email[0]._id)
       if(sentMail.status){
-        this.props.onSendMailToCandidate(idList,name,subject,body,this.props.currentAction._id,attachment).then((data)=>{
+        this.props.onSendMailToCandidate(idList,name,subject,body,this.props.currentAction._id,attachment,this.props.testing).then((data)=>{
           this.handleCloseSendMailDialog();
           this.setState({
             SnackbarOpen: true,

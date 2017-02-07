@@ -257,7 +257,28 @@ Meteor.methods({
      })
      return {email:ignrReturn,tagId:tagId};
   },
-  "sendMailToCandidate" : function(candidateIdList,name,sub,body,action_id,attachment,userId){
+  "sendMailToCandidate" : function(candidateIdList,name,sub,body,action_id,attachment,testing,userId){
+    if(testing==true){
+      _.map(candidateIdList,(emailId)=>{
+        var transporter = nodemailer.createTransport('smtps://abhishek@excellencetechnologies.in:nKR9ENcoWmAtGZL@smtp-pulse.com:465');
+        var mailOptions = {
+          from: 'abhishek@excellencetechnologies.in',
+          to: emailId,
+          subject: sub,
+          html: body,
+          attachments: attachment
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+          if(error){
+              return console.log(error);
+          }
+          console.log('Message sent: ' + info.response);
+        });
+      })
+      return {
+        Message:'Mail successfully send, Check candidate mail'
+      }
+    }else{
     let action = DynamicActions.find({_id:action_id}).fetch()
     let tag = Tags.find({_id:action[0].tag_id}).fetch()
     let username=Meteor.users.findOne({"_id": userId})
@@ -365,6 +386,7 @@ Meteor.methods({
     prograsStatus:prograsStatus,
     emailIdS:candidateIdList
   }
+}
     /*let username=Meteor.users.findOne({"_id": userId})
     var mail;
     var email_id;

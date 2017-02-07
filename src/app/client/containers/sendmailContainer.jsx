@@ -8,6 +8,7 @@ import Header from './../components/generic/Header'
 import SendEmail from './../components/sendmail'
 import {fetchVariable} from '../actions/variable'
 import {addLogs} from '../actions/logs'
+import { candidateAction } from '../actions/dynamicActions'
 
 
 
@@ -56,7 +57,10 @@ const mapDispatchToProps = (dispatch) => {
         },
         logging: (action, id , detail) =>{
             return dispatch(addLogs(action, id , detail));
-        }
+        },
+        onSendMailToCandidate:(candidateIdList,name,sub,body,action_id,attachment,testing)=>{
+            return dispatch(candidateAction(candidateIdList,name,sub,body,action_id,attachment,testing))
+        },
     }
 }
 

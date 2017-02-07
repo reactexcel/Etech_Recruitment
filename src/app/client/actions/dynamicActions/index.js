@@ -62,13 +62,16 @@ export function deleteAction( id ){
 	}
 }
 
-export function candidateAction(candidateIdList,name,sub,body,action_id,attachment){
+export function candidateAction(candidateIdList,name,sub,body,action_id,attachment,testing){
 	return (dispatch,getState) => {
 		return new Promise( (resolve, reject) => {
-			Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,action_id,attachment,Meteor.userId(),(err, data) =>{
+			Meteor.call('sendMailToCandidate',candidateIdList,name,sub,body,action_id,attachment,testing,Meteor.userId(),(err, data) =>{
 				if(err){
 					reject(err)
 				}else{
+					if(testing==true){
+						resolve(data.Message)
+					}else{
 					if(data.successMail.length > 0){
 						dispatch(updateTagId(data.tag._id,data.emailIdS))
 						dispatch ( onAssignTag(data.successMail, data.tag._id) )
@@ -77,6 +80,7 @@ export function candidateAction(candidateIdList,name,sub,body,action_id,attachme
 					}else{
 						resolve('Failed to perform action')
 					}
+				    }
 				}
 			})
 		})

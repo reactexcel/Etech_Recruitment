@@ -93,36 +93,41 @@ class ConfigurationContainer extends React.Component {
           <SelectableList desktop={true} style={style.menu} defaultValue={1}>
           <ListItem
            value={1}
-           primaryText="IMAP server setting"
+           primaryText="IMAP Server Setting"
            onTouchTap={()=>{this.props.router.push("/config/email-server-setting");}}
           />
           <ListItem
             value={2}
-            primaryText="SMTP server setting"
+            primaryText="SMTP Server Setting"
             onTouchTap={()=>{this.props.router.push("/config/email-sending");}}
           />
           <ListItem
             value={3}
-            primaryText="Email Templates"
-            onTouchTap={()=>{this.props.router.push("/config/email-templates");}}
+            primaryText="Template Setting"
+            primaryTogglesNestedList={true}
+            nestedItems={[<ListItem
+              value={4}
+              primaryText="Email Templates"
+              onTouchTap={()=>{this.props.router.push("/config/email-templates");}}
+            />,
+            <ListItem
+              value={5}
+              primaryText="Email Variables"
+              onTouchTap={()=>{this.props.router.push("/config/variables");}}
+            />]}
           />
           <ListItem
-            value={4}
+            value={6}
             primaryText="Tag Setting"
             onTouchTap={()=>{this.props.router.push("/config/tag-setting");}}
           />
           <ListItem
-            value={5}
+            value={7}
             primaryText="Actions"
             onTouchTap={()=>{this.props.router.push("/config/dynamic-actions");}}
           />
-          <ListItem
-            value={6}
-            primaryText="Variables"
-            onTouchTap={()=>{this.props.router.push("/config/variables");}}
-          />
           {Roles.userIsInRole( Meteor.userId(), 'Admin' )?<ListItem
-            value={7}
+            value={8}
             primaryText="Manage Users"
             onTouchTap={()=>{this.props.router.push("/config/manageUsers");}}
           />:""}

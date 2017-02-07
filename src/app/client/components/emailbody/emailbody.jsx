@@ -477,6 +477,7 @@ render(){
         currentAction={this.state.currentAction}
         emailIdList={[data._id]}
         emailTemplates={this.props.emailTemplates}
+        testing={false}
         {...this.props}
         closeDialog={()=>{
           this.setState({
