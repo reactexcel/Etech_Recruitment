@@ -440,6 +440,7 @@ class SendEmail extends React.Component {
                   closeDialog={()=>{this.handleCloseTesting}}
                   testing={true}
                   {...this.props}
+                  closeDialog={()=>{this.handleCloseTesting()}}
                 />  
                   <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
