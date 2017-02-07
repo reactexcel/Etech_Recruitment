@@ -7,7 +7,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
-import Chip from 'material-ui/Chip';
 import {Menu, MenuItem} from 'material-ui/Menu'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton';
@@ -17,13 +16,15 @@ import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import {cyan100,cyan50,grey50,red700,green500,grey200,green900,pinkA200,grey900} from 'material-ui/styles/colors';
+import {lightGreenA700,indigo900,cyan100,cyan50,grey50,red700,green500,grey200,green900,pinkA200,grey900} from 'material-ui/styles/colors';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Edit from 'material-ui/svg-icons/editor/mode-edit';
+import CommunicationEmail from 'material-ui/svg-icons/communication/email';
 const classNames = require('classnames');
 import _ from 'lodash'
  import verge from 'verge';
 import RichTextEditor from 'react-rte';
+import ScheduleCandidate from '../inbox/ScheduleCandidate'
 
 
 const style = {
@@ -71,12 +72,26 @@ class SendEmail extends React.Component {
             tmppage:'row',
             tmpcreat:'hidden',
             loader:'hidden',
+            openTesting:false,
+            testingEmail:'',
+            errTestEmail:'',
+            testingName:'',
+            errTestName:'',
+            currentTemplate:'',
+            data_to_set:{
+              currentEmail:{},
+              currentAction:{},
+              emailIdList:[],
+              emailTemplates:{}
+            }
     }
         this.saveTemplate  = this.saveTemplate.bind( this )
         this.openCreatetemplate  = this.openCreatetemplate.bind( this )
         this.deleteTemplate = this.deleteTemplate.bind(this)
         this.editTemplate = this.editTemplate.bind( this )
         this.onChange = this.onChange.bind(this);
+        this.validateEmailId = this.validateEmailId.bind(this)
+        this.handleCloseTesting = this.handleCloseTesting.bind(this)
     }
     componentWillMount(){
         if (!Meteor.userId()) {
@@ -104,13 +119,8 @@ class SendEmail extends React.Component {
     }
     openCreatetemplate(){
         this.setState({
-            //tempName:'',
-            //sub:'',
-            //tmppage:'hidden',
-            //tmpcreat:'row',
             openDialog:true,
             tmpid:'',
-            //dialogTitle:'Create Template',
             content:RichTextEditor.createEmptyValue(),
         })
     }
@@ -201,7 +211,74 @@ class SendEmail extends React.Component {
     onChange(value) {
       this.setState({ content:value });
     }
+    handleCloseTesting(){
+      this.setState({
+        openTesting:false,
+        testingEmail:'',
+        errTestEmail:'',
+        testingName:'',
+        errTestName:'',
+        currentTemplate:'',
+        data_to_set:{
+          currentEmail:{},
+          currentAction:{},
+          emailIdList:[],
+          emailTemplates:{}
+        }
+      })
+    }
+    validateEmailId(){
+      let validateEmail = false,
+          validateName = false
+      let emailId = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if(!emailId.test(this.state.testingEmail)){
+        this.setState({
+          errTestEmail:'Invalid email id'
+        })
+        validateEmail = false
+      }else{
+        this.setState({
+          errTestEmail:''
+        })
+        validateEmail = true
+      }
+      if(this.state.testingName == ""){
+        this.setState({
+          errTestName:'Enter candidate name'
+        })
+        validateName = false
+      }else{
+        this.setState({
+          errTestName:''
+        })
+        validateName = true
+      }
+      if(validateName == true && validateEmail == true){
+        let currentEmail = Object.assign({},{
+          _id:this.state.testingEmail,
+          sender_mail:this.state.testingEmail,
+          from:this.state.testingName
+        })
+        let currentAction = Object.assign({},{
+          template_id:this.state.currentTemplate._id,
+          _id:'testingActionId'
+        })
+        let emailIdList = []
+        emailIdList.push(currentEmail._id)
+        let emailTemplates = this.props.emailTemplates
+        let data_to_set = Object.assign({},{
+          currentEmail:currentEmail,
+          currentAction:currentAction,
+          emailIdList:emailIdList,
+          emailTemplates:emailTemplates
+        })
+        this.setState({
+          data_to_set:data_to_set
+        })
+      }
+    }
     render(){
+      let data_to_set = this.state.data_to_set
       const actions = [
       <FlatButton
               label="BACK"
@@ -309,7 +386,61 @@ class SendEmail extends React.Component {
                   </List>
                 </div>
                 </Dialog>
-                    
+                <Dialog
+                  title="Enter Email Id"
+                  actions={[<FlatButton
+                    label="Cancel"
+                    primary={true}
+                    onTouchTap={this.handleCloseTesting}
+                    />,
+                  <FlatButton
+                    label="Ok"
+                    primary={true}
+                    keyboardFocused={true}
+                    onTouchTap={()=>{this.validateEmailId()}}
+                  />]}
+                  modal={false}
+                  open={this.state.openTesting}
+                  onRequestClose={this.handleCloseTesting}
+                >
+                <TextField
+                  ref='Email'
+                  floatingLabelText="Candidate Email Id"
+                  hintText="Enter Email Id"
+                  fullWidth={true}
+                  errorText={this.state.errTestEmail}
+                  floatingLabelFixed={true}
+                  value={this.state.testingEmail}
+                  onChange={(e)=>{
+                    this.setState({
+                      testingEmail: e.target.value,
+                    });
+                  }}
+                />
+                <TextField
+                  ref='Name'
+                  floatingLabelText="Candidate Name"
+                  hintText="Enter Name"
+                  fullWidth={true}
+                  errorText={this.state.errTestName}
+                  floatingLabelFixed={true}
+                  value={this.state.testingName}
+                  onChange={(e)=>{
+                    this.setState({
+                      testingName: e.target.value,
+                    });
+                  }}
+                />
+                </Dialog>
+                <ScheduleCandidate
+                  currentEmail={data_to_set.currentEmail}
+                  currentAction={data_to_set.currentAction}
+                  emailIdList={data_to_set.emailIdList}
+                  emailTemplates={data_to_set.emailTemplates}
+                  closeDialog={()=>{this.handleCloseTesting}}
+                  testing={true}
+                  {...this.props}
+                />  
                   <div className={this.state.tmppage} style={{margin:'0px 4px 0px'}}>
                     <div className="col-xs-12">
                       <div className='row'>
@@ -346,9 +477,17 @@ class SendEmail extends React.Component {
                             <CardActions style={{'textAlign':'right'}}>
                               <FlatButton 
                                 labelColor={grey900} 
+                                label="Test" 
+                                labelPosition="before" 
+                                icon={<CommunicationEmail color={indigo900}/>} 
+                                style={{'margin':2,'padding':-1}}
+                                onTouchTap={(evt) => {this.setState({openTesting:true,currentTemplate:data})}}
+                              />
+                              <FlatButton 
+                                labelColor={grey900} 
                                 label="Edit" 
                                 labelPosition="before" 
-                                icon={<Edit color={grey900}/>} 
+                                icon={<Edit color={lightGreenA700}/>} 
                                 style={{'margin':2,'padding':-1}}
                                 onTouchTap={(evt) => this.editTemplate(data, evt)}
                               />

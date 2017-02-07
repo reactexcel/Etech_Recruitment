@@ -78,8 +78,8 @@ const mapDispatchToProps = (dispatch) => {
       onFetchTag : () => {
         return dispatch(onFetchTag());
       },
-      onSendMailToCandidate:(candidateIdList,name,sub,body,action_id,attachment)=>{
-        return dispatch(candidateAction(candidateIdList,name,sub,body,action_id,attachment))
+      onSendMailToCandidate:(candidateIdList,name,sub,body,action_id,attachment,testing)=>{
+        return dispatch(candidateAction(candidateIdList,name,sub,body,action_id,attachment,testing))
       },
       onFetchActions:()=>{
         return dispatch(fetchAction())

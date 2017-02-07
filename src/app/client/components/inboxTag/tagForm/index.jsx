@@ -132,8 +132,8 @@ export default class TagForm extends React.Component {
             <div style={style.formInput}>
               <TextField
                 type="text"
-                floatingLabelText="Match Email"
-                hintText="Enter email "
+                floatingLabelText="Match Email ID"
+                hintText="Enter email id"
                 fullWidth={true}
                 onChange={
                   (evt) =>{
@@ -164,7 +164,7 @@ export default class TagForm extends React.Component {
             <div style={style.formInput}>
               <TextField
                 type="text"
-                floatingLabelText="Match subject"
+                floatingLabelText="Match Subject"
                 hintText="Enter Subject "
                 fullWidth={true}
                 onChange={
@@ -176,7 +176,7 @@ export default class TagForm extends React.Component {
                   (evt) =>{
                     if (!evt.target.value.length > 0 ) {
                       this.setState({
-                        errSubject:"Enter subject",
+                        errSubject:"Enter Subject",
                       });
                     }else if (/^[a-zA-Z0-9 !@#$%^&*()_+=-`~}:"|<>?';,. ]$/.test(evt.target.value)) {
                       this.setState({
