@@ -284,7 +284,6 @@ Meteor.methods({
 		next_page = ''
 		}
 		var allEmails;
-
 		if(tag == ""){
 	  	allEmails = EmailsStore.find( {tags:{$size:0}}, { sort: {m_insert_timestamp: -1}, skip : skip, limit: emails_per_page }).fetch();
 		}else if(imapEmail.length > 0 && tag == imapEmail[0]._id){

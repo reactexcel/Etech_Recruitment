@@ -194,7 +194,8 @@ class ScheduleCandidate extends React.Component {
       templ.body = content
       let format = 'DD-MM-YYYY';
       let string = templ.name.concat(" ",templ.subject," ", templ.body);
-      let regx = /#[\w\/|-]*/g;
+      //let regx = /#[\w\/|-]*/g;
+      let regx = /#[\w-]+\|[\w -\.,@$%&*!:%^\\\/]+\||#[\w-]+/ig;
       let variables = string.match(regx);
       if(variables !== null && variables.length > 0){
         variables = _.uniq(variables);
