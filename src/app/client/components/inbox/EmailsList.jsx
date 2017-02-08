@@ -194,7 +194,7 @@ class EmailsList extends React.Component {
         }
         let tag = this.props.inbox.tag
         let emails = this.props.inbox.emails
-        let emailsList
+        let emailsList = []
         let email = '';
         _.forEach(this.props.emailSetting, ( e ) =>{
           if(e._id == tag){
@@ -439,7 +439,7 @@ class EmailsList extends React.Component {
                       </div>
                       :
                       (
-                        emailsList.length == 0?
+                        emailsList && emailsList.length == 0?
                           <DefaultPage name={this.tagName} color={this.tagColor}/>:
                           <List>
                             {emailsList}
