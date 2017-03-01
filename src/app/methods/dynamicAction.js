@@ -228,40 +228,5 @@ Meteor.methods({
             prograsStatus: prograsStatus,
             emailIdS: email_ids
         }
-    },
-    "submitComment": (id, comment) => {
-        var history = CandidateHistory.find({
-            email_id: id
-        }).fetch();
-        console.log('history', history)
-        if (typeof history !== "undefined") {
-            if (typeof history.comments !== "undefined") {
-                console.log('********');
-                CandidateHistory.update({
-                    email_id: id
-                }, {
-                    $set: {
-                        "comment": comment,
-                    }
-                });
-            } else {
-                console.log('-----+++++++');
-                CandidateHistory.update({
-                    email_id: id
-                }, {
-                    $addToSet: {
-                        "comment": comment,
-                    }
-                });
-            }
-        } else {
-            CandidateHistory.insert({
-                email_id: id,
-                comment: comment
-            });
-        }
-
-
-        console.log('------------------000', id, comment);
     }
 })

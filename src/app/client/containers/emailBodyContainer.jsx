@@ -5,7 +5,7 @@ import {withRouter, Link} from 'react-router';
 import EmailBodyHeader from '../components/emailbody/emailBodyHeader';
 import EmailBody from '../components/emailbody/emailbody';
 import { getEmailData, tagUpdateArchive, updateReject } from '../actions/emailDetails'
-import { fetchAction, candidateAction, submitComment } from '../actions/dynamicActions'
+import { fetchAction, candidateAction } from '../actions/dynamicActions'
 import * as candidateHistory_action from '../actions/candidateHistory'
 import {onFetchTag, onAssignTag,onScheduleMultipleCandidate, onIgnoreMultipleCandidate, onRejectMultipleCandidate, sendMailToCandidate, removeTagFromCandidate} from '../actions/tags'
 import {addLogs} from '../actions/logs'
@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch) => {
             return dispatch(fetchVariable())
       },
       submitComment:(id, comment)=>{
-        return dispatch(submitComment(id, comment))
+        return dispatch(candidateHistory_action.submitComment(id, comment))
       }
     }
 }

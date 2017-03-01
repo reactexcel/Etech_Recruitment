@@ -96,17 +96,3 @@ export const updateProgressStatus = (data) => {
 export const updateTagId = (tagId, emailIds) => {
     return createAction(UPDATE_TAGID)(tagId, emailIds)
 }
-
-export function submitComment(id, comment) {
-    return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            Meteor.call('submitComment', id, comment, (err, data) => {
-                if (err) {
-                    reject(err)
-                } else {
-
-                }
-            })
-        })
-    }
-}

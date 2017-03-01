@@ -16,7 +16,7 @@ export function onLoadCandidateHistory(email_id){
 					if( data.length == 0 ){
 						dispatch ( empty_history( 'No candidate history' ) )
 					}else{
-						dispatch ( history_found( data ) ) 
+						dispatch ( history_found( data ) )
 					}
 				}
 			})
@@ -33,4 +33,19 @@ export function empty_history( data ){
 }
 export function history_error( data ){
 	return createAction( ACTION_ERROR_HISTORY )( data )
+}
+
+export function submitComment(id, comment) {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            Meteor.call('submitComment', id, comment, (err, data) => {
+                if (err) {
+                  reject(err)
+                } else {
+									dispatch(onLoadCandidateHistory(id));
+                  resolve(data);
+                }
+            })
+        })
+    }
 }

@@ -114,7 +114,8 @@ class ScheduleCandidate extends React.Component {
           LinearProgressBar:[],
           pageHeader:'',
           candidateComments:'',
-          pageFooter:''
+          pageFooter:'',
+          comments: false
         }
         this.forwardTemplate=this.forwardTemplate.bind(this);
         this.handleCloseSendMailDialog = this.handleCloseSendMailDialog.bind(this);
@@ -520,7 +521,13 @@ class ScheduleCandidate extends React.Component {
     submitComment(){
       let comment = this.state.candidateComments;
       let id = this.props.currentEmail._id;
-      this.props.submitComment(id, comment);
+      this.props.submitComment(id, comment).then((data)=>{
+      if(data){
+        this.handleClose();
+      }else{
+        alert("Error: Could not updated this comment")
+      }
+      });
     }
     render(){
       let fileList = []
@@ -561,7 +568,7 @@ class ScheduleCandidate extends React.Component {
         })
 
         let history=this.props.candidateHistory;
-        console.log(history);
+
         const candidateActions = [
               <FlatButton
                 label="Cancel"
@@ -592,6 +599,8 @@ class ScheduleCandidate extends React.Component {
           <TextField
                 floatingLabelText="Write Your Comments Here"
                 fullWidth={true}
+                multiLine={true}
+                rows={2}
                 onChange={(e)=>{
                   this.setState({
                       candidateComments: e.target.value,
