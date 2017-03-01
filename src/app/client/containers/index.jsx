@@ -21,4 +21,3 @@ class AppContainer extends React.Component {
 }
 
 export default withRouter(AppContainer);
-export {default as RegisterContainer} from './registerContainer'

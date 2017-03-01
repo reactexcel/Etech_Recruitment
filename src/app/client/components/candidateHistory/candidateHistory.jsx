@@ -149,7 +149,7 @@ class CandidateHistory extends React.Component {
           activeStep={stepIndex}
           linear={false}
           orientation="vertical"
-        >
+          >
          {this.state.current_history}
         </Stepper>
   		</div>

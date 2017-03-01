@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router'
 import _ from 'lodash';
@@ -9,6 +10,7 @@ import Chip from 'material-ui/Chip';
 import {pinkA100} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import * as history_action from '../../actions/candidateHistory';
 import Badge from 'material-ui/Badge';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {cyan100,cyan50,grey50,red700,green500,grey200} from 'material-ui/styles/colors';
@@ -26,6 +28,11 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     marginTop: '20px'
+  },
+  comments:{
+    "marginLeft": "2%",
+      "marginTop": "1%",
+      "marginBottom" :"0%",
   },
   formInput:{
     "marginLeft": "5%",
@@ -106,6 +113,7 @@ class ScheduleCandidate extends React.Component {
           uploadedPDF:[],
           LinearProgressBar:[],
           pageHeader:'',
+          candidateComments:'',
           pageFooter:''
         }
         this.forwardTemplate=this.forwardTemplate.bind(this);
@@ -121,6 +129,7 @@ class ScheduleCandidate extends React.Component {
         this.uploadPDF=this.uploadPDF.bind(this)
         this.deleteAttachment = this.deleteAttachment.bind(this)
         this.download_mail_preview = this.download_mail_preview.bind(this)
+        this.submitComment = this.submitComment.bind(this)
         //this.handleCloseTemplateDialog=this.handleCloseTemplateDialog.bind(this);
     }
     componentWillReceiveProps(props){
@@ -135,6 +144,16 @@ class ScheduleCandidate extends React.Component {
     handleContentChange(value) {
       this.setState({templateBody: value});
     }
+
+    handleOpen = () => {
+        this.setState({comments: true});
+      };
+
+      handleClose = () => {
+        this.setState({comments: false});
+      };
+
+
     handleCloseSendMailDialog(){
       this.setState({
         openSendMailDialog:false,
@@ -333,7 +352,7 @@ class ScheduleCandidate extends React.Component {
           SnackbarMessage:'Please put all variable`s value',
         })
       }
-     
+
     }
     handleClose(){
       this.setState({
@@ -498,6 +517,11 @@ class ScheduleCandidate extends React.Component {
           }
         });
     }
+    submitComment(){
+      let comment = this.state.candidateComments;
+      let id = this.props.currentEmail._id;
+      this.props.submitComment(id, comment);
+    }
     render(){
       let fileList = []
       _.map(this.state.uploadedPDF,(name, key)=>{
@@ -531,12 +555,53 @@ class ScheduleCandidate extends React.Component {
                   pValue: this.state.pValue,
                 });
                 }}
-                value={variable.value} 
+                value={variable.value}
               />
           </div>)
         })
+
+        let history=this.props.candidateHistory;
+        console.log(history);
+        const candidateActions = [
+              <FlatButton
+                label="Cancel"
+                  primary={true}
+                onTouchTap={this.handleClose}
+              />,
+              <FlatButton
+                label="Comment"
+                primary={true}
+                keyboardFocused={true}
+                onTouchTap={this.submitComment}
+              />,
+            ];
+
+
       return(
         <div>
+          <div>
+          <RaisedButton label={"Candidate Comments"} icon={<i className="fa fa-comments-o fa-lg" aria-hidden="true"></i>} primary={true} onTouchTap={this.handleOpen} style={styles.comments} />
+          <Dialog
+            title="Candidate Comments"
+            actions={candidateActions}
+            modal={false}
+            open={this.state.comments}
+            onRequestClose={this.handleClose}
+          >
+          <div className="form-group" style={styles.formInput}>
+          <TextField
+                floatingLabelText="Write Your Comments Here"
+                fullWidth={true}
+                onChange={(e)=>{
+                  this.setState({
+                      candidateComments: e.target.value,
+                  });
+                }}
+          />
+          </div>
+          </Dialog>
+        </div>
+
             <Dialog
               title={"Send Mail"}
               actions={actionsSendMail}
@@ -641,7 +706,7 @@ class ScheduleCandidate extends React.Component {
                     {fileList}
                   </div>
                 </div>
-                
+
                 <form action={''} method="POST" encType="multipart/form-data">
                   <div className="form-group" style={{'cursor':'pointer'}}>
                     <button style={styles.uploadButton} className="btn btn-blue" >
