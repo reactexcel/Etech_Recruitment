@@ -397,6 +397,23 @@ render(){
         if(_.includes(data.tags,this.scheduleTagId)==true){
                 this.rejectText="Scheduled"
         }
+
+        let comments = this.props.candidateHistory && this.props.candidateHistory.history[0] && this.props.candidateHistory.history[0].comments;
+        comments = _.orderBy(comments,["date"],["desc"]);
+        console.log('after',comments)
+        let more = _.merge(comments, more_email);
+        let previous_mails = [];
+        _.map(more,( email, i) => {
+          if(typeof email.comment !== "undefined"){
+            previous_mails.push(<div style={{backgroundColor:'white',borderRadius:'3px',padding:10,marginBottom:"10px"}}>
+              <div style={{fontSize:'x-large'}}>
+                Comment:</div>
+                <div style={{border:"1px solid rgba(220, 220, 220, 0.68)",padding:"10px", whiteSpace: "pre"}} >{email.comment}</div>
+              </div>);
+          }else{
+            previous_mails.push(<MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} candidateTags={candidateTags} />)
+          }
+        });
            const actions = [
       <FlatButton
         label="Cancel"
@@ -487,9 +504,7 @@ render(){
         />
         <div className="row" style={{marginLeft:'4px',marginRight:'4px'}}>
           <div className="col-sm-12 col-sx-12 col-lg-12">
-              {_.map(more_email,( email, i) => (
-                  <MyCard email={email} i={i} key={i} progresStatus={data.progresStatus} index={i} candidateTags={candidateTags} />
-              ))}
+              {previous_mails}
               <MyCard email={data} i={typeof data.more_emails !== 'undefined'?-1:0}
               progresStatus={data.progresStatus}
               index={typeof data.more_emails !== 'undefined'?"more":"done"}

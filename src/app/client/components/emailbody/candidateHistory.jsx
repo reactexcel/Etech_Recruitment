@@ -19,12 +19,12 @@ import FlatButton from 'material-ui/FlatButton';
 class CandidateHistory extends React.Component {
 	constructor(props) {
     super(props);
-    
+
     }
     componentWillMount(){
     }
-   
-  
+
+
   render(){
     let history=this.props.candidateHistory.history;
     let historySteper=[]
@@ -74,6 +74,7 @@ class CandidateHistory extends React.Component {
           </Step>
             )
          }
+
          if(hist.scheduled){
           historySteper.push(
             <Step key={i} active={true}>
@@ -94,7 +95,29 @@ class CandidateHistory extends React.Component {
           </Step>
             )
          }
-         if(!hist.ignored && !hist.rejected && !hist.scheduled){
+
+         if(hist.comment){
+          historySteper.push(
+            <Step key={i} active={true}>
+            <StepButton >
+              <div>Comments</div>&nbsp;&nbsp;&nbsp;
+              <div style={{color:'#8c8c8c'}}>({moment(hist.date).format("DD-MM-YYYY HH:mm:ss")})</div>
+            </StepButton>
+            <StepContent>
+            <div>
+              <div style={{fontWeight:'bold'}}>
+                Comments :{hist.comment}
+              </div>
+              <p>
+                {hist.detail}
+              </p>
+              </div>
+            </StepContent>
+          </Step>
+            )
+         }
+
+         if(!hist.ignored && !hist.rejected && !hist.scheduled && !hist.comment){
           historySteper.push(
             <Step key={i} active={true}>
             <StepButton>
@@ -114,13 +137,16 @@ class CandidateHistory extends React.Component {
           </Step>
             )
          }
-          
+
       })
     }else{
       historySteper.push(<div>{this.props.candidateHistory.status_history}</div>)
     }
-  	
+
   	return(
+
+
+
   	<div style={{backgroundColor:'white',borderRadius:'3px',padding:10}}>
     <div style={{fontSize:'x-large'}}>
         Candidate History:

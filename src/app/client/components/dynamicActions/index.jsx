@@ -54,12 +54,14 @@ class DynamicActions extends React.Component {
         this.state={
             paper:'show',
             actionName:'',
+            comment:'',
             actionId:'',
             tmppage:'row',
             tmpcreat:'hidden',
             openDialog:false,
             dialogTitle:'',
             errName:'',
+            errComment:'',
             dependentAction:'',
             templateId:'',
             snackbarOpen:false,
@@ -75,6 +77,7 @@ class DynamicActions extends React.Component {
             pPointValue:1,
             pPointError:'',
             showReportToggle:false,
+            commentToggle:false,
             dependentActionList:[]
         }
         this.saveAction  = this.saveAction.bind( this )
@@ -115,7 +118,7 @@ class DynamicActions extends React.Component {
         dependentAction:value
       })
     }
-    changeTag = (event, index, value) =>{ 
+    changeTag = (event, index, value) =>{
       this.setState({
         tagValue:value,
         tagError:''
@@ -132,26 +135,34 @@ class DynamicActions extends React.Component {
       pPointValue: event.target.value,
     });
   };
+  changeComment = (event) => {
+  this.setState({
+    comment: event.target.value,
+  });
+};
     openCreateAction(){
-      
+
       if(this.props.dynamicActions.length > 0){
         this.state.dependentActionList.push(<MenuItem value="" key={0} primaryText="           "/>);
         _.map(this.props.dynamicActions,(action, key)=>{
           this.state.dependentActionList.push(<MenuItem value={action._id} key={key+1} primaryText={action.name} />)
         })
       }
-      
+
         this.setState({
           actionName:'',
+          comment:'',
             openDialog:true,
             dialogTitle:"Create Action",
             errName:'',
+            errComment:'',
             tagValue:'',
             tagError:'',
             tempValue:'',
             tempError:'',
             progressToggle:false,
             showReportToggle:false,
+            showCommentToggle:false,
             floatingLabelText:'Action Name',
             hintText:'Enter Action Name',
             pPointError:''
@@ -166,13 +177,20 @@ class DynamicActions extends React.Component {
     handleReport() {
         this.setState({showReportToggle: !this.state.showReportToggle});
     }
+
+    handleComment() {
+        this.setState({showCommentToggle :!this.state.showCommentToggle});
+    }
+
     gotoActionPage(){
         this.setState({
           actionName:'',
+            comment:'',
             openDialog:'',
             dialogTitle:'',
             actionId:'',
             errName:'',
+            errComment:'',
             dependentAction:'',
             tagValue:'',
             tagError:'',
@@ -181,6 +199,7 @@ class DynamicActions extends React.Component {
             progressToggle:false,
             pPointValue:1,
             showReportToggle:false,
+            showCommentToggle:false,
             dependentActionList:[],
             pPointError:''
         })
@@ -192,6 +211,8 @@ class DynamicActions extends React.Component {
         let id = this.state.actionId
         let progress = this.state.progressToggle
         let report = this.state.showReportToggle
+        let comment = this.state.comment
+        let commentToggle = this.state.showCommentToggle
         let dependentAction = this.state.dependentAction
         let pPointClear = false;
         if(name!=''){
@@ -222,16 +243,21 @@ class DynamicActions extends React.Component {
           progress=0;
           pPointClear=true;
         }
-        if(name!='' && tagId!='' && templateId!='' && pPointClear==true){
+
+
+        if(name!='' && tagId!='' && templateId!='' && pPointClear==true && commentToggle==true){
             let action={
               name:name,
-              dependentAction:dependentAction, 
-              tagId:tagId, 
-              templateId:templateId, 
+              dependentAction:dependentAction,
+              tagId:tagId,
+              templateId:templateId,
               progress:progress,
-              report:report
+              report:report,
+              comment:comment,
+              commentToggle:commentToggle
+
             }
-            this.props.onSaveAction(id,action).then( () => {
+        this.props.onSaveAction(id,action).then( () => {
         this.setState({
             actionName:'',
             snackbarOpen:true,
@@ -239,6 +265,7 @@ class DynamicActions extends React.Component {
             actionId:'',
             tmppage:'row',
             tmpcreat:'hidden'
+
         })
         if(id==""){
             this.props.logging("New action added",Meteor.userId(),"Action name : "+name)
@@ -283,6 +310,8 @@ class DynamicActions extends React.Component {
           floatingLabelText:'',
           hintText:'',
           showReportToggle:data.report,
+          showCommentToggle:data.commentToggle,
+          comment:data.comment,
           dependentAction:data.dependentActionId
         })
         if(data.progress_point!=0){
@@ -295,7 +324,7 @@ class DynamicActions extends React.Component {
             progressToggle:false,
             pPointValue:1
           })
-          
+
         }
         if(this.props.dynamicActions.length > 0){
           this.state.dependentActionList.push(<MenuItem value="" key={0} primaryText="           "/>);
@@ -334,25 +363,24 @@ class DynamicActions extends React.Component {
           }
           })
       }
-      
+
         let tempItems=[<MenuItem value="" key={0} primaryText="           "/>];
         if(this.props.emailTemplates.length > 0){
           _.map(this.props.emailTemplates,(template, key)=>{
             tempItems.push(<MenuItem value={template._id} key={key+1} primaryText={template.name} />)
           })
         }
-          
+
       return(
         <div className="col-xs-12 col-sm-12" style={{ "float":"right"}}>
-            
+
             <Dialog
               title={this.state.dialogTitle}
               actions={actions}
               modal={false}
               open={this.state.openDialog}
               onRequestClose={this.gotoActionPage.bind(this)}
-              autoScrollBodyContent={true}
-            >
+              autoScrollBodyContent={true}>
             <div>
               <form className="form-inline">
               <div className="form-group" style={styles.formInput}>
@@ -379,6 +407,7 @@ class DynamicActions extends React.Component {
                     hintText="Select Dependent Action"
               >
                     {this.state.dependentActionList}
+
               </SelectField>
               </div>
               <div className="form-group" style={styles.formInput}>
@@ -405,6 +434,7 @@ class DynamicActions extends React.Component {
                     {tempItems}
               </SelectField>
               </div>
+
               <div className="form-group" style={styles.formInput}>
               <div style={styles.block}>
                     <Toggle
@@ -444,6 +474,42 @@ class DynamicActions extends React.Component {
                       toggle={this.state.showReportToggle}
                     />
               </div>
+              </div>
+
+
+              <div className="form-group" style={styles.formInput}>
+              <div style={styles.block}>
+                    <Toggle
+                      label="Comment Before Completing Action"
+                      labelStyle={styles.lable}
+                      defaultToggled={this.state.showCommentToggle}
+                      style={styles.toggle}
+                      onToggle={this.handleComment.bind(this)}
+                      toggle={this.state.showCommentToggle}
+                    />
+              </div>
+                  { this.state.showCommentToggle ?
+                <div>
+
+                  <TextField
+                        floatingLabelText= "Comment Field Title"
+                        hintText= "Add comments title here "
+                        fullWidth={true}
+                        errorText={this.state.errComment}
+                        value={this.state.comment}
+                        onChange={(e)=>{
+                          this.setState({
+                              comment: e.target.value,
+                          });
+                        }}
+                  />
+             </div>
+                :
+                (
+                  <div></div>
+                )
+              }
+
               </div>
               </form>
             </div>

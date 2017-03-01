@@ -92,6 +92,9 @@ const mapDispatchToProps = (dispatch) => {
       },
       onFetchVariables:()=>{
             return dispatch(fetchVariable())
+      },
+      submitComment:(id, comment)=>{
+        return dispatch(candidateHistory_action.submitComment(id, comment))
       }
     }
 }
